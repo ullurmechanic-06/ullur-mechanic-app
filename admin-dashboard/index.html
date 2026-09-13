@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ullur Mechanic — Admin Super Dashboard & Kavalan Police Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon"><i data-lucide="wrench"></i></div>
+        <div class="brand-text">
+          <h2>ULLUR ADMIN</h2>
+          <span>KAVALAN 112 READY</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#overview" class="nav-item active" onclick="switchTab('overview')">
+          <i data-lucide="layout-dashboard"></i> Overview & Live Radar
+        </a>
+        <a href="#sos" class="nav-item" onclick="switchTab('sos')">
+          <i data-lucide="shield-alert"></i> Kavalan Police SOS
+          <span class="badge red animate-pulse">1 Active Alert</span>
+        </a>
+        <a href="#requests" class="nav-item" onclick="switchTab('requests')">
+          <i data-lucide="alert-triangle"></i> Breakdown Requests
+          <span class="badge yellow">3 Live</span>
+        </a>
+        <a href="#mechanics" class="nav-item" onclick="switchTab('mechanics')">
+          <i data-lucide="users"></i> Mechanics & KYC
+          <span class="badge yellow">2 Pending</span>
+        </a>
+        <a href="#inventory" class="nav-item" onclick="switchTab('inventory')">
+          <i data-lucide="package"></i> Wholesale Spares
+        </a>
+        <a href="#towing" class="nav-item" onclick="switchTab('towing')">
+          <i data-lucide="truck"></i> Tow & Recovery
+        </a>
+        <a href="#analytics" class="nav-item" onclick="switchTab('analytics')">
+          <i data-lucide="credit-card"></i> Razorpay Payouts
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-chip">
+          <div class="avatar">A</div>
+          <div>
+            <strong>Super Admin (தமிழ்நாடு)</strong>
+            <p>admin@ullur.in</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-header">
+        <div class="search-bar">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search police stations, SOS alert ID, mechanic name..." />
+        </div>
+        <div class="header-actions">
+          <div class="status-indicator">
+            <span class="pulse-dot"></span> Kavalan Link: <strong>Theni Control Room (112)</strong>
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('sos')">
+            <i data-lucide="shield-alert"></i> SOS POLICE DESK
+          </button>
+        </div>
+      </header>
+
+      <!-- KPI Metrics Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card red">
+          <div class="metric-header">
+            <span>KAVALAN SOS ALERTS</span>
+            <i data-lucide="shield-alert"></i>
+          </div>
+          <h3>1 ACTIVE</h3>
+          <p>Theni Police Station Notified (112)</p>
+        </div>
+        <div class="metric-card yellow">
+          <div class="metric-header">
+            <span>ACTIVE BREAKDOWNS</span>
+            <i data-lucide="zap"></i>
+          </div>
+          <h3>14</h3>
+          <p>8 En-Route • 6 Diagnosing</p>
+        </div>
+        <div class="metric-card green">
+          <div class="metric-header">
+            <span>ONLINE MECHANICS</span>
+            <i data-lucide="shield-check"></i>
+          </div>
+          <h3>28</h3>
+          <p>94% Response Rate (< 3 min)</p>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-header">
+            <span>RAZORPAY VOLUME (INR)</span>
+            <i data-lucide="wallet"></i>
+          </div>
+          <h3>₹1,48,900</h3>
+          <p>100% Verified UPI/Cards</p>
+        </div>
+      </div>
+
+      <!-- Tab 1: Live Radar -->
+      <div id="overview-tab" class="tab-content active">
+        <div class="content-split">
+          <!-- Live Map Radar -->
+          <div class="brutal-panel map-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="radar"></i> Live Highway Radar & Safety Grid (Theni / Madurai)</h3>
+              <span class="badge green">28 Online</span>
+            </div>
+            <div class="map-view-mock">
+              <div class="radar-ping"></div>
+              <div class="map-pin user-pin" style="top: 35%; left: 45%;" title="Breakdown: Hyundai i20 (Murugan)">
+                <i data-lucide="car"></i>
+                <span class="pin-tag red">Murugan (TN-60)</span>
+              </div>
+              <div class="map-pin mech-pin" style="top: 42%; left: 52%;" title="Mechanic: Selvam">
+                <i data-lucide="wrench"></i>
+                <span class="pin-tag yellow">Selvam (En Route)</span>
+              </div>
+              <div class="map-pin police-pin" style="top: 20%; left: 38%; background: #000; color: #FF3B30;" title="Theni Town Police Station">
+                <i data-lucide="shield"></i>
+                <span class="pin-tag black" style="background: #000; color: #FFF;">தேனி காவல் நிலையம்</span>
+              </div>
+              <div class="map-pin shop-pin" style="top: 25%; left: 70%;" title="Shop: Theni Wholesale Spares">
+                <i data-lucide="store"></i>
+                <span class="pin-tag green">Theni Spares Hub</span>
+              </div>
+              <div class="map-pin tow-pin" style="top: 75%; left: 65%;" title="Tow Truck: TN Highway Tow">
+                <i data-lucide="truck"></i>
+                <span class="pin-tag blue">TN Flatbed Tow</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Feed -->
+          <div class="brutal-panel feed-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="activity"></i> Safety & Service Feed</h3>
+              <span class="badge black">Realtime</span>
+            </div>
+            <div class="event-list">
+              <div class="event-item" style="border-left: 6px solid #FF3B30;">
+                <div class="event-icon red"><i data-lucide="shield-alert"></i></div>
+                <div class="event-info">
+                  <strong>🚨 Kavalan SOS: Theni Bypass (NH-85)</strong>
+                  <p>Customer triggered Misbehavior / Danger Alert. Police (112) notified.</p>
+                  <small>1 min ago</small>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-icon green"><i data-lucide="credit-card"></i></div>
+                <div class="event-info">
+                  <strong>Razorpay Payment Captured: ₹3,450</strong>
+                  <p>Wholesale Battery • Order #ORD-8821</p>
+                  <small>12 mins ago</small>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-icon yellow"><i data-lucide="wrench"></i></div>
+                <div class="event-info">
+                  <strong>Mechanic Dispatched: Selvam</strong>
+                  <p>Tire Puncture at Theni Tollgate (ETA 7 mins)</p>
+                  <small>18 mins ago</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Kavalan Police SOS Emergency Desk -->
+      <div id="sos-tab" class="tab-content">
+        <div class="brutal-panel" style="border: 3px solid #FF3B30;">
+          <div class="panel-header" style="background: #FFEAEA; padding: 12px; border-radius: 8px;">
+            <h3 style="color: #FF3B30;"><i data-lucide="shield-alert"></i> 🚨 KAVALAN EMERGENCY POLICE DESK (112 INTEGRATION)</h3>
+            <span class="badge red">IMMEDIATE ACTION REQUIRED</span>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <table class="brutal-table">
+              <thead>
+                <tr style="background: #FFCDD2;">
+                  <th>Alert ID</th>
+                  <th>Customer Name & Phone</th>
+                  <th>GPS Location & Address</th>
+                  <th>Incident Category</th>
+                  <th>Assigned Police Station</th>
+                  <th>Reported Mechanic</th>
+                  <th>Status</th>
+                  <th>Emergency Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: #FFF9F9;">
+                  <td><strong>#SOS-11201</strong></td>
+                  <td>Murugan Swamy<br><small>+91 98765 43210</small></td>
+                  <td>10.0104, 77.4768<br><small>Theni Bypass Highway Toll Plaza</small></td>
+                  <td><span class="badge red">Misbehavior / Threat</span></td>
+                  <td><strong>தேனி நகர் காவல் நிலையம்</strong><br><small>04546-252222 (112)</small></td>
+                  <td>Selvam Auto Works<br><span class="badge black" style="color: #FF3B30;">SUSPENDED</span></td>
+                  <td><span class="status-badge yellow">POLICE NOTIFIED</span></td>
+                  <td>
+                    <button class="btn btn-primary" style="background: #FF3B30; color: #FFF;" onclick="alert('Directing call to Theni Police Patrol Officer on NH-85!')">
+                      <i data-lucide="phone-call"></i> Call Patrol
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Breakdown Requests -->
+      <div id="requests-tab" class="tab-content">
+        <div class="brutal-panel">
+          <div class="panel-header">
+            <h3><i data-lucide="list"></i> Breakdown Requests</h3>
+            <button class="btn btn-secondary">Export Data</button>
+          </div>
+          <table class="brutal-table">
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Issue</th>
+                <th>Assigned Mechanic</th>
+                <th>Payment Status</th>
+                <th>Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>#BR-9042</strong></td>
+                <td>Murugan Swamy</td>
+                <td>Hyundai i20 (TN-60)</td>
+                <td>Tire Puncture</td>
+                <td>Selvam Auto Works</td>
+                <td><span class="status-badge green">Razorpay Verified (PAID)</span></td>
+                <td>₹350</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab: Mechanics & KYC -->
+      <div id="mechanics-tab" class="tab-content">
+        <div class="brutal-panel">
+          <div class="panel-header">
+            <h3><i data-lucide="user-check"></i> Mechanic Partner Onboarding & Safety Verification</h3>
+            <span class="badge yellow">2 Pending Approval</span>
+          </div>
+          <div class="kyc-grid">
+            <div class="kyc-card">
+              <div class="kyc-header">
+                <div class="avatar yellow">S</div>
+                <div>
+                  <h4>Selvam Auto Works</h4>
+                  <p>+91 98421 00001 • Verified Background Check</p>
+                </div>
+                <span class="status-badge green">ACTIVE</span>
+              </div>
+            </div>
+            <div class="kyc-card">
+              <div class="kyc-header">
+                <div class="avatar yellow">R</div>
+                <div>
+                  <h4>Ramesh Garage (New)</h4>
+                  <p>+91 98421 99999 • Police Verification Pending</p>
+                </div>
+                <span class="status-badge yellow">PENDING</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

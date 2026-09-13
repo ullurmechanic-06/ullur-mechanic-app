@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ta">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ULLUR MECHANIC — Live Interactive Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <!-- Top Navigation Header -->
+  <header class="master-header">
+    <div class="brand-badge">
+      <div class="brand-logo"><i data-lucide="wrench"></i></div>
+      <div>
+        <h1 id="app-title-header">ULLUR MECHANIC</h1>
+        <span class="sub-badge" id="app-sub-badge">⚡ LIVE SIMULATOR</span>
+      </div>
+    </div>
+
+    <!-- App Mode Switcher -->
+    <div class="mode-tabs">
+      <button class="mode-btn active" id="tab-btn-customer" onclick="switchAppMode('customer')">
+        <i data-lucide="smartphone"></i> <span id="tab-txt-customer">🧑 வாடிக்கையாளர் செயலி</span>
+      </button>
+      <button class="mode-btn" id="tab-btn-mechanic" onclick="switchAppMode('mechanic')">
+        <i data-lucide="tool"></i> <span id="tab-txt-mechanic">🔧 மெக்கானிக் செயலி</span>
+      </button>
+      <button class="mode-btn" id="tab-btn-admin" onclick="switchAppMode('admin')">
+        <i data-lucide="shield-alert"></i> <span id="tab-txt-admin">🚨 காவல் & அட்மின் அறை</span>
+      </button>
+    </div>
+
+    <!-- Global Tamil / English Language Switcher -->
+    <div class="lang-toggle-box">
+      <button class="lang-btn active" id="lang-ta-btn" onclick="setAppLanguage('ta')">🇮🇳 தமிழ்</button>
+      <button class="lang-btn" id="lang-en-btn" onclick="setAppLanguage('en')">🇬🇧 English</button>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <main class="main-viewport">
+
+    <!-- 1. CUSTOMER MOBILE APP SIMULATOR -->
+    <section id="customer-mode" class="app-mode-view active">
+      <div class="phone-frame-container">
+        <!-- Phone Device Shell -->
+        <div class="phone-device">
+          <!-- Dynamic Island / Notch -->
+          <div class="phone-notch">
+            <div class="camera"></div>
+            <div class="speaker"></div>
+          </div>
+
+          <!-- Customer App Screen Body -->
+          <div class="phone-screen" id="customer-screen-viewport">
+
+            <!-- Screen Header -->
+            <div class="screen-top-bar">
+              <div class="loc-indicator">
+                <i data-lucide="map-pin" class="loc-icon"></i>
+                <div>
+                  <small id="c-loc-title">தற்போதைய இடம்</small>
+                  <strong id="c-loc-sub">தேனி பைபாஸ், தமிழ்நாடு</strong>
+                </div>
+              </div>
+              <div class="screen-top-actions">
+                <button class="mini-sos-btn" onclick="customerNavigate('sos')" title="Kavalan Police SOS">
+                  <i data-lucide="shield-alert"></i> SOS
+                </button>
+                <div class="mini-avatar" onclick="customerNavigate('profile')">M</div>
+              </div>
+            </div>
+
+            <!-- Screen Viewport Container -->
+            <div class="screen-inner-content" id="customer-inner-content">
+              <!-- Content dynamically rendered via JS -->
+            </div>
+
+            <!-- Customer Bottom Navigation Bar with Emergency Cab Ride -->
+            <nav class="customer-bottom-bar">
+              <button class="c-nav-item active" id="cnav-home" onclick="customerNavigate('home')">
+                <i data-lucide="home"></i>
+                <span id="cnav-home-txt">முகப்பு</span>
+              </button>
+              <button class="c-nav-item" id="cnav-parts" onclick="customerNavigate('parts')">
+                <i data-lucide="shopping-bag"></i>
+                <span id="cnav-parts-txt">உதிரிபாகங்கள்</span>
+              </button>
+              <button class="c-nav-item" id="cnav-tow" onclick="customerNavigate('tow')">
+                <i data-lucide="truck"></i>
+                <span id="cnav-tow-txt">டோயிங்</span>
+              </button>
+              <button class="c-nav-item" id="cnav-sos" onclick="customerNavigate('sos')">
+                <i data-lucide="shield-alert" style="color: #FF3B30;"></i>
+                <span style="color: #FF3B30;" id="cnav-sos-txt">காவலன் SOS</span>
+              </button>
+            </nav>
+
+          </div>
+        </div>
+
+        <!-- Simulator Instructions Panel -->
+        <div class="simulator-guide-card" id="guide-panel-container">
+          <!-- Guide content rendered dynamically in selected language -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MECHANIC PARTNER APP SIMULATOR -->
+    <section id="mechanic-mode" class="app-mode-view">
+      <div class="phone-frame-container">
+        <div class="phone-device">
+          <div class="phone-notch">
+            <div class="camera"></div>
+            <div class="speaker"></div>
+          </div>
+          <div class="phone-screen" id="mechanic-screen-viewport">
+            <!-- Mechanic Screen Content injected via JS -->
+          </div>
+        </div>
+
+        <div class="simulator-guide-card" id="mechanic-guide-container">
+          <!-- Mechanic guide rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. KAVALAN POLICE & ADMIN DESK -->
+    <section id="admin-mode" class="app-mode-view">
+      <div class="admin-full-panel" id="admin-panel-container">
+        <!-- Admin dashboard content rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Razorpay Checkout Simulation Modal -->
+  <div id="razorpay-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="razorpay-header">
+        <div class="rzp-badge">R</div>
+        <div>
+          <h3>Razorpay Trusted Checkout</h3>
+          <small>Ullur Mechanic Services Pvt Ltd</small>
+        </div>
+        <button class="close-modal-btn" onclick="closeRazorpayModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="pay-amount-box">
+          <span id="rzp-payable-label">செலுத்த வேண்டிய தொகை:</span>
+          <strong id="rzp-pay-amount">₹350.00</strong>
+        </div>
+        <div class="pay-options-list">
+          <label class="pay-option active">
+            <input type="radio" name="pay-method" checked />
+            <div class="pay-opt-info">
+              <strong>⚡ Google Pay / PhonePe / Paytm UPI</strong>
+              <small>Instant 1-Click Payment via UPI App</small>
+            </div>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay-method" />
+            <div class="pay-opt-info">
+              <strong>💳 Debit / Credit Card</strong>
+              <small>Visa, Mastercard, RuPay, Maestro</small>
+            </div>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay-method" />
+            <div class="pay-opt-info">
+              <strong>🏦 Net Banking / Wallets</strong>
+              <small>SBI, HDFC, ICICI, Axis Bank & More</small>
+            </div>
+          </label>
+        </div>
+        <button class="btn btn-green full-width" onclick="completeRazorpayPayment()">
+          <i data-lucide="lock"></i> <span id="rzp-btn-text">₹350.00 செலுத்து (PAY NOW)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

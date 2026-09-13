@@ -1,0 +1,386 @@
+// Ullur Mechanic Prisma Schema with SOS & Razorpay Support
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== ENUMS =====
+
+enum UserRole {
+  CUSTOMER
+  MECHANIC
+  SHOP_OWNER
+  TOW_PARTNER
+  ADMIN
+  POLICE_DESK
+}
+
+enum VehicleType {
+  CAR
+  BIKE
+  TRUCK
+  AUTO
+  VAN
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  EN_ROUTE
+  ARRIVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum OrderStatus {
+  PLACED
+  CONFIRMED
+  DISPATCHED
+  DELIVERED
+  CANCELLED
+}
+
+enum TowStatus {
+  PENDING
+  ACCEPTED
+  EN_ROUTE
+  PICKED_UP
+  DELIVERED
+  CANCELLED
+}
+
+enum SosStatus {
+  ACTIVE
+  POLICE_NOTIFIED
+  RESPONDED
+  RESOLVED
+  CANCELLED
+}
+
+// ===== MODELS =====
+
+model User {
+  id              String   @id @default(uuid())
+  firebaseUid     String?  @unique @map("firebase_uid")
+  name            String
+  phone           String   @unique
+  email           String?
+  profileImageUrl String?  @map("profile_image_url")
+  role            UserRole @default(CUSTOMER)
+  preferredLang   String   @default("ta") @map("preferred_lang") // "ta" for Tamil, "en" for English
+  isVerified      Boolean  @default(false) @map("is_verified")
+  isActive        Boolean  @default(true) @map("is_active")
+  currentLat      Float?   @map("current_lat")
+  currentLng      Float?   @map("current_lng")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  vehicles           Vehicle[]
+  breakdownRequests  BreakdownRequest[]
+  mechanic           Mechanic?
+  shop               Shop?
+  towPartner         TowPartner?
+  ordersAsCustomer   Order[]            @relation("CustomerOrders")
+  reviews            Review[]           @relation("CustomerReviews")
+  receivedReviews    Review[]           @relation("SubjectReviews")
+  payments           Payment[]
+  sosAlerts          SosAlert[]
+  emergencyContacts  EmergencyContact[]
+
+  @@map("users")
+}
+
+model EmergencyContact {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  phone     String
+  relation  String?  // Family, Friend, Police, etc.
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("emergency_contacts")
+}
+
+model SosAlert {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  mechanicId      String?   @map("mechanic_id")
+  breakdownReqId  String?   @map("breakdown_req_id")
+  lat             Float
+  lng             Float
+  address         String?
+  incidentType    String    @default("HARASSMENT_OR_DANGER") @map("incident_type") // HARASSMENT, THREAT, ACCIDENT, MEDICAL
+  description     String?
+  status          SosStatus @default(ACTIVE)
+  policeStation   String?   @map("police_station") // Name of nearest police station
+  policeNotifiedAt DateTime? @map("police_notified_at")
+  resolvedAt      DateTime? @map("resolved_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("sos_alerts")
+}
+
+model Vehicle {
+  id            String      @id @default(uuid())
+  userId        String      @map("user_id")
+  type          VehicleType
+  make          String
+  model         String
+  year          Int
+  regNumber     String      @unique @map("reg_number")
+  color         String?
+  imageUrl      String?     @map("image_url")
+  isActive      Boolean     @default(true) @map("is_active")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  user              User               @relation(fields: [userId], references: [id])
+  breakdownRequests BreakdownRequest[]
+  towRequests       TowRequest[]
+
+  @@map("vehicles")
+}
+
+model Mechanic {
+  id              String        @id @default(uuid())
+  userId          String        @unique @map("user_id")
+  skills          String[]
+  vehicleTypes    VehicleType[] @map("vehicle_types")
+  experience      Int           @default(0)
+  certImageUrl    String?       @map("cert_image_url")
+  idProofUrl      String?       @map("id_proof_url")
+  isOnline        Boolean       @default(false) @map("is_online")
+  isVerified      Boolean       @default(false) @map("is_verified")
+  isBlacklisted   Boolean       @default(false) @map("is_blacklisted")
+  rating          Float         @default(0.0)
+  totalJobs       Int           @default(0) @map("total_jobs")
+  currentLat      Float?        @map("current_lat")
+  currentLng      Float?        @map("current_lng")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  user     User               @relation(fields: [userId], references: [id])
+  requests BreakdownRequest[]
+
+  @@map("mechanics")
+}
+
+model Shop {
+  id           String   @id @default(uuid())
+  userId       String   @unique @map("user_id")
+  shopName     String   @map("shop_name")
+  description  String?
+  address      String
+  lat          Float
+  lng          Float
+  gstNumber    String?  @map("gst_number")
+  logoUrl      String?  @map("logo_url")
+  isVerified   Boolean  @default(false) @map("is_verified")
+  isOpen       Boolean  @default(true) @map("is_open")
+  rating       Float    @default(0.0)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user       User        @relation(fields: [userId], references: [id])
+  spareParts SparePart[]
+  orders     Order[]
+
+  @@map("shops")
+}
+
+model SparePart {
+  id             String        @id @default(uuid())
+  shopId         String        @map("shop_id")
+  name           String
+  nameTa         String?       @map("name_ta") // Tamil name
+  description    String?
+  category       String
+  vehicleTypes   VehicleType[] @map("vehicle_types")
+  brand          String?
+  partNumber     String?       @map("part_number")
+  price          Float
+  wholesalePrice Float?        @map("wholesale_price")
+  stock          Int           @default(0)
+  imageUrl       String?       @map("image_url")
+  isAvailable    Boolean       @default(true) @map("is_available")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  shop       Shop        @relation(fields: [shopId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("spare_parts")
+}
+
+model BreakdownRequest {
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
+  vehicleId     String        @map("vehicle_id")
+  mechanicId    String?       @map("mechanic_id")
+  issueDesc     String        @map("issue_desc")
+  issueImages   String[]      @map("issue_images")
+  lat           Float
+  lng           Float
+  address       String?
+  status        RequestStatus @default(PENDING)
+  estimatedFee  Float?        @map("estimated_fee")
+  finalFee      Float?        @map("final_fee")
+  mechanicNotes String?       @map("mechanic_notes")
+  completedAt   DateTime?     @map("completed_at")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  customer User      @relation(fields: [userId], references: [id])
+  vehicle  Vehicle   @relation(fields: [vehicleId], references: [id])
+  mechanic Mechanic? @relation(fields: [mechanicId], references: [id])
+  payment  Payment?
+  review   Review?   @relation("RequestReview")
+
+  @@map("breakdown_requests")
+}
+
+model TowPartner {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  vehicleType String   @map("vehicle_type")
+  isOnline    Boolean  @default(false) @map("is_online")
+  isVerified  Boolean  @default(false) @map("is_verified")
+  rating      Float    @default(0.0)
+  currentLat  Float?   @map("current_lat")
+  currentLng  Float?   @map("current_lng")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id])
+  towRequests TowRequest[]
+
+  @@map("tow_partners")
+}
+
+model TowRequest {
+  id             String    @id @default(uuid())
+  userId         String    @map("user_id")
+  vehicleId      String    @map("vehicle_id")
+  towPartnerId   String?   @map("tow_partner_id")
+  pickupLat      Float     @map("pickup_lat")
+  pickupLng      Float     @map("pickup_lng")
+  pickupAddress  String    @map("pickup_address")
+  dropoffLat     Float     @map("dropoff_lat")
+  dropoffLng     Float     @map("dropoff_lng")
+  dropoffAddress String    @map("dropoff_address")
+  distanceKm     Float?    @map("distance_km")
+  estimatedFee   Float?    @map("estimated_fee")
+  status         TowStatus @default(PENDING)
+  completedAt    DateTime? @map("completed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  customer   User        @relation(fields: [userId], references: [id])
+  vehicle    Vehicle     @relation(fields: [vehicleId], references: [id])
+  towPartner TowPartner? @relation(fields: [towPartnerId], references: [id])
+  payment    Payment?
+
+  @@map("tow_requests")
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  customerId  String      @map("customer_id")
+  shopId      String      @map("shop_id")
+  totalAmount Float       @map("total_amount")
+  status      OrderStatus @default(PLACED)
+  address     String
+  lat         Float
+  lng         Float
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  customer User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  shop     Shop        @relation(fields: [shopId], references: [id])
+  items    OrderItem[]
+  payment  Payment?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String @id @default(uuid())
+  orderId     String @map("order_id")
+  partId      String @map("part_id")
+  quantity    Int
+  priceAtTime Float  @map("price_at_time")
+
+  order Order     @relation(fields: [orderId], references: [id])
+  part  SparePart @relation(fields: [partId], references: [id])
+
+  @@map("order_items")
+}
+
+model Payment {
+  id                 String        @id @default(uuid())
+  userId             String        @map("user_id")
+  breakdownRequestId String?       @unique @map("breakdown_request_id")
+  towRequestId       String?       @unique @map("tow_request_id")
+  orderId            String?       @unique @map("order_id")
+  amount             Float
+  currency           String        @default("INR")
+  status             PaymentStatus @default(PENDING)
+  razorpayOrderId    String?       @map("razorpay_order_id")
+  razorpayPaymentId  String?       @map("razorpay_payment_id")
+  razorpaySignature  String?       @map("razorpay_signature")
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @updatedAt @map("updated_at")
+
+  user             User              @relation(fields: [userId], references: [id])
+  breakdownRequest BreakdownRequest? @relation(fields: [breakdownRequestId], references: [id])
+  towRequest       TowRequest?       @relation(fields: [towRequestId], references: [id])
+  order            Order?            @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  customerId String   @map("customer_id")
+  subjectId  String   @map("subject_id")
+  requestId  String?  @unique @map("request_id")
+  rating     Float
+  comment    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  customer         User              @relation("CustomerReviews", fields: [customerId], references: [id])
+  subject          User              @relation("SubjectReviews", fields: [subjectId], references: [id])
+  breakdownRequest BreakdownRequest? @relation("RequestReview", fields: [requestId], references: [id])
+
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  title     String
+  body      String
+  data      Json?
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
+}
