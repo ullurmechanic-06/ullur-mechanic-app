@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Background Vignette Filter -->
+    <radialGradient id="gearMetalGrad" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#7A889B" />
+      <stop offset="45%" stop-color="#48566A" />
+      <stop offset="85%" stop-color="#252D3A" />
+      <stop offset="100%" stop-color="#141923" />
+    </radialGradient>
+    
+    <linearGradient id="goldRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF176" />
+      <stop offset="30%" stop-color="#FFD700" />
+      <stop offset="70%" stop-color="#FFA000" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+
+    <linearGradient id="blueLetterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#29B6F6" />
+      <stop offset="35%" stop-color="#0288D1" />
+      <stop offset="75%" stop-color="#01579B" />
+      <stop offset="100%" stop-color="#002F6C" />
+    </linearGradient>
+
+    <linearGradient id="orangeWrenchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFA726" />
+      <stop offset="40%" stop-color="#FB8C00" />
+      <stop offset="85%" stop-color="#E65100" />
+      <stop offset="100%" stop-color="#BF360C" />
+    </linearGradient>
+
+    <linearGradient id="blueWrenchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42A5F5" />
+      <stop offset="50%" stop-color="#1E88E5" />
+      <stop offset="100%" stop-color="#0D47A1" />
+    </linearGradient>
+
+    <linearGradient id="redHandleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5252" />
+      <stop offset="40%" stop-color="#E53935" />
+      <stop offset="80%" stop-color="#C62828" />
+      <stop offset="100%" stop-color="#8E0000" />
+    </linearGradient>
+
+    <linearGradient id="steelBarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#CFD8DC" />
+      <stop offset="50%" stop-color="#78909C" />
+      <stop offset="100%" stop-color="#37474F" />
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="gearDropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="4" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.85" />
+    </filter>
+    <filter id="letterDropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.9" />
+    </filter>
+  </defs>
+
+  <!-- Left Orange Wrench Head extending out -->
+  <g filter="url(#gearDropShadow)">
+    <path d="M 170 250 L 70 250 C 60 250 50 240 40 225 C 20 228 10 240 10 250 C 10 260 20 272 40 275 C 50 260 60 250 70 250 Z" fill="url(#orangeWrenchGrad)" stroke="#212121" stroke-width="3" />
+    <!-- Wrench jaws left -->
+    <path d="M 120 235 L 50 235 C 35 235 25 220 15 232 C 30 242 35 258 15 268 C 25 280 35 265 50 265 L 120 265 Z" fill="url(#orangeWrenchGrad)" stroke="#FFB74D" stroke-width="2" />
+  </g>
+
+  <!-- Right Blue Wrench Head extending out -->
+  <g filter="url(#gearDropShadow)">
+    <path d="M 380 235 L 450 235 C 465 235 475 220 485 232 C 470 242 465 258 485 268 C 475 280 465 265 450 265 L 380 265 Z" fill="url(#blueWrenchGrad)" stroke="#64B5F6" stroke-width="2" />
+  </g>
+
+  <!-- Top-Left Adjustable Wrench Head -->
+  <g filter="url(#gearDropShadow)" transform="rotate(-35 150 130)">
+    <rect x="135" y="60" width="30" height="90" rx="8" fill="url(#steelBarGrad)" stroke="#263238" stroke-width="3" />
+    <circle cx="150" cy="78" r="12" fill="#1E272E" stroke="#78909C" stroke-width="3" />
+    <circle cx="150" cy="78" r="6" fill="#0D1117" />
+  </g>
+
+  <!-- Top-Right Red Screwdriver Handle -->
+  <g filter="url(#gearDropShadow)" transform="rotate(35 350 130)">
+    <rect x="330" y="55" width="40" height="90" rx="10" fill="url(#redHandleGrad)" stroke="#B71C1C" stroke-width="3" />
+    <!-- Handle Grips -->
+    <line x1="338" y1="65" x2="338" y2="135" stroke="#FF8A80" stroke-width="3" stroke-linecap="round" />
+    <line x1="350" y1="65" x2="350" y2="135" stroke="#FF8A80" stroke-width="3" stroke-linecap="round" />
+    <line x1="362" y1="65" x2="362" y2="135" stroke="#FF8A80" stroke-width="3" stroke-linecap="round" />
+    <!-- Steel Shank Connection -->
+    <rect x="342" y="145" width="16" height="20" fill="url(#steelBarGrad)" stroke="#37474F" stroke-width="2" />
+  </g>
+
+  <!-- Main Metallic Gear Body -->
+  <g filter="url(#gearDropShadow)">
+    <!-- 8 Gear Teeth -->
+    <path d="
+      M 225 90 L 275 90 L 280 120 L 320 135 L 350 110 L 385 145 L 360 175 L 375 215 L 405 220 L 405 270 L 375 275 L 360 315 L 385 345 L 350 380 L 320 355 L 280 370 L 275 400 L 225 400 L 220 370 L 180 355 L 150 380 L 115 345 L 140 315 L 125 275 L 95 270 L 95 220 L 125 215 L 140 175 L 115 145 L 150 110 L 180 135 L 220 120 Z
+    " fill="url(#gearMetalGrad)" stroke="#78909C" stroke-width="4" stroke-linejoin="round" />
+
+    <!-- Outer Gear Inner Rim Chamfer -->
+    <circle cx="250" cy="245" r="130" fill="none" stroke="#263238" stroke-width="6" />
+    <circle cx="250" cy="245" r="126" fill="none" stroke="#90A4AE" stroke-width="2" />
+  </g>
+
+  <!-- Golden Inner Compass / Star Wings Backdrop -->
+  <g filter="url(#gearDropShadow)">
+    <!-- Golden Geometric X / Star -->
+    <path d="M 250 140 L 335 320 L 295 320 L 250 230 L 205 320 L 165 320 Z" fill="url(#goldRingGrad)" stroke="#FFE082" stroke-width="2" />
+    
+    <!-- Central Golden Ring -->
+    <circle cx="250" cy="245" r="102" fill="none" stroke="url(#goldRingGrad)" stroke-width="12" />
+    <circle cx="250" cy="245" r="95" fill="none" stroke="#FFF59D" stroke-width="2" />
+    <circle cx="250" cy="245" r="109" fill="none" stroke="#E65100" stroke-width="2" />
+  </g>
+
+  <!-- Horizontal Steel Center Spoke Bar -->
+  <rect x="145" y="236" width="210" height="20" rx="4" fill="url(#steelBarGrad)" stroke="#263238" stroke-width="2" />
+  <line x1="150" y1="246" x2="350" y2="246" stroke="#ECEFF1" stroke-width="2" />
+
+  <!-- Bottom Clamp / Anvil Feature on Ring -->
+  <path d="M 215 338 L 285 338 L 290 355 L 275 355 L 270 348 L 230 348 L 225 355 L 210 355 Z" fill="url(#steelBarGrad)" stroke="#37474F" stroke-width="2" />
+
+  <!-- Prominent 3D Blue "U" Centerpiece -->
+  <g filter="url(#letterDropShadow)">
+    <!-- 3D Bevel/Extrusion of 'U' -->
+    <path d="
+      M 195 200 L 225 200 L 225 260 C 225 278 236 290 250 290 C 264 290 275 278 275 260 L 275 200 L 305 200 L 305 260 C 305 295 280 318 250 318 C 220 318 195 295 195 260 Z
+    " fill="#002171" />
+    
+    <!-- Front Face of 'U' -->
+    <path d="
+      M 190 195 L 222 195 L 222 258 C 222 274 234 286 250 286 C 266 286 278 274 278 258 L 278 195 L 310 195 L 310 258 C 310 292 284 314 250 314 C 216 314 190 292 190 258 Z
+    " fill="url(#blueLetterGrad)" stroke="#80D8FF" stroke-width="3" stroke-linejoin="round" />
+
+    <!-- Top Left & Right Serifs/Flairs on U -->
+    <polygon points="182,195 228,195 228,206 182,206" fill="url(#blueLetterGrad)" stroke="#80D8FF" stroke-width="1.5" />
+    <polygon points="272,195 318,195 318,206 272,206" fill="url(#blueLetterGrad)" stroke="#80D8FF" stroke-width="1.5" />
+    
+    <!-- Central Highlight on 'U' -->
+    <path d="M 200 206 L 212 206 L 212 258 C 212 268 220 276 230 276" fill="none" stroke="#E1F5FE" stroke-width="2" stroke-linecap="round" opacity="0.8" />
+  </g>
+</svg>

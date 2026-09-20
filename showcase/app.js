@@ -1,21 +1,81 @@
-// Ullur Mechanic Interactive Super App Showcase Logic (Full Bilingual System)
+// ==========================================================================
+// ULLUR MECHANIC — INTERACTIVE SUPER APP & MULTI-ROLE HYPERLOCAL PLATFORM
+// Full Bilingual System, Dynamic Role Authentication, Responsive Top/Bottom Nav
+// ==========================================================================
 
-let currentLang = 'ta'; // 'ta' for Tamil, 'en' for English
+// Global Application State
+let currentLang = localStorage.getItem('ullur_lang') || 'ta';
+let currentUserRole = localStorage.getItem('ullur_role') || null; // 'customer' | 'mechanic' | 'shop' | 'towing' | 'admin' | null
 let currentCustomerScreen = 'home';
+let pendingAuthRole = 'customer';
 let cartItems = [];
 let isSirenActive = false;
-let mechanicJobStage = 1; // 0: Assigned, 1: En Route, 2: Diagnosing, 3: Completed
+let mechanicJobStage = 1; // 0: Assigned, 1: En Route, 2: Fixing, 3: Completed
 let mechanicOnline = true;
-let currentAppMode = 'customer';
+let towDispatchAccepted = false;
 
-// Complete Bilingual Dictionaries
+// Sample Initial Inventory for Spare Parts Shop Owner
+let shopInventory = [
+  { id: 1, name: 'Exide Mileage 35Ah Battery', nameTa: 'எக்சைட் 35Ah ஹெவி பேட்டரி', price: 3450, retail: 4200, stock: 14, category: 'Battery' },
+  { id: 2, name: 'Motul 7100 4T 10W-50 (1L)', nameTa: 'மோட்டுல் 7100 என்ஜின் ஆயில் (1L)', price: 690, retail: 880, stock: 28, category: 'Oil' },
+  { id: 3, name: 'Bosch Front Brake Pads Set', nameTa: 'பாஷ் பிரேக் பேட்ஸ் செட் (Bosch)', price: 950, retail: 1350, stock: 8, category: 'Brakes' },
+  { id: 4, name: 'MRF Zapper 100/80-17 Tire', nameTa: 'MRF ஜாப்பர் டியூப்லெஸ் டயர்', price: 1950, retail: 2450, stock: 4, category: 'Tire' },
+  { id: 5, name: 'NGK Iridium Spark Plug', nameTa: 'NGK இரிடியம் ஸ்பார்க் பிளக்', price: 320, retail: 480, stock: 22, category: 'Electrical' },
+];
+
+// Sample Towing Fleet for Towing Partner
+let towingFleet = [
+  { id: 'TOW-01', type: 'Flatbed Hydraulic', reg: 'TN-60-T-9001', driver: 'Mani (மணி)', status: 'En Route', eta: '8 mins' },
+  { id: 'TOW-02', type: 'Wheel-Lift Crane', reg: 'TN-60-T-9002', driver: 'Rajesh (ராஜேஷ்)', status: 'Available', eta: 'Ready' },
+  { id: 'TOW-03', type: 'Heavy Commercial Rig', reg: 'TN-60-T-9003', driver: 'Kannan (கண்ணன்)', status: 'Available', eta: 'Ready' },
+];
+
+// ==========================================================================
+// COMPLETE BILINGUAL DICTIONARIES (Tamil 🇮🇳 & English 🇬🇧)
+// ==========================================================================
+
 const STRINGS = {
   ta: {
     appTitle: 'ULLUR MECHANIC',
-    appSubBadge: '⚡ நேரலை செயலி',
-    tabCustomer: '🧑 வாடிக்கையாளர் செயலி',
-    tabMechanic: '🔧 மெக்கானிக் செயலி',
-    tabAdmin: '🚨 காவல் & அட்மின் அறை',
+    appSubBadge: '⚡ 24/7 தமிழ்நாடு ஹைப்பர்-லோக்கல்',
+    logoutBtn: 'வெளியேறு',
+    gatewayBadge: '⚡ தமிழ்நாட்டின் #1 அவசர வாகன உதவி தளம்',
+    gatewayTitle: 'உங்களின் பயன்பாட்டு வகையை தேர்வு செய்க',
+    gatewaySub: 'உங்கள் பிரத்யேக போர்ட்டலை அணுக கீழே உள்ள வகையை தேர்வு செய்க',
+
+    // 4 Role Card Titles & Subtitles
+    roleCard1Title: '1. வாடிக்கையாளர் / User',
+    roleCard1Desc: 'நெடுஞ்சாலை வாகன பழுது, பஞ்சர், பேட்டரி ஜம்ப், 30% மொத்த உதிரிபாகங்கள், டோயிங் & 24/7 காவலன் போலீஸ் SOS உதவி.',
+    roleCard1Btn: 'உள்நுழைக (Customer Login)',
+
+    roleCard2Title: '2. மெக்கானிக் பார்ட்னர் / Partner',
+    roleCard2Desc: 'டியூட்டி ஆன்/ஆஃப் சுவிட்ச், Google Maps வழிசெலுத்தல், நேரலை பழுது கோரிக்கைகள் & தினசரி வருமான கணக்கு (₹2,450+).',
+    roleCard2Btn: 'பார்ட்னர் உள்நுழைவு (Mechanic)',
+
+    roleCard3Title: '3. உதிரிபாக விற்பனையாளர் / Shop Owner',
+    roleCard3Desc: 'மொத்த உதிரிபாகங்கள் விற்பனை, நேரலை வாடிக்கையாளர் ஆர்டர்கள், இருப்பு மேலாண்மை & உடனடி டெலிவரி டிஸ்பாட்ச்.',
+    roleCard3Btn: 'கடை உள்நுழைவு (Shop Login)',
+
+    roleCard4Title: '4. மீட்பு & டோயிங் சேவை / Towing Partner',
+    roleCard4Desc: 'ஹைட்ராலிக் பிளாட்பெட் லாரிகள் & டோயிங் வாகனங்கள் மேலாண்மை, நெடுஞ்சாலை விபத்து மீட்பு கோரிக்கைகள்.',
+    roleCard4Btn: 'டோயிங் உள்நுழைவு (Towing Login)',
+
+    // Header Desktop Nav
+    navHome: 'முகப்பு',
+    navParts: 'உதிரிபாகங்கள்',
+    navTow: 'டோயிங்',
+    navSos: 'காவலன் SOS',
+    navProfile: 'சுயவிவரம்',
+    navDutyToggle: 'டியூட்டி நிலை',
+    navEarnings: 'வருமானம்',
+    navInventory: 'இருப்பு விவரம்',
+    navOrders: 'ஆர்டர்கள்',
+    navFleet: 'டோயிங் வாகனங்கள்',
+    navDispatches: 'மீட்பு கோரிக்கைகள்',
+    navRadar: 'நெடுஞ்சாலை ரேடார்',
+    navIncidents: 'காவலன் சம்பவங்கள்',
+
+    // Customer App Texts
     locTitle: 'தற்போதைய இடம்',
     locSub: 'தேனி பைபாஸ், தமிழ்நாடு',
     sosBannerTitle: '🚨 காவலன் அவசர போலீஸ் உதவி (112 SOS)',
@@ -44,35 +104,62 @@ const STRINGS = {
     policeDispatched: 'உங்கள் நேரலை ஜி.பி.எஸ் இடம் தேனி நகர் காவல் நிலையத்திற்கும் (112) மற்றும் உங்கள் குடும்பத்தினருக்கும் அவசரமாக அனுப்பப்பட்டது!',
     sirenBtn: '🔊 அலார ஒலி எழுப்பு (Siren)',
     reportMisbehavior: 'மெக்கானிக் தகாத நடத்தை மீது புகார் அளி',
-    navHome: 'முகப்பு',
-    navParts: 'உதிரிபாகங்கள்',
-    navTow: 'டோயிங்',
-    navSos: 'காவலன் SOS',
+
+    // Guides
     guideTitle: 'நேரலை சோதனை வழிகாட்டி',
-    guideIntro: 'இந்த மொபைல் திரையில் நீங்கள் நேரடியாக அனைத்து அம்சங்களையும் தொட்டு இயக்கலாம்:',
-    guideStep1Title: '1. பழுது நீக்க கோரிக்கை (Breakdown Request):',
-    guideStep1Desc: "'வாகன பழுது நீக்கம்' பட்டனை தொட்டு Tire Puncture அல்லது Dead Battery தேர்வு செய்து மெக்கானிக்கை அழைக்கவும்.",
+    guideIntro: 'இந்த திரையில் நீங்கள் நேரடியாக அனைத்து அம்சங்களையும் தொட்டு இயக்கலாம்:',
+    guideStep1Title: '1. பழுது நீக்க கோரிக்கை:',
+    guideStep1Desc: "'வாகன பழுது நீக்கம்' பட்டனை தொட்டு Tire Puncture தேர்வு செய்து மெக்கானிக்கை அழைக்கவும்.",
     guideStep2Title: '2. நேரலை வருகை & Razorpay:',
     guideStep2Desc: 'மெக்கானிக் வரும் வழியை பார்த்துவிட்டு Razorpay (GPay/UPI/Card) மூலம் ₹350 செலுத்தவும்.',
-    guideStep3Title: '3. 🚨 காவலன் போலீஸ் SOS (Kavalan Protocol):',
+    guideStep3Title: '3. 🚨 காவலன் போலீஸ் SOS:',
     guideStep3Desc: 'மெக்கானிக் தகாத முறையில் நடந்தால் உடனே 112 போலீஸ் நிலையத்திற்கு நேரலை GPS அனுப்பவும்.',
     guideStep4Title: '4. மொத்த உதிரிபாகங்கள் அங்காடி:',
     guideStep4Desc: '30% நேரடி தொழிற்சாலை தள்ளுபடியில் உதிரிபாகங்களை கூடையில் சேர்த்து ஆர்டர் செய்யவும்.',
     guideBtnHome: 'முகப்பு திரை',
     guideBtnSos: '112 SOS சோதனை',
     guideBtnParts: 'உதிரிபாகங்கள் கூடை',
+
+    // Mechanic Texts
     mechDutyTitle: 'மெக்கானிக் பார்ட்னர் செயலி',
     mechDutyIntro: 'செல்வம் ஆட்டோ ஒர்க்ஸ் மெக்கானிக் அம்சங்கள்:',
     mechStep1: 'ஆன்லைன்/ஆஃப்லைன் ஸ்விட்ச்: டியூட்டி ஆன் செய்து அருகில் உள்ள பழுது கோரிக்கைகளை பெறலாம்.',
     mechStep2: 'Google Maps நேவிகேஷன்: பழுதான வாகனத்தின் இருப்பிடத்திற்கு நேரடி வழி பெறலாம்.',
-    mechStep3: 'பணி நிலை மாற்றுதல் (Stages): Accepted ➔ En Route ➔ Fixing ➔ Completed என மாற்றி வாடிக்கையாளருக்கு தகவல் அனுப்பலாம்.',
-    mechStep4: 'வருமான கணக்கு (Wallet): இன்றைய வருமானம் & முடித்த வேலைகளை கண்காணிக்கலாம்.',
+    mechStep3: 'பணி நிலை மாற்றுதல்: Accepted ➔ En Route ➔ Fixing ➔ Completed என மாற்றி வாடிக்கையாளருக்கு தகவல் அனுப்பலாம்.',
+    mechStep4: 'வருமான கணக்கு: இன்றைய வருமானம் & முடித்த வேலைகளை கண்காணிக்கலாம்.',
     mechTodayEarnings: "இன்றைய வருமானம் (Today's Earnings)",
     mechCompletedJobs: 'முடிந்த பணிகள்',
     mechActiveJob: '🔥 நேரலை பழுது பணி',
     mechCustomerLabel: 'வாடிக்கையாளர்:',
     mechVehicleLabel: 'வாகனம்:',
     mechLocLabel: 'இடம்:',
+
+    // Shop Owner Texts
+    shopTitle: 'தேனி ஸ்ரீ முருகன் ஆட்டோ ஸ்பேர்ஸ்',
+    shopSub: 'சரிபார்க்கப்பட்ட மொத்த உதிரிபாக விற்பனையாளர் • Theni Spares Hub',
+    shopTodayOrders: 'இன்றைய ஆர்டர்கள்',
+    shopTodaySales: 'இன்றைய விற்பனை',
+    shopLowStock: 'குறைந்த இருப்பு எச்சரிக்கை',
+    shopActiveDispatches: 'நேரலை விநியோகம்',
+    shopInventoryTitle: '📦 மொத்த உதிரிபாகங்கள் இருப்பு பட்டியல் (Wholesale Stock)',
+    shopOrdersTitle: '🛒 நேரலை வாடிக்கையாளர் & மெக்கானிக் ஆர்டர்கள்',
+    stockInStock: 'இருப்பில் உள்ளது',
+    stockLow: 'குறைந்த இருப்பு',
+    dispatchOrderBtn: 'டிஸ்பாட்ச் செய் ➔',
+
+    // Towing Partner Texts
+    towingTitle: 'தமிழ்நாடு ஹைவே டோயிங் & மீட்பு சேவை',
+    towingSub: '24/7 நெடுஞ்சாலை அவசர விபத்து & பழுது மீட்பு படை',
+    towActiveTrucks: 'செயலில் உள்ள லாரிகள்',
+    towRecoveriesDone: 'இன்றைய மீட்புகள்',
+    towEarnings: 'டோயிங் வருமானம்',
+    towAvgEta: 'சராசரி வருகை நேரம்',
+    fleetTitle: '🚚 மீட்பு வாகனங்கள் நிலை (Recovery Fleet Grid)',
+    liveTowReqTitle: '🚨 நேரலை நெடுஞ்சாலை டோயிங் கோரிக்கை',
+    acceptTowBtn: 'டோயிங் கோரிக்கையை ஏற்றுக்கொள் ➔',
+    towEnRouteStatus: '🚚 டோயிங் லாரி பிக்கப் இடத்தை நோக்கி விரைகிறது!',
+
+    // Admin Texts
     adminSosTitle: 'காவலன் அவசர எச்சரிக்கை',
     adminActiveJobs: 'நேரலை பழுது பணிகள்',
     adminOnlineMechs: 'ஆன்லைன் மெக்கானிக்குகள்',
@@ -96,10 +183,45 @@ const STRINGS = {
   },
   en: {
     appTitle: 'ULLUR MECHANIC',
-    appSubBadge: '⚡ LIVE SIMULATOR',
-    tabCustomer: '🧑 Customer App',
-    tabMechanic: '🔧 Mechanic App',
-    tabAdmin: '🚨 Kavalan Police & Admin',
+    appSubBadge: '⚡ 24/7 TAMIL NADU HYPERLOCAL',
+    logoutBtn: 'Logout',
+    gatewayBadge: "⚡ TAMIL NADU'S #1 EMERGENCY BREAKDOWN PLATFORM",
+    gatewayTitle: 'Select Your Access Portal',
+    gatewaySub: 'Choose your specific role below to enter your dedicated dashboard',
+
+    // 4 Role Card Titles & Subtitles
+    roleCard1Title: '1. Customer / User View',
+    roleCard1Desc: 'Highway breakdown assistance, puncture repair, battery jumpstart, 30% off wholesale spares, towing & 24/7 Kavalan Police SOS.',
+    roleCard1Btn: 'Enter Customer App ➔',
+
+    roleCard2Title: '2. Mechanic Partner View',
+    roleCard2Desc: 'Online/Offline duty toggle, turn-by-turn Google Maps navigation, active breakdown dispatch alerts & daily wallet earnings (₹2,450+).',
+    roleCard2Btn: 'Mechanic Partner Login ➔',
+
+    roleCard3Title: '3. Spare Parts Shop Owner View',
+    roleCard3Desc: 'Wholesale inventory management, real-time incoming orders, catalog pricing & instant mechanic pickup dispatches.',
+    roleCard3Btn: 'Shop Owner Login ➔',
+
+    roleCard4Title: '4. Backup Travel / Towing Partner View',
+    roleCard4Desc: 'Hydraulic flatbed & wheel-lift recovery fleet management, highway breakdown tow requests & toll road emergency routing.',
+    roleCard4Btn: 'Towing Fleet Login ➔',
+
+    // Header Desktop Nav
+    navHome: 'Home',
+    navParts: 'Spares',
+    navTow: 'Towing',
+    navSos: 'Police SOS',
+    navProfile: 'Profile',
+    navDutyToggle: 'Duty Status',
+    navEarnings: 'Earnings',
+    navInventory: 'Inventory',
+    navOrders: 'Live Orders',
+    navFleet: 'Tow Fleet',
+    navDispatches: 'Dispatches',
+    navRadar: 'Highway Radar',
+    navIncidents: 'Kavalan Log',
+
+    // Customer App Texts
     locTitle: 'CURRENT LOCATION',
     locSub: 'Theni Highway Bypass, TN',
     sosBannerTitle: '🚨 KAVALAN POLICE SOS (112 ALERT)',
@@ -128,23 +250,23 @@ const STRINGS = {
     policeDispatched: 'Live GPS coordinates transmitted to Theni Town Police Station (112) & Emergency Contacts!',
     sirenBtn: '🔊 Sound High-Decibel Siren',
     reportMisbehavior: 'Report Mechanic Misbehavior',
-    navHome: 'Home',
-    navParts: 'Spares',
-    navTow: 'Tow',
-    navSos: 'Police SOS',
+
+    // Guides
     guideTitle: 'Interactive Live Guide',
-    guideIntro: 'You can directly touch and test all features on this mobile screen:',
+    guideIntro: 'You can directly touch and test all features on this screen:',
     guideStep1Title: '1. Breakdown Request:',
     guideStep1Desc: "Tap 'Breakdown Repair' to select Tire Puncture or Dead Battery and dispatch nearest mechanic.",
     guideStep2Title: '2. Live Radar & Razorpay:',
     guideStep2Desc: 'Track mechanic ETA on live radar and pay ₹350 seamlessly via Razorpay UPI / Cards.',
-    guideStep3Title: '3. 🚨 Kavalan Police SOS (Safety Protocol):',
+    guideStep3Title: '3. 🚨 Kavalan Police SOS:',
     guideStep3Desc: 'Instantly send live GPS to 112 Police Station in case of driver misbehavior or danger.',
     guideStep4Title: '4. Wholesale Spares Store:',
     guideStep4Desc: 'Order batteries and engine oils directly at 30% factory wholesale discounts.',
     guideBtnHome: 'Home Screen',
     guideBtnSos: 'Test 112 SOS',
     guideBtnParts: 'Test Spares Cart',
+
+    // Mechanic Texts
     mechDutyTitle: 'Mechanic Partner Console',
     mechDutyIntro: 'Selvam Auto Works Partner features:',
     mechStep1: 'Online/Offline Duty Toggle: Go online to receive nearby breakdown alerts.',
@@ -157,6 +279,33 @@ const STRINGS = {
     mechCustomerLabel: 'Customer:',
     mechVehicleLabel: 'Vehicle:',
     mechLocLabel: 'Location:',
+
+    // Shop Owner Texts
+    shopTitle: 'Sri Murugan Auto Spares, Theni',
+    shopSub: 'Verified Wholesale Parts Merchant • Theni Spares Hub',
+    shopTodayOrders: "Today's Orders",
+    shopTodaySales: "Today's Sales Revenue",
+    shopLowStock: 'Low Stock Alerts',
+    shopActiveDispatches: 'Active Dispatches',
+    shopInventoryTitle: '📦 Wholesale Spares Inventory Catalog',
+    shopOrdersTitle: '🛒 Real-Time Mechanic & Customer Orders',
+    stockInStock: 'In Stock',
+    stockLow: 'Low Stock',
+    dispatchOrderBtn: 'Dispatch Now ➔',
+
+    // Towing Partner Texts
+    towingTitle: 'Tamil Nadu Highway Towing & Recovery Fleet',
+    towingSub: '24/7 Emergency Highway Accident & Breakdown Rescue Fleet',
+    towActiveTrucks: 'Active Tow Trucks',
+    towRecoveriesDone: "Today's Recoveries",
+    towEarnings: 'Recovery Revenue',
+    towAvgEta: 'Average Response Time',
+    fleetTitle: '🚚 Recovery Fleet Status Grid',
+    liveTowReqTitle: '🚨 Live Highway Breakdown Tow Request',
+    acceptTowBtn: 'Accept Tow Dispatch ➔',
+    towEnRouteStatus: '🚚 Tow truck is rushing to breakdown pickup location!',
+
+    // Admin Texts
     adminSosTitle: 'KAVALAN SOS ALERTS',
     adminActiveJobs: 'ACTIVE BREAKDOWNS',
     adminOnlineMechs: 'ONLINE MECHANICS',
@@ -184,74 +333,342 @@ function t(key) {
   return STRINGS[currentLang][key] || key;
 }
 
-// Global App Mode Switcher
+// ==========================================================================
+// AUTHENTICATION & ROLE MANAGEMENT
+// ==========================================================================
+
+function initiateRoleAuth(role) {
+  pendingAuthRole = role;
+  const modal = document.getElementById('auth-modal');
+  const title = document.getElementById('auth-modal-role-title');
+  const sub = document.getElementById('auth-modal-role-sub');
+  const perks = document.getElementById('auth-perks-text');
+
+  if (role === 'customer') {
+    title.innerText = currentLang === 'ta' ? '🧑 வாடிக்கையாளர் உள்நுழைவு' : '🧑 Customer / User Login';
+    sub.innerText = 'Fast OTP Verification for Emergency Assistance';
+    perks.innerText = currentLang === 'ta' ? 'உடனடி ஜி.பி.எஸ் லாக் & 6 நிமிட மெக்கானிக் ரேடார் அணுகல்.' : 'Instant GPS Lock & 6-min mechanic dispatch activated.';
+  } else if (role === 'mechanic') {
+    title.innerText = currentLang === 'ta' ? '🔧 மெக்கானிக் பார்ட்னர் உள்நுழைவு' : '🔧 Mechanic Partner Login';
+    sub.innerText = 'Verified Partner ID: TN-MEC-8842';
+    perks.innerText = currentLang === 'ta' ? 'டியூட்டி நிலை, நேரலை வரைபடம் & நேரடி தினசரி பேமெண்ட்.' : 'Duty toggle, Google Maps navigation & daily wallet payout.';
+  } else if (role === 'shop') {
+    title.innerText = currentLang === 'ta' ? '🏪 உதிரிபாக விற்பனையாளர் உள்நுழைவு' : '🏪 Spare Parts Merchant Login';
+    sub.innerText = 'Verified Merchant Hub: Theni Spares #104';
+    perks.innerText = currentLang === 'ta' ? 'மொத்த விலை நிர்ணயம் & வாடிக்கையாளர் ஆர்டர்கள் அணுகல்.' : 'Wholesale catalog, stock management & dispatch streaming.';
+  } else if (role === 'towing') {
+    title.innerText = currentLang === 'ta' ? '🚚 டோயிங் & மீட்பு பார்ட்னர் உள்நுழைவு' : '🚚 Towing Fleet Partner Login';
+    sub.innerText = 'NH-85 Highway Recovery Fleet Unit';
+    perks.innerText = currentLang === 'ta' ? 'பிளாட்பெட் லாரிகள் & அவசர விபத்து மீட்பு கோரிக்கைகள்.' : 'Flatbed truck fleet management & toll recovery routes.';
+  }
+
+  modal.classList.add('active');
+  if (window.lucide) lucide.createIcons();
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.remove('active');
+}
+
+function autofillDemoOtp() {
+  const digits = document.querySelectorAll('.otp-digit');
+  const sample = ['1', '2', '3', '4', '5', '6'];
+  digits.forEach((d, i) => (d.value = sample[i]));
+}
+
+function submitRoleAuth() {
+  closeAuthModal();
+  currentUserRole = pendingAuthRole;
+  localStorage.setItem('ullur_role', currentUserRole);
+
+  // Switch to the authenticated mode
+  switchAppMode(currentUserRole);
+}
+
+function logoutUser() {
+  currentUserRole = null;
+  localStorage.removeItem('ullur_role');
+  switchAppMode('gateway');
+}
+
+function navigateToRoleGateway() {
+  if (currentUserRole) {
+    switchAppMode(currentUserRole);
+  } else {
+    switchAppMode('gateway');
+  }
+}
+
+// Admin Secret Authentication
+function openAdminLoginModal(e) {
+  if (e) e.preventDefault();
+  document.getElementById('admin-login-modal').classList.add('active');
+  if (window.lucide) lucide.createIcons();
+}
+
+function closeAdminLoginModal() {
+  document.getElementById('admin-login-modal').classList.remove('active');
+}
+
+function autofillAdminDemo() {
+  document.getElementById('admin-email-input').value = 'admin@ullur.in';
+  document.getElementById('admin-pass-input').value = 'KAVALAN-112';
+}
+
+function verifyAdminLogin() {
+  const email = document.getElementById('admin-email-input').value;
+  const pass = document.getElementById('admin-pass-input').value;
+
+  if (email.includes('admin') || pass === 'KAVALAN-112' || pass === 'ullur2026') {
+    closeAdminLoginModal();
+    currentUserRole = 'admin';
+    localStorage.setItem('ullur_role', 'admin');
+    switchAppMode('admin');
+  } else {
+    alert('❌ Invalid Staff Credentials. Access Denied!');
+  }
+}
+
+// ==========================================================================
+// APP MODE & DESKTOP NAVIGATION SYSTEM
+// ==========================================================================
+
 function switchAppMode(mode) {
-  currentAppMode = mode;
-  document.querySelectorAll('.mode-btn').forEach((btn) => btn.classList.remove('active'));
+  // Hide all mode views
   document.querySelectorAll('.app-mode-view').forEach((view) => view.classList.remove('active'));
 
-  const activeBtn = document.getElementById(`tab-btn-${mode}`);
-  if (activeBtn) activeBtn.classList.add('active');
+  const sessionChip = document.getElementById('user-session-chip');
+  const sessionRoleLabel = document.getElementById('session-role-label');
 
-  const activeView = document.getElementById(`${mode}-mode`);
-  if (activeView) activeView.classList.add('active');
-
-  if (mode === 'customer') {
+  if (mode === 'gateway' || !mode) {
+    document.getElementById('role-gateway-view').classList.add('active');
+    if (sessionChip) sessionChip.style.display = 'none';
+    renderDesktopHeaderNav(null);
+  } else if (mode === 'customer') {
+    document.getElementById('customer-mode').classList.add('active');
+    if (sessionChip) {
+      sessionChip.style.display = 'flex';
+      sessionRoleLabel.innerText = currentLang === 'ta' ? '🧑 வாடிக்கையாளர்' : 'Customer View';
+    }
     customerNavigate(currentCustomerScreen);
     renderCustomerGuidePanel();
+    renderDesktopHeaderNav('customer');
   } else if (mode === 'mechanic') {
+    document.getElementById('mechanic-mode').classList.add('active');
+    if (sessionChip) {
+      sessionChip.style.display = 'flex';
+      sessionRoleLabel.innerText = currentLang === 'ta' ? '🔧 மெக்கானிக் பார்ட்னர்' : 'Mechanic Partner';
+    }
     renderMechanicScreen();
     renderMechanicGuidePanel();
+    renderDesktopHeaderNav('mechanic');
+  } else if (mode === 'shop') {
+    document.getElementById('shop-mode').classList.add('active');
+    if (sessionChip) {
+      sessionChip.style.display = 'flex';
+      sessionRoleLabel.innerText = currentLang === 'ta' ? '🏪 உதிரிபாக விற்பனையாளர்' : 'Spares Merchant';
+    }
+    renderShopOwnerScreen();
+    renderDesktopHeaderNav('shop');
+  } else if (mode === 'towing') {
+    document.getElementById('towing-mode').classList.add('active');
+    if (sessionChip) {
+      sessionChip.style.display = 'flex';
+      sessionRoleLabel.innerText = currentLang === 'ta' ? '🚚 டோயிங் பார்ட்னர்' : 'Towing Fleet';
+    }
+    renderTowingPartnerScreen();
+    renderDesktopHeaderNav('towing');
   } else if (mode === 'admin') {
+    document.getElementById('admin-mode').classList.add('active');
+    if (sessionChip) {
+      sessionChip.style.display = 'flex';
+      sessionRoleLabel.innerText = '🚨 Police & Super Admin';
+    }
     renderAdminPanel();
+    renderDesktopHeaderNav('admin');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (window.lucide) lucide.createIcons();
+}
+
+// Render Horizontal Desktop Header Navigation Bar (>= 768px)
+function renderDesktopHeaderNav(role) {
+  const container = document.getElementById('desktop-header-nav');
+  if (!container) return;
+
+  if (!role || role === 'gateway') {
+    container.innerHTML = `
+      <button class="d-nav-btn active" onclick="switchAppMode('gateway')">
+        <i data-lucide="compass"></i> <span>${currentLang === 'ta' ? 'போர்ட்டல் தேர்வகம்' : 'Role Gateway'}</span>
+      </button>
+    `;
+  } else if (role === 'customer') {
+    container.innerHTML = `
+      <button class="d-nav-btn ${currentCustomerScreen === 'home' ? 'active' : ''}" id="dnav-home" onclick="customerNavigate('home')">
+        <i data-lucide="home"></i> <span>${t('navHome')}</span>
+      </button>
+      <button class="d-nav-btn ${currentCustomerScreen === 'parts' ? 'active' : ''}" id="dnav-parts" onclick="customerNavigate('parts')">
+        <i data-lucide="shopping-bag"></i> <span>${t('navParts')}</span>
+      </button>
+      <button class="d-nav-btn ${currentCustomerScreen === 'tow' ? 'active' : ''}" id="dnav-tow" onclick="customerNavigate('tow')">
+        <i data-lucide="truck"></i> <span>${t('navTow')}</span>
+      </button>
+      <button class="d-nav-btn ${currentCustomerScreen === 'profile' ? 'active' : ''}" id="dnav-profile" onclick="customerNavigate('profile')">
+        <i data-lucide="user"></i> <span>${t('navProfile')}</span>
+      </button>
+      <button class="d-nav-btn sos-btn ${currentCustomerScreen === 'sos' ? 'active' : ''}" id="dnav-sos" onclick="customerNavigate('sos')">
+        <i data-lucide="shield-alert"></i> <span>${t('navSos')}</span>
+      </button>
+    `;
+  } else if (role === 'mechanic') {
+    container.innerHTML = `
+      <button class="d-nav-btn active" onclick="renderMechanicScreen()">
+        <i data-lucide="wrench"></i> <span>${t('mechDutyTitle')}</span>
+      </button>
+      <button class="d-nav-btn" onclick="toggleMechanicDuty()">
+        <i data-lucide="power"></i> <span>${mechanicOnline ? '● Online Duty' : '○ Offline'}</span>
+      </button>
+      <button class="d-nav-btn" onclick="customerNavigate('sos')">
+        <i data-lucide="shield-alert"></i> <span>112 SOS</span>
+      </button>
+    `;
+  } else if (role === 'shop') {
+    container.innerHTML = `
+      <button class="d-nav-btn active" onclick="renderShopOwnerScreen()">
+        <i data-lucide="store"></i> <span>${t('shopInventoryTitle')}</span>
+      </button>
+      <button class="d-nav-btn" onclick="alert('Viewing Real-time buyer orders...')">
+        <i data-lucide="shopping-cart"></i> <span>${t('shopOrdersTitle')}</span>
+      </button>
+    `;
+  } else if (role === 'towing') {
+    container.innerHTML = `
+      <button class="d-nav-btn active" onclick="renderTowingPartnerScreen()">
+        <i data-lucide="truck"></i> <span>${t('fleetTitle')}</span>
+      </button>
+      <button class="d-nav-btn" onclick="alert('Viewing Highway Rescue Radar...')">
+        <i data-lucide="navigation"></i> <span>${t('liveTowReqTitle')}</span>
+      </button>
+    `;
+  } else if (role === 'admin') {
+    container.innerHTML = `
+      <button class="d-nav-btn active" onclick="renderAdminPanel()">
+        <i data-lucide="shield-alert"></i> <span>Kavalan 112 Super Desk</span>
+      </button>
+      <button class="d-nav-btn" onclick="logoutUser()">
+        <i data-lucide="arrow-left"></i> <span>Exit Admin Desk</span>
+      </button>
+    `;
   }
 
   if (window.lucide) lucide.createIcons();
 }
 
-// Global Language Switcher (Updates EVERYTHING across the whole UI)
+// ==========================================================================
+// GLOBAL LANGUAGE SWITCHER
+// ==========================================================================
+
 function setAppLanguage(lang) {
   currentLang = lang;
+  localStorage.setItem('ullur_lang', lang);
+
   document.getElementById('lang-ta-btn').classList.toggle('active', lang === 'ta');
   document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
 
-  // Master Header & Mode Buttons
+  // Master Header
   document.getElementById('app-title-header').innerText = t('appTitle');
   document.getElementById('app-sub-badge').innerText = t('appSubBadge');
-  document.getElementById('tab-txt-customer').innerText = t('tabCustomer');
-  document.getElementById('tab-txt-mechanic').innerText = t('tabMechanic');
-  document.getElementById('tab-txt-admin').innerText = t('tabAdmin');
+  const logoutTxt = document.getElementById('logout-btn-txt');
+  if (logoutTxt) logoutTxt.innerText = t('logoutBtn');
 
-  // Phone Header & Bottom Navigation
-  document.getElementById('c-loc-title').innerText = t('locTitle');
-  document.getElementById('c-loc-sub').innerText = t('locSub');
-  document.getElementById('cnav-home-txt').innerText = t('navHome');
-  document.getElementById('cnav-parts-txt').innerText = t('navParts');
-  document.getElementById('cnav-tow-txt').innerText = t('navTow');
-  document.getElementById('cnav-sos-txt').innerText = t('navSos');
+  // Gateway Screen Elements
+  const gBadge = document.getElementById('gateway-badge');
+  if (gBadge) gBadge.innerText = t('gatewayBadge');
+  const gTitle = document.getElementById('gateway-title');
+  if (gTitle) gTitle.innerText = t('gatewayTitle');
+  const gSub = document.getElementById('gateway-subtitle');
+  if (gSub) gSub.innerText = t('gatewaySub');
 
-  // Razorpay labels
-  const rzpLabel = document.getElementById('rzp-payable-label');
-  if (rzpLabel) rzpLabel.innerText = t('rzpPayableLabel');
+  const rc1T = document.getElementById('role-card-1-title');
+  if (rc1T) rc1T.innerText = t('roleCard1Title');
+  const rc1D = document.getElementById('role-card-1-desc');
+  if (rc1D) rc1D.innerText = t('roleCard1Desc');
+  const rc1B = document.getElementById('role-card-1-btn');
+  if (rc1B) rc1B.innerText = t('roleCard1Btn');
 
-  // Re-render current screens
-  customerNavigate(currentCustomerScreen);
-  renderCustomerGuidePanel();
-  renderMechanicScreen();
-  renderMechanicGuidePanel();
-  renderAdminPanel();
+  const rc2T = document.getElementById('role-card-2-title');
+  if (rc2T) rc2T.innerText = t('roleCard2Title');
+  const rc2D = document.getElementById('role-card-2-desc');
+  if (rc2D) rc2D.innerText = t('roleCard2Desc');
+  const rc2B = document.getElementById('role-card-2-btn');
+  if (rc2B) rc2B.innerText = t('roleCard2Btn');
 
+  const rc3T = document.getElementById('role-card-3-title');
+  if (rc3T) rc3T.innerText = t('roleCard3Title');
+  const rc3D = document.getElementById('role-card-3-desc');
+  if (rc3D) rc3D.innerText = t('roleCard3Desc');
+  const rc3B = document.getElementById('role-card-3-btn');
+  if (rc3B) rc3B.innerText = t('roleCard3Btn');
+
+  const rc4T = document.getElementById('role-card-4-title');
+  if (rc4T) rc4T.innerText = t('roleCard4Title');
+  const rc4D = document.getElementById('role-card-4-desc');
+  if (rc4D) rc4D.innerText = t('roleCard4Desc');
+  const rc4B = document.getElementById('role-card-4-btn');
+  if (rc4B) rc4B.innerText = t('roleCard4Btn');
+
+  // Customer Screen Top Bar & Bottom Nav
+  const cLocT = document.getElementById('c-loc-title');
+  if (cLocT) cLocT.innerText = t('locTitle');
+  const cLocS = document.getElementById('c-loc-sub');
+  if (cLocS) cLocS.innerText = t('locSub');
+  const cnavHome = document.getElementById('cnav-home-txt');
+  if (cnavHome) cnavHome.innerText = t('navHome');
+  const cnavParts = document.getElementById('cnav-parts-txt');
+  if (cnavParts) cnavParts.innerText = t('navParts');
+  const cnavTow = document.getElementById('cnav-tow-txt');
+  if (cnavTow) cnavTow.innerText = t('navTow');
+  const cnavSos = document.getElementById('cnav-sos-txt');
+  if (cnavSos) cnavSos.innerText = t('navSos');
+
+  // Re-render currently active view
+  if (currentUserRole === 'customer') {
+    customerNavigate(currentCustomerScreen);
+    renderCustomerGuidePanel();
+  } else if (currentUserRole === 'mechanic') {
+    renderMechanicScreen();
+    renderMechanicGuidePanel();
+  } else if (currentUserRole === 'shop') {
+    renderShopOwnerScreen();
+  } else if (currentUserRole === 'towing') {
+    renderTowingPartnerScreen();
+  } else if (currentUserRole === 'admin') {
+    renderAdminPanel();
+  }
+
+  renderDesktopHeaderNav(currentUserRole);
   if (window.lucide) lucide.createIcons();
 }
 
-// Customer App Navigation
+// ==========================================================================
+// 1. CUSTOMER APP NAVIGATION & SCREEN RENDERERS
+// ==========================================================================
+
 function customerNavigate(screen) {
   currentCustomerScreen = screen;
   const container = document.getElementById('customer-inner-content');
+  if (!container) return;
 
+  // Sync Mobile Bottom Navigation Active State
   document.querySelectorAll('.c-nav-item').forEach((item) => item.classList.remove('active'));
-  const activeNav = document.getElementById(`cnav-${screen}`);
-  if (activeNav) activeNav.classList.add('active');
+  const activeMobileNav = document.getElementById(`cnav-${screen}`);
+  if (activeMobileNav) activeMobileNav.classList.add('active');
+
+  // Sync Desktop Top Navigation Active State
+  document.querySelectorAll('.d-nav-btn').forEach((btn) => btn.classList.remove('active'));
+  const activeDesktopNav = document.getElementById(`dnav-${screen}`);
+  if (activeDesktopNav) activeDesktopNav.classList.add('active');
 
   switch (screen) {
     case 'home':
@@ -285,44 +702,7 @@ function customerNavigate(screen) {
   if (window.lucide) lucide.createIcons();
 }
 
-// Render Customer Guide Side Panel
-function renderCustomerGuidePanel() {
-  const container = document.getElementById('guide-panel-container');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div class="guide-header">
-      <h3><i data-lucide="sparkles"></i> ${t('guideTitle')}</h3>
-      <span class="pill green">Live Ready</span>
-    </div>
-    <p class="guide-intro">${t('guideIntro')}</p>
-    <ul class="guide-steps">
-      <li>
-        <strong>${t('guideStep1Title')}</strong>
-        <span>${t('guideStep1Desc')}</span>
-      </li>
-      <li>
-        <strong>${t('guideStep2Title')}</strong>
-        <span>${t('guideStep2Desc')}</span>
-      </li>
-      <li>
-        <strong>${t('guideStep3Title')}</strong>
-        <span>${t('guideStep3Desc')}</span>
-      </li>
-      <li>
-        <strong>${t('guideStep4Title')}</strong>
-        <span>${t('guideStep4Desc')}</span>
-      </li>
-    </ul>
-    <div class="guide-actions">
-      <button class="btn btn-yellow" onclick="customerNavigate('home')"><i data-lucide="home"></i> ${t('guideBtnHome')}</button>
-      <button class="btn btn-red" onclick="customerNavigate('sos')"><i data-lucide="shield-alert"></i> ${t('guideBtnSos')}</button>
-      <button class="btn btn-black" onclick="customerNavigate('parts')"><i data-lucide="shopping-bag"></i> ${t('guideBtnParts')}</button>
-    </div>
-  `;
-}
-
-// 1. Customer Screen: Home
+// Customer Screen: Home
 function renderCustomerHome(container) {
   container.innerHTML = `
     <!-- Kavalan Police SOS Banner -->
@@ -333,7 +713,7 @@ function renderCustomerHome(container) {
         </div>
         <div style="flex: 1;">
           <strong style="font-size: 13px; display: block;">${t('sosBannerTitle')}</strong>
-          <small style="font-size: 10px; font-weight: 700;">${t('sosBannerSub')}</small>
+          <small style="font-size: 10.5px; font-weight: 700;">${t('sosBannerSub')}</small>
         </div>
         <button class="btn btn-yellow" style="padding: 4px 8px; font-size: 11px;">${t('sosFixBtn')}</button>
       </div>
@@ -359,7 +739,7 @@ function renderCustomerHome(container) {
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <strong style="font-size: 13px; font-weight: 900;">${t('nearbyMechs')} (3)</strong>
       <span class="pill green" style="display: flex; align-items: center; gap: 4px;">
-        <span style="width: 6px; height: 6px; background: #00C851; border-radius: 50%;"></span> ${t('liveRadar')}
+        <span class="pulse-dot" style="width: 6px; height: 6px;"></span> ${t('liveRadar')}
       </span>
     </div>
 
@@ -371,7 +751,7 @@ function renderCustomerHome(container) {
         </div>
         <div style="flex: 1;">
           <strong style="font-size: 14px;">${currentLang === 'ta' ? 'செல்வம் ஆட்டோ ஒர்க்ஸ்' : 'Selvam Auto Works'}</strong>
-          <div style="font-size: 11px; font-weight: 700; color: #555;">⭐ 4.9 (148 jobs) • <span style="color: #00C851;">ONLINE</span></div>
+          <div style="font-size: 11px; font-weight: 700; color: #555;">⭐ 4.9 (148 jobs) • <span style="color: #00C851; font-weight: 900;">ONLINE</span></div>
         </div>
         <div style="text-align: right;">
           <strong style="font-size: 13px;">0.8 km</strong>
@@ -410,7 +790,7 @@ function renderCustomerHome(container) {
   `;
 }
 
-// 2. Customer Screen: Breakdown Request
+// Customer Screen: Breakdown Request
 function renderCustomerRequest(container) {
   container.innerHTML = `
     <div class="b-card yellow">
@@ -425,7 +805,7 @@ function renderCustomerRequest(container) {
     </div>
 
     <strong style="font-size: 13px;">${currentLang === 'ta' ? 'வாகன பிரச்சனையை தேர்வு செய்க:' : 'Select Breakdown Issue:'}</strong>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
       <button class="btn btn-yellow" style="font-size: 11px; padding: 8px;" onclick="selectIssue(this, 'Tire Puncture')">🛞 ${currentLang === 'ta' ? 'டயர் பஞ்சர் (Puncture)' : 'Tire Puncture'}</button>
       <button class="btn" style="font-size: 11px; padding: 8px; background: white;" onclick="selectIssue(this, 'Dead Battery')">🔋 ${currentLang === 'ta' ? 'பேட்டரி டவுன் (Battery)' : 'Dead Battery'}</button>
       <button class="btn" style="font-size: 11px; padding: 8px; background: white;" onclick="selectIssue(this, 'Engine Heat')">🔥 ${currentLang === 'ta' ? 'என்ஜின் புகை (Smoke)' : 'Engine Smoke'}</button>
@@ -456,17 +836,17 @@ function selectIssue(btn, issue) {
   btn.style.background = '#FFD600';
 }
 
-// 3. Customer Screen: Live Tracking & Razorpay
+// Customer Screen: Live Tracking & Razorpay
 function renderCustomerTracking(container) {
   const steps = [t('stepAssigned'), t('stepEnRoute'), t('stepArrived'), t('stepFixing'), t('stepDone')];
-  
+
   container.innerHTML = `
     <!-- Top Step Progression -->
     <div class="b-card" style="padding: 10px;">
       <div style="display: flex; justify-content: space-between;">
         ${steps
-          .map(
-            (st, i) => `
+      .map(
+        (st, i) => `
             <div style="text-align: center;">
               <div style="width: 22px; height: 22px; border-radius: 50%; background: ${i <= 1 ? '#FFD600' : '#E0E0E0'}; border: 1.5px solid #0D0D0D; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900;">
                 ${i <= 1 ? '✓' : i + 1}
@@ -474,8 +854,8 @@ function renderCustomerTracking(container) {
               <small style="font-size: 8px; font-weight: 900; margin-top: 2px; display: block;">${st}</small>
             </div>
           `
-          )
-          .join('')}
+      )
+      .join('')}
       </div>
     </div>
 
@@ -526,39 +906,8 @@ function renderCustomerTracking(container) {
   `;
 }
 
-// 4. Customer Screen: Wholesale Spare Parts
+// Customer Screen: Wholesale Spare Parts Marketplace
 function renderCustomerParts(container) {
-  const parts = [
-    {
-      name: currentLang === 'ta' ? 'எக்சைட் 35Ah ஹெவி கார் பேட்டரி' : 'Exide Mileage 35Ah Heavy Car Battery',
-      price: 3450,
-      retail: 4200,
-      icon: 'battery-charging',
-      desc: currentLang === 'ta' ? '36 மாத வாரண்டி • இலவச பொருத்துதல்' : '36 Months Warranty • Free Installation',
-    },
-    {
-      name: currentLang === 'ta' ? 'மோட்டுல் 7100 என்ஜின் ஆயில் (1L)' : 'Motul 7100 4T 10W-50 Engine Oil (1L)',
-      price: 690,
-      retail: 880,
-      icon: 'droplet',
-      desc: currentLang === 'ta' ? '100% சிந்தெடிக் 4-ஸ்ட்ரோக் ஆயில்' : '100% Synthetic 4-Stroke Oil',
-    },
-    {
-      name: currentLang === 'ta' ? 'பாஷ் பிரேக் பேட்ஸ் செட் (Bosch)' : 'Bosch Front Ceramic Brake Pads Set',
-      price: 950,
-      retail: 1350,
-      icon: 'disc',
-      desc: currentLang === 'ta' ? 'Swift, i20, Baleno பொருத்தமானது' : 'Swift, i20, Baleno OEM Fit',
-    },
-    {
-      name: currentLang === 'ta' ? 'MRF ஜாப்பர் டியூப்லெஸ் டயர்' : 'MRF Zapper 100/80-17 Tubeless Tire',
-      price: 1950,
-      retail: 2450,
-      icon: 'disc',
-      desc: currentLang === 'ta' ? 'அனைத்து சாலைகளுக்கும் ஏற்ற டயர்' : 'High road grip puncture resistant',
-    },
-  ];
-
   container.innerHTML = `
     <div class="b-card" style="background: #0D0D0D; color: white; padding: 10px 14px;">
       <div style="display: flex; align-items: center; gap: 8px;">
@@ -567,24 +916,24 @@ function renderCustomerParts(container) {
       </div>
     </div>
 
-    ${parts
+    ${shopInventory
       .map(
         (p) => `
       <div class="b-card" style="padding: 12px;">
         <div style="display: flex; gap: 10px;">
           <div style="width: 50px; height: 50px; background: #F6F6F2; border-radius: 8px; border: 2px solid #0D0D0D; display: flex; align-items: center; justify-content: center;">
-            <i data-lucide="${p.icon}"></i>
+            <i data-lucide="package"></i>
           </div>
           <div style="flex: 1;">
-            <strong style="font-size: 13px;">${p.name}</strong>
-            <small style="display: block; font-size: 10px; color: #666;">${p.desc}</small>
+            <strong style="font-size: 13px;">${currentLang === 'ta' ? p.nameTa : p.name}</strong>
+            <small style="display: block; font-size: 10px; color: #666;">Stock: ${p.stock} units • Theni Spares Hub</small>
             <div style="margin-top: 6px; display: flex; align-items: center; gap: 6px;">
               <strong style="font-size: 15px; color: #00C851;">₹${p.price}</strong>
               <small style="text-decoration: line-through; color: #888;">₹${p.retail}</small>
               <span class="pill yellow" style="font-size: 9px;">${Math.round(((p.retail - p.price) / p.retail) * 100)}% OFF</span>
             </div>
           </div>
-          <button class="btn btn-yellow" style="padding: 6px 8px; align-self: center;" onclick="addToCart('${p.name}', ${p.price})">
+          <button class="btn btn-yellow" style="padding: 6px 8px; align-self: center;" onclick="addToCart('${currentLang === 'ta' ? p.nameTa : p.name}', ${p.price})">
             <i data-lucide="plus"></i>
           </button>
         </div>
@@ -605,13 +954,13 @@ function addToCart(name, price) {
   customerNavigate('parts');
 }
 
-// 5. Customer Screen: Cart & Razorpay Checkout
+// Customer Screen: Cart & Razorpay Checkout
 function renderCustomerCart(container) {
   const total = cartItems.reduce((acc, curr) => acc + curr.price, 0) || 3450;
 
   container.innerHTML = `
     <div class="b-card yellow">
-      <strong style="font-size: 14px;">🛍️ ${currentLang === 'ta' ? 'எனது கூடை (Cart Items)' : 'My Cart Items'}</strong>
+      <strong style="font-size: 14px;">🛍️ ${currentLang === 'ta' ? 'எனது கூடை (Cart Items)' : 'My Cart Items'} (${cartItems.length || 1})</strong>
     </div>
 
     <div class="b-card">
@@ -650,7 +999,7 @@ function renderCustomerCart(container) {
   `;
 }
 
-// 6. Customer Screen: Towing / Recovery
+// Customer Screen: Towing / Recovery
 function renderCustomerTow(container) {
   container.innerHTML = `
     <div class="b-card">
@@ -688,7 +1037,7 @@ function renderCustomerTow(container) {
   `;
 }
 
-// 7. Customer Screen: Kavalan Police SOS Alert
+// Customer Screen: Kavalan Police SOS Alert
 function renderCustomerSos(container) {
   container.innerHTML = `
     <div style="text-align: center;">
@@ -740,9 +1089,6 @@ function renderCustomerSos(container) {
 
 function triggerKavalanSos() {
   alert(t('policeDispatched'));
-  const badge = document.getElementById('active-sos-count');
-  if (badge) badge.innerText = '2 ACTIVE';
-  switchAppMode('admin');
 }
 
 function toggleSiren() {
@@ -750,7 +1096,7 @@ function toggleSiren() {
   customerNavigate('sos');
 }
 
-// 8. Customer Screen: Profile
+// Customer Screen: Profile
 function renderCustomerProfile(container) {
   container.innerHTML = `
     <div class="b-card yellow">
@@ -788,7 +1134,34 @@ function renderCustomerProfile(container) {
   `;
 }
 
-// Mechanic Partner Console Renderer
+function renderCustomerGuidePanel() {
+  const container = document.getElementById('guide-panel-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="guide-header">
+      <h3><i data-lucide="sparkles"></i> ${t('guideTitle')}</h3>
+      <span class="pill green">Live Ready</span>
+    </div>
+    <p class="guide-intro">${t('guideIntro')}</p>
+    <ul class="guide-steps">
+      <li><strong>${t('guideStep1Title')}</strong> <span>${t('guideStep1Desc')}</span></li>
+      <li><strong>${t('guideStep2Title')}</strong> <span>${t('guideStep2Desc')}</span></li>
+      <li><strong>${t('guideStep3Title')}</strong> <span>${t('guideStep3Desc')}</span></li>
+      <li><strong>${t('guideStep4Title')}</strong> <span>${t('guideStep4Desc')}</span></li>
+    </ul>
+    <div class="guide-actions">
+      <button class="btn btn-yellow" onclick="customerNavigate('home')"><i data-lucide="home"></i> ${t('guideBtnHome')}</button>
+      <button class="btn btn-red" onclick="customerNavigate('sos')"><i data-lucide="shield-alert"></i> ${t('guideBtnSos')}</button>
+      <button class="btn btn-black" onclick="customerNavigate('parts')"><i data-lucide="shopping-bag"></i> ${t('guideBtnParts')}</button>
+    </div>
+  `;
+}
+
+// ==========================================================================
+// 2. MECHANIC PARTNER CONSOLE RENDERER
+// ==========================================================================
+
 function renderMechanicScreen() {
   const container = document.getElementById('mechanic-screen-viewport');
   if (!container) return;
@@ -797,7 +1170,7 @@ function renderMechanicScreen() {
 
   container.innerHTML = `
     <!-- Mechanic Header -->
-    <div style="padding: 34px 16px 12px 16px; background: #FFD600; border-bottom: 3px solid #0D0D0D; display: flex; justify-content: space-between; align-items: center;">
+    <div style="padding: 16px 18px; background: #FFD600; border-bottom: 3px solid #0D0D0D; display: flex; justify-content: space-between; align-items: center;">
       <div>
         <small style="font-size: 10px; font-weight: 900;">${currentLang === 'ta' ? 'மெக்கானிக் பார்ட்னர்' : 'MECHANIC PARTNER'}</small>
         <strong style="font-size: 14px; display: block;">${currentLang === 'ta' ? 'செல்வம் ஆட்டோ ஒர்க்ஸ்' : 'Selvam Auto Works'}</strong>
@@ -807,7 +1180,7 @@ function renderMechanicScreen() {
       </button>
     </div>
 
-    <div style="flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
+    <div style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px;">
       <!-- Today's Earnings -->
       <div class="b-card" style="background: #0D0D0D; color: white;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -835,16 +1208,15 @@ function renderMechanicScreen() {
         <!-- Stage progression -->
         <div style="display: flex; gap: 4px; margin-top: 10px;">
           ${stages
-            .map(
-              (st, i) => `
-            <div style="flex: 1; text-align: center; padding: 4px 2px; border: 1.5px solid #0D0D0D; border-radius: 4px; font-size: 9px; font-weight: 900; background: ${
-              i <= mechanicJobStage ? '#FFD600' : '#E0E0E0'
-            };">
+      .map(
+        (st, i) => `
+            <div style="flex: 1; text-align: center; padding: 6px 2px; border: 1.5px solid #0D0D0D; border-radius: 4px; font-size: 9.5px; font-weight: 900; background: ${i <= mechanicJobStage ? '#FFD600' : '#E0E0E0'
+          };">
               ${st}
             </div>
           `
-            )
-            .join('')}
+      )
+      .join('')}
         </div>
 
         <div style="margin-top: 12px; display: flex; gap: 8px;">
@@ -882,6 +1254,7 @@ function renderMechanicGuidePanel() {
 function toggleMechanicDuty() {
   mechanicOnline = !mechanicOnline;
   renderMechanicScreen();
+  renderDesktopHeaderNav('mechanic');
 }
 
 function advanceMechanicStage() {
@@ -889,7 +1262,289 @@ function advanceMechanicStage() {
   renderMechanicScreen();
 }
 
-// Admin & Kavalan Desk Renderer
+// ==========================================================================
+// 3. SPARE PARTS SHOP OWNER VIEW RENDERER
+// ==========================================================================
+
+function renderShopOwnerScreen() {
+  const container = document.getElementById('shop-panel-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <!-- Shop Profile Header -->
+    <div class="role-dashboard-header">
+      <div class="role-profile-info">
+        <div class="role-avatar-circle shop">🏪</div>
+        <div>
+          <h2 style="font-size: 18px; font-weight: 900;">${t('shopTitle')}</h2>
+          <span style="font-size: 11.5px; font-weight: 700; color: #4B5563;">${t('shopSub')}</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-yellow" onclick="addNewInventoryItem()"><i data-lucide="plus-circle"></i> Add Spare Part</button>
+      </div>
+    </div>
+
+    <!-- Shop KPI Stats -->
+    <div class="admin-top-stats">
+      <div class="stat-box yellow">
+        <i data-lucide="shopping-bag"></i>
+        <div>
+          <span>${t('shopTodayOrders')}</span>
+          <h2>18 ORDERS</h2>
+          <small>14 Delivered • 4 In Transit</small>
+        </div>
+      </div>
+      <div class="stat-box green">
+        <i data-lucide="credit-card"></i>
+        <div>
+          <span>${t('shopTodaySales')}</span>
+          <h2>₹42,300</h2>
+          <small>Direct Wholesale Settlement</small>
+        </div>
+      </div>
+      <div class="stat-box red">
+        <i data-lucide="alert-circle"></i>
+        <div>
+          <span>${t('shopLowStock')}</span>
+          <h2>3 ITEMS</h2>
+          <small>MRF Tires, Bosch Pads</small>
+        </div>
+      </div>
+      <div class="stat-box blue">
+        <i data-lucide="truck"></i>
+        <div>
+          <span>${t('shopActiveDispatches')}</span>
+          <h2>4 RUNNING</h2>
+          <small>Selvam & Karthik Clinics</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shop Dashboard Grid -->
+    <div class="role-dashboard-grid">
+      <!-- Inventory Management Table -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h3><i data-lucide="package"></i> ${t('shopInventoryTitle')}</h3>
+          <span class="pill green">Live Wholesale Sync</span>
+        </div>
+        <div class="inventory-table-container">
+          ${shopInventory
+      .map(
+        (item) => `
+            <div class="inventory-row">
+              <div class="inventory-info">
+                <strong>${currentLang === 'ta' ? item.nameTa : item.name}</strong>
+                <small>${item.category} • Wholesale: ₹${item.price} (Retail: ₹${item.retail})</small>
+              </div>
+              <div class="stock-control">
+                <span class="stock-pill ${item.stock > 6 ? 'in-stock' : 'low-stock'}">
+                  ${item.stock} in stock
+                </span>
+                <button class="btn btn-yellow" style="padding: 4px 8px; font-size: 11px;" onclick="restockItem(${item.id})">+ Stock</button>
+              </div>
+            </div>
+          `
+      )
+      .join('')}
+        </div>
+      </div>
+
+      <!-- Real-time Incoming Orders Stream -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h3><i data-lucide="shopping-cart" style="color: #00C851;"></i> ${t('shopOrdersTitle')}</h3>
+          <span class="pill red animate-pulse">Live Feed</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="b-card yellow" style="padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <span class="badge black">ORDER #ORD-8821</span>
+                <strong style="display: block; font-size: 13px; margin-top: 4px;">Exide 35Ah Heavy Car Battery</strong>
+                <small style="font-weight: 700; color: #333;">Mechanic: Selvam Auto Works (Theni Bypass Toll)</small>
+              </div>
+              <strong style="font-size: 15px; color: #166534;">₹3,450</strong>
+            </div>
+            <button class="btn btn-green full-width" style="margin-top: 8px; padding: 6px; font-size: 11px;" onclick="dispatchShopOrder('ORD-8821')">
+              <i data-lucide="send"></i> ${t('dispatchOrderBtn')}
+            </button>
+          </div>
+
+          <div class="b-card" style="padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <span class="badge black">ORDER #ORD-8820</span>
+                <strong style="display: block; font-size: 13px; margin-top: 4px;">Motul 7100 4T Oil (1L)</strong>
+                <small style="font-weight: 700; color: #333;">Customer: Murugan Swamy (Hyundai i20)</small>
+              </div>
+              <strong style="font-size: 15px; color: #166534;">₹690</strong>
+            </div>
+            <span class="pill green" style="margin-top: 6px; display: inline-block;">✓ Dispatched via Courier</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function restockItem(id) {
+  const item = shopInventory.find((i) => i.id === id);
+  if (item) {
+    item.stock += 5;
+    alert(`📦 ${item.name} stock increased to ${item.stock}!`);
+    renderShopOwnerScreen();
+  }
+}
+
+function addNewInventoryItem() {
+  const name = prompt('Enter New Spare Part Name:', 'Amaron Pro 45Ah Car Battery');
+  if (name) {
+    shopInventory.push({
+      id: Date.now(),
+      name: name,
+      nameTa: name,
+      price: 2800,
+      retail: 3500,
+      stock: 10,
+      category: 'Battery',
+    });
+    renderShopOwnerScreen();
+  }
+}
+
+function dispatchShopOrder(orderId) {
+  alert(`🚚 Order ${orderId} dispatched to Selvam Mechanic on Highway Dispatch!`);
+}
+
+// ==========================================================================
+// 4. BACKUP TRAVEL / TOWING SERVICE VIEW RENDERER
+// ==========================================================================
+
+function renderTowingPartnerScreen() {
+  const container = document.getElementById('towing-panel-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <!-- Towing Profile Header -->
+    <div class="role-dashboard-header">
+      <div class="role-profile-info">
+        <div class="role-avatar-circle towing">🚚</div>
+        <div>
+          <h2 style="font-size: 18px; font-weight: 900;">${t('towingTitle')}</h2>
+          <span style="font-size: 11.5px; font-weight: 700; color: #4B5563;">${t('towingSub')}</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <span class="pill green" style="padding: 6px 12px; font-size: 12px;">● 6 Trucks Online</span>
+      </div>
+    </div>
+
+    <!-- Towing KPI Stats -->
+    <div class="admin-top-stats">
+      <div class="stat-box yellow">
+        <i data-lucide="truck"></i>
+        <div>
+          <span>${t('towActiveTrucks')}</span>
+          <h2>6 / 8 FLEET</h2>
+          <small>Theni, Dindigul & Madurai</small>
+        </div>
+      </div>
+      <div class="stat-box green">
+        <i data-lucide="check-circle"></i>
+        <div>
+          <span>${t('towRecoveriesDone')}</span>
+          <h2>9 TOWS</h2>
+          <small>100% Zero-Damage Flatbed</small>
+        </div>
+      </div>
+      <div class="stat-box blue">
+        <i data-lucide="credit-card"></i>
+        <div>
+          <span>${t('towEarnings')}</span>
+          <h2>₹12,400</h2>
+          <small>Daily Tow Fare Payout</small>
+        </div>
+      </div>
+      <div class="stat-box red">
+        <i data-lucide="clock"></i>
+        <div>
+          <span>${t('towAvgEta')}</span>
+          <h2>11 MINS</h2>
+          <small>Highway Fast Response</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Towing Dashboard Grid -->
+    <div class="role-dashboard-grid">
+      <!-- Recovery Fleet Grid -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h3><i data-lucide="truck"></i> ${t('fleetTitle')}</h3>
+          <span class="pill green">GPS Active</span>
+        </div>
+        <div class="fleet-grid">
+          ${towingFleet
+      .map(
+        (f) => `
+            <div class="fleet-truck-card">
+              <span class="badge black">${f.id}</span>
+              <strong>${f.type}</strong>
+              <small style="font-weight: 700; color: #444;">${f.reg} • Driver: ${f.driver}</small>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <span class="pill ${f.status === 'Available' ? 'green' : 'yellow'}">${f.status}</span>
+                <small style="font-weight: 900;">ETA: ${f.eta}</small>
+              </div>
+            </div>
+          `
+      )
+      .join('')}
+        </div>
+      </div>
+
+      <!-- Live Highway Breakdown Tow Request -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h3><i data-lucide="alert-triangle" style="color: #FF3B30;"></i> ${t('liveTowReqTitle')}</h3>
+          <span class="pill red">Dispatch Alert</span>
+        </div>
+        <div class="b-card yellow" style="padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="badge red">#TOW-REQ-901</span>
+            <strong style="font-size: 16px; color: #166534;">₹850 Fare</strong>
+          </div>
+          <p style="font-size: 13px; font-weight: 900; margin-top: 6px;">Vehicle: Hyundai i20 Asta (TN-60-AZ-1234)</p>
+          <p style="font-size: 11.5px; font-weight: 700; color: #333;">📍 Pickup: Theni Highway Junction (Near Tollgate)</p>
+          <p style="font-size: 11.5px; font-weight: 700; color: #333;">🏁 Drop: Madurai Road Auto Clinic (8.5 km)</p>
+          <p style="font-size: 11px; color: #666; margin-top: 4px;">Issue: Transmission breakdown. Flatbed required.</p>
+
+          ${towDispatchAccepted
+      ? `<div class="auth-perks-box" style="margin-top: 10px;">
+                  <i data-lucide="check-circle" style="color: #00C851;"></i>
+                  <span>${t('towEnRouteStatus')}</span>
+                </div>`
+      : `<button class="btn btn-green full-width" style="margin-top: 10px; font-size: 12px;" onclick="acceptTowDispatch()">
+                  <i data-lucide="check"></i> ${t('acceptTowBtn')}
+                </button>`
+    }
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function acceptTowDispatch() {
+  towDispatchAccepted = true;
+  alert('🚚 Flatbed Hydraulic Truck TN-60-T-9001 dispatched to customer breakdown location!');
+  renderTowingPartnerScreen();
+}
+
+// ==========================================================================
+// 5. ISOLATED KAVALAN POLICE & SUPER ADMIN DESK (Restricted Staff Only)
+// ==========================================================================
+
 function renderAdminPanel() {
   const container = document.getElementById('admin-panel-container');
   if (!container) return;
@@ -986,7 +1641,10 @@ function renderAdminPanel() {
   `;
 }
 
-// Razorpay Modal Handlers
+// ==========================================================================
+// 6. RAZORPAY MODAL HANDLERS
+// ==========================================================================
+
 function openRazorpayModal(amount) {
   document.getElementById('rzp-pay-amount').innerText = `₹${amount}.00`;
   document.getElementById('rzp-btn-text').innerText = `₹${amount}.00 ${t('rzpPayBtn')}`;
@@ -1003,7 +1661,33 @@ function completeRazorpayPayment() {
   customerNavigate('home');
 }
 
-// Initialize on DOM ready
+// ==========================================================================
+// 7. INITIALIZATION & SHORTCUTS
+// ==========================================================================
+
+// Secret Hash and Keyboard Shortcuts for Admin
+window.addEventListener('hashchange', () => {
+  if (window.location.hash === '#/admin-login' || window.location.hash === '#admin-login') {
+    openAdminLoginModal();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+    e.preventDefault();
+    openAdminLoginModal();
+  }
+});
+
+// App Bootstrap on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
-  setAppLanguage('ta');
+  setAppLanguage(currentLang);
+
+  if (window.location.hash === '#/admin-login' || window.location.hash === '#admin-login') {
+    openAdminLoginModal();
+  } else if (currentUserRole) {
+    switchAppMode(currentUserRole);
+  } else {
+    switchAppMode('gateway');
+  }
 });
