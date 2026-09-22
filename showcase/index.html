@@ -336,126 +336,128 @@
             <label id="auth-phone-label">மொபைல் எண் (Mobile Phone):</label>
             <div class="phone-input-wrapper">
               <span class="phone-prefix">🇮🇳 +91</span>
-              <input type="tel" id="auth-phone-input" value="98421 00001" placeholder="Enter 10-digit number" />
+              <input type="tel" id="auth-phone-input" placeholder="Enter Mobile  Number" />
             </div>
+            <div id="recaptcha-container"></div>
+
+            <div class="input-group" style="margin-top: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label id="auth-otp-label">அனுப்பப்பட்ட OTP எண்:</label>
+                <button class="btn-demo-autofill" onclick="autofillDemoOtp()">⚡ Auto-fill Demo (123456)</button>
+              </div>
+              <div class="otp-inputs-row">
+                <input type="text" class="otp-digit" maxlength="1" value="1" />
+                <input type="text" class="otp-digit" maxlength="1" value="2" />
+                <input type="text" class="otp-digit" maxlength="1" value="3" />
+                <input type="text" class="otp-digit" maxlength="1" value="4" />
+                <input type="text" class="otp-digit" maxlength="1" value="5" />
+                <input type="text" class="otp-digit" maxlength="1" value="6" />
+              </div>
+            </div>
+
+            <div class="auth-perks-box" id="auth-perks-box">
+              <i data-lucide="shield-check" style="color: #00C851;"></i>
+              <span id="auth-perks-text">உடனடி சரிபார்ப்பு & நேரலை ஜி.பி.எஸ் இணைப்பு செயல்படுத்தப்படும்.</span>
+            </div>
+
+            <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
+              onclick="submitRoleAuth()">
+              <i data-lucide="log-in"></i> <span id="auth-submit-btn-txt">சரிபார்த்து உள்நுழைக (VERIFY & ENTER)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Isolated Admin Staff Verification Modal (Secret Desk) -->
+    <div id="admin-login-modal" class="modal-overlay">
+      <div class="modal-box admin-auth-box">
+        <div class="admin-modal-header">
+          <div class="rzp-badge" style="background: #FF3B30;"><i data-lucide="shield-alert"
+              style="width: 20px; height: 20px; color: white;"></i></div>
+          <div>
+            <h3>🚨 TAMIL NADU POLICE & SUPER ADMIN DESK</h3>
+            <small>Restricted Internal Staff Verification Portal</small>
+          </div>
+          <button class="close-modal-btn" onclick="closeAdminLoginModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="admin-alert-banner">
+            <i data-lucide="alert-triangle"></i>
+            <span>அங்கீகரிக்கப்பட்ட காவல் & தலைமை நிர்வாக பணியாளர்களுக்கு மட்டுமே அனுமதி!</span>
           </div>
 
           <div class="input-group" style="margin-top: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <label id="auth-otp-label">அனுப்பப்பட்ட OTP எண்:</label>
-              <button class="btn-demo-autofill" onclick="autofillDemoOtp()">⚡ Auto-fill Demo (123456)</button>
-            </div>
-            <div class="otp-inputs-row">
-              <input type="text" class="otp-digit" maxlength="1" value="1" />
-              <input type="text" class="otp-digit" maxlength="1" value="2" />
-              <input type="text" class="otp-digit" maxlength="1" value="3" />
-              <input type="text" class="otp-digit" maxlength="1" value="4" />
-              <input type="text" class="otp-digit" maxlength="1" value="5" />
-              <input type="text" class="otp-digit" maxlength="1" value="6" />
-            </div>
+            <label>அதிகாரப்பூர்வ மின்னஞ்சல் (Staff Email):</label>
+            <input type="email" id="admin-email-input" value="admin@ullur.in" class="brutal-input" />
           </div>
 
-          <div class="auth-perks-box" id="auth-perks-box">
-            <i data-lucide="shield-check" style="color: #00C851;"></i>
-            <span id="auth-perks-text">உடனடி சரிபார்ப்பு & நேரலை ஜி.பி.எஸ் இணைப்பு செயல்படுத்தப்படும்.</span>
+          <div class="input-group" style="margin-top: 12px;">
+            <label>ரகசிய கடவுச்சொல் / Staff Key:</label>
+            <input type="password" id="admin-pass-input" value="KAVALAN-112" class="brutal-input" />
           </div>
 
-          <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
-            onclick="submitRoleAuth()">
-            <i data-lucide="log-in"></i> <span id="auth-submit-btn-txt">சரிபார்த்து உள்நுழைக (VERIFY & ENTER)</span>
+          <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+            <button class="btn-demo-autofill" onclick="autofillAdminDemo()">⚡ Staff Key Demo Fill</button>
+          </div>
+
+          <button class="btn btn-red full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
+            onclick="verifyAdminLogin()">
+            <i data-lucide="lock"></i> <span>நிர்வாக அறையில் நுழைக (VERIFY STAFF ACCESS)</span>
           </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Isolated Admin Staff Verification Modal (Secret Desk) -->
-  <div id="admin-login-modal" class="modal-overlay">
-    <div class="modal-box admin-auth-box">
-      <div class="admin-modal-header">
-        <div class="rzp-badge" style="background: #FF3B30;"><i data-lucide="shield-alert"
-            style="width: 20px; height: 20px; color: white;"></i></div>
-        <div>
-          <h3>🚨 TAMIL NADU POLICE & SUPER ADMIN DESK</h3>
-          <small>Restricted Internal Staff Verification Portal</small>
+    <!-- Global Razorpay Checkout Simulation Modal -->
+    <div id="razorpay-modal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="razorpay-header">
+          <div class="rzp-badge">R</div>
+          <div>
+            <h3>Razorpay Trusted Checkout</h3>
+            <small>Ullur Mechanic Services Pvt Ltd</small>
+          </div>
+          <button class="close-modal-btn" onclick="closeRazorpayModal()">✕</button>
         </div>
-        <button class="close-modal-btn" onclick="closeAdminLoginModal()">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="admin-alert-banner">
-          <i data-lucide="alert-triangle"></i>
-          <span>அங்கீகரிக்கப்பட்ட காவல் & தலைமை நிர்வாக பணியாளர்களுக்கு மட்டுமே அனுமதி!</span>
+        <div class="modal-body">
+          <div class="pay-amount-box">
+            <span id="rzp-payable-label">செலுத்த வேண்டிய தொகை:</span>
+            <strong id="rzp-pay-amount">₹350.00</strong>
+          </div>
+          <div class="pay-options-list">
+            <label class="pay-option active">
+              <input type="radio" name="pay-method" checked />
+              <div class="pay-opt-info">
+                <strong>⚡ Google Pay / PhonePe / Paytm UPI</strong>
+                <small>Instant 1-Click Payment via UPI App</small>
+              </div>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="pay-method" />
+              <div class="pay-opt-info">
+                <strong>💳 Debit / Credit Card</strong>
+                <small>Visa, Mastercard, RuPay, Maestro</small>
+              </div>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="pay-method" />
+              <div class="pay-opt-info">
+                <strong>🏦 Net Banking / Wallets</strong>
+                <small>SBI, HDFC, ICICI, Axis Bank & More</small>
+              </div>
+            </label>
+          </div>
+          <button class="btn btn-green full-width" onclick="completeRazorpayPayment()">
+            <i data-lucide="lock"></i> <span id="rzp-btn-text">₹350.00 செலுத்து (PAY NOW)</span>
+          </button>
         </div>
-
-        <div class="input-group" style="margin-top: 14px;">
-          <label>அதிகாரப்பூர்வ மின்னஞ்சல் (Staff Email):</label>
-          <input type="email" id="admin-email-input" value="admin@ullur.in" class="brutal-input" />
-        </div>
-
-        <div class="input-group" style="margin-top: 12px;">
-          <label>ரகசிய கடவுச்சொல் / Staff Key:</label>
-          <input type="password" id="admin-pass-input" value="KAVALAN-112" class="brutal-input" />
-        </div>
-
-        <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-          <button class="btn-demo-autofill" onclick="autofillAdminDemo()">⚡ Staff Key Demo Fill</button>
-        </div>
-
-        <button class="btn btn-red full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
-          onclick="verifyAdminLogin()">
-          <i data-lucide="lock"></i> <span>நிர்வாக அறையில் நுழைக (VERIFY STAFF ACCESS)</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Global Razorpay Checkout Simulation Modal -->
-  <div id="razorpay-modal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="razorpay-header">
-        <div class="rzp-badge">R</div>
-        <div>
-          <h3>Razorpay Trusted Checkout</h3>
-          <small>Ullur Mechanic Services Pvt Ltd</small>
-        </div>
-        <button class="close-modal-btn" onclick="closeRazorpayModal()">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="pay-amount-box">
-          <span id="rzp-payable-label">செலுத்த வேண்டிய தொகை:</span>
-          <strong id="rzp-pay-amount">₹350.00</strong>
-        </div>
-        <div class="pay-options-list">
-          <label class="pay-option active">
-            <input type="radio" name="pay-method" checked />
-            <div class="pay-opt-info">
-              <strong>⚡ Google Pay / PhonePe / Paytm UPI</strong>
-              <small>Instant 1-Click Payment via UPI App</small>
-            </div>
-          </label>
-          <label class="pay-option">
-            <input type="radio" name="pay-method" />
-            <div class="pay-opt-info">
-              <strong>💳 Debit / Credit Card</strong>
-              <small>Visa, Mastercard, RuPay, Maestro</small>
-            </div>
-          </label>
-          <label class="pay-option">
-            <input type="radio" name="pay-method" />
-            <div class="pay-opt-info">
-              <strong>🏦 Net Banking / Wallets</strong>
-              <small>SBI, HDFC, ICICI, Axis Bank & More</small>
-            </div>
-          </label>
-        </div>
-        <button class="btn btn-green full-width" onclick="completeRazorpayPayment()">
-          <i data-lucide="lock"></i> <span id="rzp-btn-text">₹350.00 செலுத்து (PAY NOW)</span>
-        </button>
       </div>
     </div>
-  </div>
-
-  <script src="app.js"></script>
+    <script src="app.js"></script>
+    <!-- Firebase Web SDK (v9/v10 Compatibility) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </body>
 
 </html>
