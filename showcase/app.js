@@ -1,10 +1,10 @@
+/* eslint-disable no-undef */
+/* global firebase */
 // ==========================================================================
 // ULLUR MECHANIC — INTERACTIVE SUPER APP & MULTI-ROLE HYPERLOCAL PLATFORM
 // Full Bilingual System, Dynamic Role Authentication, Responsive Top/Bottom Nav
 // ==========================================================================
 // Firebase Configuration Setup
-/* eslint-disable no-undef */
-/* global firebase */
 const firebaseConfig = {
   apiKey: "AIzaSyAdAvhgZy29k_Cn_yFxLKVzOgPBNq2bis",
   authDomain: "ullur-mechanic.firebaseapp.com",
@@ -15,20 +15,33 @@ const firebaseConfig = {
   measurementId: "G-GJKPY9VW57"
 };
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+// Initialize Firebase safely
+let auth = null;
+try {
+  if (typeof firebase !== "undefined" && !firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+  } else if (typeof firebase !== "undefined") {
+    auth = firebase.auth();
+  }
+} catch (e) {
+  console.warn("Firebase Init Deferred:", e);
 }
-const auth = firebase.auth();
 
 // Recaptcha Verifier Setup
 window.onload = function () {
-  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-    'size': 'invisible',
-    'callback': (response) => {
-      // reCAPTCHA solved
+  try {
+    if (typeof firebase !== "undefined" && firebase.auth && document.getElementById('recaptcha-container')) {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response) => {
+          // reCAPTCHA solved
+        }
+      });
     }
-  });
+  } catch (e) {
+    console.warn("Recaptcha Verifier setup deferred:", e);
+  }
 };
 
 let confirmationResultGlobal = null;
@@ -46,18 +59,22 @@ function sendOTP() {
   const formattedPhoneNumber = "+91" + phoneNumberInput.slice(-10);
   const appVerifier = window.recaptchaVerifier;
 
-  auth.signInWithPhoneNumber(formattedPhoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      window.confirmationResultGlobal = confirmationResult;
-      alert(`Real SMS OTP sent to ${formattedPhoneNumber}! Check your mobile.`);
+  if (auth) {
+    auth.signInWithPhoneNumber(formattedPhoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResultGlobal = confirmationResult;
+        alert(`Real SMS OTP sent to ${formattedPhoneNumber}! Check your mobile.`);
 
-      // Display OTP input section
-      document.getElementById("otp-section").style.display = "block";
-    })
-    .catch((error) => {
-      console.error("SMS Error:", error);
-      alert("Error sending SMS: " + error.message);
-    });
+        // Display OTP input section
+        document.getElementById("otp-section").style.display = "block";
+      })
+      .catch((error) => {
+        console.error("SMS Error:", error);
+        alert("Error sending SMS: " + error.message);
+      });
+  } else {
+    alert(`[Demo Mode] OTP sent to ${formattedPhoneNumber}! Use 123456 or Auto-fill.`);
+  }
 }
 
 // Verify SMS OTP Function
@@ -80,6 +97,13 @@ function verifyOTP() {
         alert("Invalid OTP Code! Please check your SMS.");
       });
   }
+}
+
+function autofillDemoOtp() {
+  const digits = ['1', '2', '3', '4', '5', '6'];
+  document.querySelectorAll('.otp-digit').forEach((input, idx) => {
+    input.value = digits[idx] || '';
+  });
 }
 
 // Global Application State
@@ -449,83 +473,6 @@ function closeAuthModal() {
   document.getElementById('auth-modal').classList.remove('active');
 }
 
-f// Firebase Configuration Setup
-const firebaseConfig = {
-  apiKey: "AIzaSyAdAvhgZy29k_Cn_yFxLKVzOgPBNq2bis",
-  authDomain: "ullur-mechanic.firebaseapp.com",
-  projectId: "ullur-mechanic",
-  storageBucket: "ullur-mechanic.firebasestorage.app",
-  messagingSenderId: "325254482783",
-  appId: "1:325254482783:web:1f08437dc410b3128004ea",
-  measurementId: "G-GJKPY9VW57"
-};
-
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-const auth = firebase.auth();
-
-// Recaptcha Verifier Setup
-window.onload = function () {
-  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-    'size': 'invisible',
-    'callback': (response) => {
-      // reCAPTCHA solved
-    }
-  });
-};
-
-let confirmationResultGlobal = null;
-
-// Send Real SMS OTP Function
-function sendOTP() {
-  const phoneNumberInput = document.getElementById("phone-number").value.trim();
-
-  if (phoneNumberInput.length < 10) {
-    alert("Please enter a valid 10-digit mobile number!");
-    return;
-  }
-
-  // Format phone number with country code (+91 for India)
-  const formattedPhoneNumber = "+91" + phoneNumberInput.slice(-10);
-  const appVerifier = window.recaptchaVerifier;
-
-  auth.signInWithPhoneNumber(formattedPhoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      window.confirmationResultGlobal = confirmationResult;
-      alert(`Real SMS OTP sent to ${formattedPhoneNumber}! Check your mobile.`);
-
-      // Display OTP input section
-      document.getElementById("otp-section").style.display = "block";
-    })
-    .catch((error) => {
-      console.error("SMS Error:", error);
-      alert("Error sending SMS: " + error.message);
-    });
-}
-
-// Verify SMS OTP Function
-function verifyOTP() {
-  const otpCode = document.getElementById("otp-input").value.trim();
-
-  if (!otpCode || otpCode.length < 6) {
-    alert("Please enter the 6-digit SMS OTP!");
-    return;
-  }
-
-  if (window.confirmationResultGlobal) {
-    window.confirmationResultGlobal.confirm(otpCode)
-      .then((result) => {
-        const user = result.user;
-        alert("Phone Number Verified Successfully via Firebase!");
-        loadUserDashboard();
-      })
-      .catch((error) => {
-        alert("Invalid OTP Code! Please check your SMS.");
-      });
-  }
-}
 function submitRoleAuth() {
   const otpCode = Array.from(document.querySelectorAll('.otp-digit')).map(d => d.value).join('');
 
@@ -554,14 +501,8 @@ function submitRoleAuth() {
     switchAppMode(currentUserRole);
   }
 }
-function submitRoleAuth() {
-  closeAuthModal();
-  currentUserRole = pendingAuthRole;
-  localStorage.setItem('ullur_role', currentUserRole);
 
-  // Switch to the authenticated mode
-  switchAppMode(currentUserRole);
-}
+
 
 function logoutUser() {
   currentUserRole = null;
