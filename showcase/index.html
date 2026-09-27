@@ -5,20 +5,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ULLUR MECHANIC — Tamil Nadu's #1 Emergency Breakdown & Spares Platform</title>
+  
+  <!-- Modern Typography: Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet.js Mapping Library CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Custom Neo-Brutalist Stylesheet -->
   <link rel="stylesheet" href="style.css" />
-  <!-- Lucide icons CDN -->
+  
+  <!-- Leaflet.js Mapping Library JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Firebase Web SDK Compatibility CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Razorpay Checkout SDK CDN -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
 <body>
   <!-- Master Navigation Header -->
   <header class="master-header">
     <div class="header-left">
-      <div class="brand-badge" onclick="navigateToRoleGateway()" title="Ullur Mechanic Home">
+      <div class="brand-badge" onclick="window.navigateToRoleGateway()" title="Ullur Mechanic Home">
         <img src="ullur_mechanic_v2_logo.svg" alt="Ullur Mechanic Logo" class="brand-logo-img" />
         <div>
           <h1 id="app-title-header">ULLUR MECHANIC</h1>
@@ -28,7 +46,7 @@
 
       <!-- Desktop Header Horizontal Navigation Bar (Visible on Desktop >= 768px when authenticated) -->
       <nav class="desktop-nav-bar" id="desktop-header-nav">
-        <!-- Injected dynamically based on role -->
+        <!-- Injected dynamically based on active role -->
       </nav>
     </div>
 
@@ -40,15 +58,15 @@
           <span class="pulse-dot"></span>
           <span id="session-role-label">Customer View</span>
         </div>
-        <button class="btn btn-logout-sm" onclick="logoutUser()" title="Logout & Switch Role">
+        <button class="btn btn-logout-sm" onclick="window.logoutUser()" title="Logout & Switch Role">
           <i data-lucide="log-out"></i> <span id="logout-btn-txt">வெளியேறு</span>
         </button>
       </div>
 
       <!-- Global Tamil / English Language Switcher -->
       <div class="lang-toggle-box">
-        <button class="lang-btn active" id="lang-ta-btn" onclick="setAppLanguage('ta')">🇮🇳 தமிழ்</button>
-        <button class="lang-btn" id="lang-en-btn" onclick="setAppLanguage('en')">🇬🇧 English</button>
+        <button class="lang-btn active" id="lang-ta-btn" onclick="window.setAppLanguage('ta')">🇮🇳 தமிழ்</button>
+        <button class="lang-btn" id="lang-en-btn" onclick="window.setAppLanguage('en')">🇬🇧 English</button>
       </div>
     </div>
   </header>
@@ -69,11 +87,11 @@
           <p id="gateway-subtitle">Select your role to access your dedicated hyper-local portal & dashboard</p>
         </div>
 
-        <!-- 4 Primary Role Selection Cards Grid -->
+        <!-- 4 Primary Stakeholder Role Selection Cards Grid -->
         <div class="role-cards-grid">
 
           <!-- Role 1: Customer / User View -->
-          <div class="role-select-card card-customer" onclick="initiateRoleAuth('customer')">
+          <div class="role-select-card card-customer" onclick="window.initiateRoleAuth('customer')">
             <div class="role-card-top">
               <div class="role-icon-box yellow">
                 <i data-lucide="car"></i>
@@ -81,8 +99,7 @@
               <span class="badge yellow">PUBLIC USER</span>
             </div>
             <h3 id="role-card-1-title">1. வாடிக்கையாளர் / User</h3>
-            <p id="role-card-1-desc">நெடுஞ்சாலை வாகன பழுது, பஞ்சர், பேட்டரி ஜம்ப், 30% மொத்த உதிரிபாகங்கள், டோயிங் &
-              24/7 காவலன் போலீஸ் SOS உதவி.</p>
+            <p id="role-card-1-desc">நெடுஞ்சாலை வாகன பழுது, பஞ்சர், பேட்டரி ஜம்ப், 30% மொத்த உதிரிபாகங்கள், டோயிங் & 24/7 காவலன் போலீஸ் SOS உதவி.</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> 6 நிமிடம் மெக்கானிக் ரேடார்</li>
               <li><i data-lucide="check"></i> நேரடி பேக்டரி விலை உதிரிபாகங்கள்</li>
@@ -94,7 +111,7 @@
           </div>
 
           <!-- Role 2: Mechanic Partner View -->
-          <div class="role-select-card card-mechanic" onclick="initiateRoleAuth('mechanic')">
+          <div class="role-select-card card-mechanic" onclick="window.initiateRoleAuth('mechanic')">
             <div class="role-card-top">
               <div class="role-icon-box green">
                 <i data-lucide="wrench"></i>
@@ -102,8 +119,7 @@
               <span class="badge green">PARTNER</span>
             </div>
             <h3 id="role-card-2-title">2. மெக்கானிக் பார்ட்னர் / Partner</h3>
-            <p id="role-card-2-desc">டியூட்டி ஆன்/ஆஃப் சுவிட்ச், Google Maps வழிசெலுத்தல், நேரலை பழுது கோரிக்கைகள் &
-              தினசரி வருமான கணக்கு (₹2,450+).</p>
+            <p id="role-card-2-desc">டியூட்டி ஆன்/ஆஃப் சுவிட்ச், Google Maps வழிசெலுத்தல், நேரலை பழுது கோரிக்கைகள் & தினசரி வருமான கணக்கு (₹2,450+).</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> உடனடி வேலை அறிவிப்புகள்</li>
               <li><i data-lucide="check"></i> டர்ன்-பை-டர்ன் GPS நேவிகேஷன்</li>
@@ -115,7 +131,7 @@
           </div>
 
           <!-- Role 3: Spare Parts Shop Owner View -->
-          <div class="role-select-card card-shop" onclick="initiateRoleAuth('shop')">
+          <div class="role-select-card card-shop" onclick="window.initiateRoleAuth('shop')">
             <div class="role-card-top">
               <div class="role-icon-box blue">
                 <i data-lucide="shopping-bag"></i>
@@ -123,8 +139,7 @@
               <span class="badge blue">MERCHANT</span>
             </div>
             <h3 id="role-card-3-title">3. உதிரிபாக விற்பனையாளர் / Shop Owner</h3>
-            <p id="role-card-3-desc">மொத்த உதிரிபாகங்கள் விற்பனை, நேரலை வாடிக்கையாளர் ஆர்டர்கள், இருப்பு மேலாண்மை &
-              உடனடி டெலிவரி டிஸ்பாட்ச்.</p>
+            <p id="role-card-3-desc">மொத்த உதிரிபாகங்கள் விற்பனை, நேரலை வாடிக்கையாளர் ஆர்டர்கள், இருப்பு மேலாண்மை & உடனடி டெலிவரி டிஸ்பாட்ச்.</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> இன்வென்டரி & ஸ்டாக் கண்ட்ரோல்</li>
               <li><i data-lucide="check"></i> மெக்கானிக் உடனடி ஆர்டர்கள்</li>
@@ -136,7 +151,7 @@
           </div>
 
           <!-- Role 4: Backup Travel / Towing Service View -->
-          <div class="role-select-card card-towing" onclick="initiateRoleAuth('towing')">
+          <div class="role-select-card card-towing" onclick="window.initiateRoleAuth('towing')">
             <div class="role-card-top">
               <div class="role-icon-box lime">
                 <i data-lucide="truck"></i>
@@ -144,8 +159,7 @@
               <span class="badge yellow">FLEET RECOVERY</span>
             </div>
             <h3 id="role-card-4-title">4. மீட்பு & டோயிங் சேவை / Towing Partner</h3>
-            <p id="role-card-4-desc">ஹைட்ராலிக் பிளாட்பெட் லாரிகள் & டோயிங் வாகனங்கள் மேலாண்மை, நெடுஞ்சாலை விபத்து
-              மீட்பு கோரிக்கைகள்.</p>
+            <p id="role-card-4-desc">ஹைட்ராலிக் பிளாட்பெட் லாரிகள் & டோயிங் வாகனங்கள் மேலாண்மை, நெடுஞ்சாலை விபத்து மீட்பு கோரிக்கைகள்.</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> பிளாட்பெட் / வீல்லிஃப்ட் ஃப்ளீட்</li>
               <li><i data-lucide="check"></i> நெடுஞ்சாலை அவசர பிக்கப்</li>
@@ -200,129 +214,43 @@
           <!-- Customer App Screen Body -->
           <div class="phone-screen" id="customer-screen-viewport">
 
-            <!-- Screen Header -->
+            <!-- Screen Top Bar -->
             <div class="screen-top-bar">
-              <div class="loc-indicator">
+              <div class="loc-indicator" onclick="window.customerNavigate('request')">
                 <i data-lucide="map-pin" class="loc-icon"></i>
                 <div>
                   <small id="c-loc-title">தற்போதைய இடம்</small>
-                  <strong id="c-loc-sub">தேனி பைபாஸ், தமிழ்நாடு</strong>
+                  <strong id="c-loc-sub">தேனி பைபாஸ் (NH-85), தமிழ்நாடு</strong>
                 </div>
               </div>
               <div class="screen-top-actions">
-                <button class="mini-sos-btn" onclick="customerNavigate('sos')" title="Kavalan Police SOS">
+                <button class="mini-sos-btn" onclick="window.customerNavigate('sos')" title="Kavalan Police SOS">
                   <i data-lucide="shield-alert"></i> SOS
                 </button>
-                <div class="mini-avatar" onclick="customerNavigate('profile')">M</div>
+                <div class="mini-avatar" onclick="window.customerNavigate('profile')">M</div>
               </div>
             </div>
 
-            <!-- Screen Viewport Container -->
+            <!-- Screen Viewport Container for Customer Sub-screens -->
             <div class="screen-inner-content" id="customer-inner-content">
-              <!-- Customer App Inner Content Components -->
-              <div class="customer-inner-content"
-                style="padding: 12px; display: flex; flex-direction: column; gap: 12px;">
-
-                <!-- 1. Vehicle Setup Modal (Onboarding) -->
-                <div id="vehicle-setup-modal" class="customer-setup-modal" style="display: none;">
-                  <h4 style="margin: 0 0 8px 0;">Vehicle Details</h4>
-                  <div class="vehicle-selector">
-                    <div class="vehicle-chip active" onclick="selectVehicleType('Bike')">🏍️ Bike</div>
-                    <div class="vehicle-chip" onclick="selectVehicleType('Car')">🚗 Car</div>
-                    <div class="vehicle-chip" onclick="selectVehicleType('Auto')">🛺 Auto</div>
-                  </div>
-                  <input type="text" id="vehicle-model-input" placeholder="Model (e.g. Swift / FZ)"
-                    style="margin-top: 8px; padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
-                  <input type="text" id="vehicle-plate-input" placeholder="Plate No (e.g. TN 57 AB 1234)"
-                    style="margin-top: 6px; padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
-                  <button class="btn-primary" style="margin-top: 8px; padding: 8px; width: 100%;"
-                    onclick="saveVehicleProfile()">Save Profile</button>
-                </div>
-
-                <!-- 2. Leaflet GPS Map Container with Pin Drop -->
-                <div class="map-wrapper">
-                  <div id="leaflet-map"></div>
-                  <div class="pin-drop-crosshair">
-                    <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Pin Drop">
-                  </div>
-                </div>
-
-                <!-- 3. Issue Selection & Audio Voice Note -->
-                <div class="issue-section">
-                  <h4 style="margin: 0 0 6px 0;">Select Issue Type</h4>
-                  <div class="issue-grid">
-                    <div class="issue-card" onclick="selectIssue('Breakdown', this)">🚨 Breakdown</div>
-                    <div class="issue-card" onclick="selectIssue('Puncture', this)">🛞 Puncture</div>
-                    <div class="issue-card" onclick="selectIssue('Battery Jump', this)">🔋 Battery</div>
-                    <div class="issue-card" onclick="selectIssue('Fuel', this)">⛽ Fuel</div>
-                  </div>
-
-                  <div class="voice-record-bar">
-                    <button id="btn-record" class="btn-mic-record" onclick="toggleVoiceRecording()">🎙️</button>
-                    <span id="recording-status" style="font-size: 11px; color: #64748b;">Tap for voice note</span>
-                    <input type="file" id="issue-photo" accept="image/*" style="display:none;"
-                      onchange="handlePhotoUpload(this)">
-                    <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;"
-                      onclick="document.getElementById('issue-photo').click()">📷 Photo</button>
-                  </div>
-                </div>
-
-                <!-- Request Help CTA -->
-                <button id="btn-request-help" class="btn-primary" style="width: 100%; padding: 10px; font-weight: bold;"
-                  onclick="initiateHaversineMatch()">
-                  REQUEST HELP (3KM SEARCH)
-                </button>
-
-                <!-- 4. Matched Mechanic Live Card -->
-                <div id="mechanic-matched-card" class="mechanic-match-card" style="display: none;">
-                  <img id="mech-avatar" src="https://via.placeholder.com/50" alt="Mechanic" class="mechanic-avatar">
-                  <div class="mechanic-details">
-                    <h4 id="mech-name" style="margin:0;">Searching Mechanic...</h4>
-                    <p id="mech-rating-eta" style="margin:2px 0;">⭐ 4.8 • ETA: 8 Mins</p>
-                    <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="callMechanic()">📞
-                      Call Mechanic</button>
-                  </div>
-                </div>
-
-                <!-- 5. Razorpay Rate Card Summary Modal -->
-                <div id="rate-card-modal" class="rate-card-summary" style="display: none;">
-                  <h4 style="margin:0 0 8px 0;">Service Bill Summary</h4>
-                  <div class="rate-item"><span>Visiting Charge</span><span>₹150</span></div>
-                  <div class="rate-item"><span>Spare Parts / Labor</span><span id="labor-cost-text">₹200</span></div>
-                  <div class="rate-item total"><span>Total Payable</span><span id="total-cost-text">₹350</span></div>
-                  <button class="btn-primary" style="width: 100%; margin-top: 8px; padding: 8px;"
-                    onclick="triggerRazorpayPayment()">
-                    PAY VIA RAZORPAY
-                  </button>
-                </div>
-
-                <!-- 6. 3-Second Hold SOS Emergency Button -->
-                <div style="margin-top: 8px;">
-                  <button class="sos-hold-button" onmousedown="startSOSHold()" onmouseup="cancelSOSHold()"
-                    onmouseleave="cancelSOSHold()" ontouchstart="startSOSHold()" ontouchend="cancelSOSHold()">
-                    <div id="sos-progress" class="sos-progress-bar"></div>
-                    <span style="position: relative; z-index: 2;">🚨 HOLD 3 SECS FOR SOS</span>
-                  </button>
-                </div>
-
-              </div>
+              <!-- Dynamically populated by JS: Home, Request, Tracking, Parts, Cart, Tow, SOS, Profile -->
             </div>
 
-            <!-- Customer Bottom Navigation Bar (Active on Mobile < 768px) -->
+            <!-- Customer Bottom Navigation Bar -->
             <nav class="customer-bottom-bar">
-              <button class="c-nav-item active" id="cnav-home" onclick="customerNavigate('home')">
+              <button class="c-nav-item active" id="cnav-home" onclick="window.customerNavigate('home')">
                 <i data-lucide="home"></i>
                 <span id="cnav-home-txt">முகப்பு</span>
               </button>
-              <button class="c-nav-item" id="cnav-parts" onclick="customerNavigate('parts')">
+              <button class="c-nav-item" id="cnav-parts" onclick="window.customerNavigate('parts')">
                 <i data-lucide="shopping-bag"></i>
                 <span id="cnav-parts-txt">உதிரிபாகங்கள்</span>
               </button>
-              <button class="c-nav-item" id="cnav-tow" onclick="customerNavigate('tow')">
+              <button class="c-nav-item" id="cnav-tow" onclick="window.customerNavigate('tow')">
                 <i data-lucide="truck"></i>
                 <span id="cnav-tow-txt">டோயிங்</span>
               </button>
-              <button class="c-nav-item" id="cnav-sos" onclick="customerNavigate('sos')">
+              <button class="c-nav-item" id="cnav-sos" onclick="window.customerNavigate('sos')">
                 <i data-lucide="shield-alert" style="color: #FF3B30;"></i>
                 <span style="color: #FF3B30;" id="cnav-sos-txt">காவலன் SOS</span>
               </button>
@@ -395,15 +323,18 @@
           <i data-lucide="shield-check"></i> Kavalan 112 Live Grid
         </span>
         <!-- Hidden Secret Trigger for Admin Login -->
-        <a href="#/admin-login" class="admin-secret-link" onclick="openAdminLoginModal(event)"
-          title="Authorized Staff Only (Ctrl+Shift+A)">
+        <a href="#/admin-login" class="admin-secret-link" onclick="window.openAdminLoginModal(event)" title="Authorized Staff Only (Ctrl+Shift+A)">
           <i data-lucide="lock"></i> <span id="admin-link-txt">நிர்வாக அறை (Staff Desk)</span>
         </a>
       </div>
     </div>
   </footer>
 
-  <!-- Streamlined Role Authentication Modal (Phone Number & OTP) -->
+  <!-- ========================================================================= -->
+  <!-- MODALS & OVERLAYS CONTAINER                                               -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. Streamlined Role Authentication Modal (Phone Number & OTP) -->
   <div id="auth-modal" class="modal-overlay">
     <div class="modal-box auth-modal-box">
       <div class="auth-modal-header">
@@ -414,7 +345,7 @@
             <small id="auth-modal-role-sub">Fast & Secure 1-Click Verification</small>
           </div>
         </div>
-        <button class="close-modal-btn" onclick="closeAuthModal()">✕</button>
+        <button class="close-modal-btn" onclick="window.closeAuthModal()">✕</button>
       </div>
       <div class="modal-body">
         <div class="auth-step-container">
@@ -422,14 +353,15 @@
             <label id="auth-phone-label">மொபைல் எண் (Mobile Phone):</label>
             <div class="phone-input-wrapper">
               <span class="phone-prefix">🇮🇳 +91</span>
-              <input type="tel" id="auth-phone-input" placeholder="Enter Mobile  Number" />
+              <input type="tel" id="auth-phone-input" placeholder="98765 43210" value="9876543210" />
             </div>
-            <div id="recaptcha-container"></div>
+            
+            <div id="recaptcha-container" style="margin-top: 8px;"></div>
 
             <div class="input-group" style="margin-top: 14px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <label id="auth-otp-label">அனுப்பப்பட்ட OTP எண்:</label>
-                <button class="btn-demo-autofill" onclick="autofillDemoOtp()">⚡ Auto-fill Demo (123456)</button>
+                <button type="button" class="btn-demo-autofill" onclick="window.autofillDemoOtp()">⚡ Auto-fill (123456)</button>
               </div>
               <div class="otp-inputs-row">
                 <input type="text" class="otp-digit" maxlength="1" value="1" />
@@ -446,104 +378,291 @@
               <span id="auth-perks-text">உடனடி சரிபார்ப்பு & நேரலை ஜி.பி.எஸ் இணைப்பு செயல்படுத்தப்படும்.</span>
             </div>
 
-            <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
-              onclick="submitRoleAuth()">
+            <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;" onclick="window.submitRoleAuth()">
               <i data-lucide="log-in"></i> <span id="auth-submit-btn-txt">சரிபார்த்து உள்நுழைக (VERIFY & ENTER)</span>
             </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Isolated Admin Staff Verification Modal (Secret Desk) -->
-    <div id="admin-login-modal" class="modal-overlay">
-      <div class="modal-box admin-auth-box">
-        <div class="admin-modal-header">
-          <div class="rzp-badge" style="background: #FF3B30;"><i data-lucide="shield-alert"
-              style="width: 20px; height: 20px; color: white;"></i></div>
-          <div>
-            <h3>🚨 TAMIL NADU POLICE & SUPER ADMIN DESK</h3>
-            <small>Restricted Internal Staff Verification Portal</small>
-          </div>
-          <button class="close-modal-btn" onclick="closeAdminLoginModal()">✕</button>
+  <!-- 2. Isolated Admin Staff Verification Modal (Secret Desk) -->
+  <div id="admin-login-modal" class="modal-overlay">
+    <div class="modal-box admin-auth-box">
+      <div class="admin-modal-header">
+        <div class="rzp-badge" style="background: #FF3B30;">
+          <i data-lucide="shield-alert" style="width: 20px; height: 20px; color: white;"></i>
         </div>
-        <div class="modal-body">
-          <div class="admin-alert-banner">
-            <i data-lucide="alert-triangle"></i>
-            <span>அங்கீகரிக்கப்பட்ட காவல் & தலைமை நிர்வாக பணியாளர்களுக்கு மட்டுமே அனுமதி!</span>
-          </div>
-
-          <div class="input-group" style="margin-top: 14px;">
-            <label>அதிகாரப்பூர்வ மின்னஞ்சல் (Staff Email):</label>
-            <input type="email" id="admin-email-input" value="admin@ullur.in" class="brutal-input" />
-          </div>
-
-          <div class="input-group" style="margin-top: 12px;">
-            <label>ரகசிய கடவுச்சொல் / Staff Key:</label>
-            <input type="password" id="admin-pass-input" value="KAVALAN-112" class="brutal-input" />
-          </div>
-
-          <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-            <button class="btn-demo-autofill" onclick="autofillAdminDemo()">⚡ Staff Key Demo Fill</button>
-          </div>
-
-          <button class="btn btn-red full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
-            onclick="verifyAdminLogin()">
-            <i data-lucide="lock"></i> <span>நிர்வாக அறையில் நுழைக (VERIFY STAFF ACCESS)</span>
-          </button>
+        <div>
+          <h3>🚨 TAMIL NADU POLICE & SUPER ADMIN DESK</h3>
+          <small>Restricted Internal Staff Verification Portal</small>
         </div>
+        <button class="close-modal-btn" onclick="window.closeAdminLoginModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="admin-alert-banner">
+          <i data-lucide="alert-triangle"></i>
+          <span>அங்கீகரிக்கப்பட்ட காவல் & தலைமை நிர்வாக பணியாளர்களுக்கு மட்டுமே அனுமதி!</span>
+        </div>
+
+        <div class="input-group" style="margin-top: 14px;">
+          <label>அதிகாரப்பூர்வ மின்னஞ்சல் (Staff Email):</label>
+          <input type="email" id="admin-email-input" value="admin@ullur.in" class="brutal-input" />
+        </div>
+
+        <div class="input-group" style="margin-top: 12px;">
+          <label>ரகசிய கடவுச்சொல் / Staff Key:</label>
+          <input type="password" id="admin-pass-input" value="KAVALAN-112" class="brutal-input" />
+        </div>
+
+        <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+          <button type="button" class="btn-demo-autofill" onclick="window.autofillAdminDemo()">⚡ Staff Key Demo Fill</button>
+        </div>
+
+        <button class="btn btn-red full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;" onclick="window.verifyAdminLogin()">
+          <i data-lucide="lock"></i> <span>நிர்வாக அறையில் நுழைக (VERIFY STAFF ACCESS)</span>
+        </button>
       </div>
     </div>
+  </div>
 
-    <!-- Global Razorpay Checkout Simulation Modal -->
-    <div id="razorpay-modal" class="modal-overlay">
-      <div class="modal-box">
-        <div class="razorpay-header">
-          <div class="rzp-badge">R</div>
-          <div>
-            <h3>Razorpay Trusted Checkout</h3>
-            <small>Ullur Mechanic Services Pvt Ltd</small>
-          </div>
-          <button class="close-modal-btn" onclick="closeRazorpayModal()">✕</button>
+  <!-- 3. Global Razorpay Checkout Simulation Modal -->
+  <div id="razorpay-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="razorpay-header">
+        <div class="rzp-badge">R</div>
+        <div>
+          <h3>Razorpay Trusted Checkout</h3>
+          <small>Ullur Mechanic Services Pvt Ltd • Secured 256-bit</small>
         </div>
-        <div class="modal-body">
-          <div class="pay-amount-box">
-            <span id="rzp-payable-label">செலுத்த வேண்டிய தொகை:</span>
-            <strong id="rzp-pay-amount">₹350.00</strong>
-          </div>
-          <div class="pay-options-list">
-            <label class="pay-option active">
-              <input type="radio" name="pay-method" checked />
-              <div class="pay-opt-info">
-                <strong>⚡ Google Pay / PhonePe / Paytm UPI</strong>
-                <small>Instant 1-Click Payment via UPI App</small>
-              </div>
-            </label>
-            <label class="pay-option">
-              <input type="radio" name="pay-method" />
-              <div class="pay-opt-info">
-                <strong>💳 Debit / Credit Card</strong>
-                <small>Visa, Mastercard, RuPay, Maestro</small>
-              </div>
-            </label>
-            <label class="pay-option">
-              <input type="radio" name="pay-method" />
-              <div class="pay-opt-info">
-                <strong>🏦 Net Banking / Wallets</strong>
-                <small>SBI, HDFC, ICICI, Axis Bank & More</small>
-              </div>
-            </label>
-          </div>
-          <button class="btn btn-green full-width" onclick="completeRazorpayPayment()">
-            <i data-lucide="lock"></i> <span id="rzp-btn-text">₹350.00 செலுத்து (PAY NOW)</span>
-          </button>
+        <button class="close-modal-btn" onclick="window.closeRazorpayModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="pay-amount-box">
+          <span id="rzp-payable-label">செலுத்த வேண்டிய தொகை:</span>
+          <strong id="rzp-pay-amount">₹350.00</strong>
         </div>
+        <div class="pay-options-list">
+          <label class="pay-option active">
+            <input type="radio" name="pay-method" checked />
+            <div class="pay-opt-info">
+              <strong>⚡ Google Pay / PhonePe / Paytm UPI</strong>
+              <small>Instant 1-Click Payment via UPI ID / QR</small>
+            </div>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay-method" />
+            <div class="pay-opt-info">
+              <strong>💳 Debit / Credit Card</strong>
+              <small>Visa, Mastercard, RuPay, Maestro</small>
+            </div>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay-method" />
+            <div class="pay-opt-info">
+              <strong>🏦 Net Banking / Wallets</strong>
+              <small>SBI, HDFC, ICICI, Axis Bank & More</small>
+            </div>
+          </label>
+        </div>
+        <button class="btn btn-green full-width" onclick="window.completeRazorpayPayment()">
+          <i data-lucide="lock"></i> <span id="rzp-btn-text">₹350.00 செலுத்து (PAY NOW)</span>
+        </button>
       </div>
     </div>
-    <script src="app.js"></script>
-    <!-- Firebase Web SDK (v9/v10 Compatibility) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  </div>
+
+  <!-- 4. Dynamic Digital Tax Invoice / Service Receipt Modal -->
+  <div id="invoice-receipt-modal" class="modal-overlay">
+    <div class="modal-box receipt-modal-box">
+      <div class="receipt-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <img src="ullur_mechanic_v2_logo.svg" alt="Ullur" style="width: 32px; height: 32px;" />
+          <div>
+            <h3 style="font-size: 16px; margin: 0;">ULLUR MECHANIC TAX INVOICE</h3>
+            <small style="color: #64748b;">GSTIN: 33AABCS1429B1Z8 • Tamil Nadu</small>
+          </div>
+        </div>
+        <button class="close-modal-btn" onclick="window.closeReceiptModal()">✕</button>
+      </div>
+      <div class="modal-body" id="receipt-modal-body">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Mechanic Incoming Job Alert Modal (with 30s Countdown Timer) -->
+  <div id="mechanic-alert-modal" class="modal-overlay">
+    <div class="modal-box dispatch-alert-box">
+      <div class="dispatch-header">
+        <div class="dispatch-badge red animate-pulse">
+          <i data-lucide="alert-triangle"></i>
+        </div>
+        <div>
+          <h3 style="margin:0; font-size: 17px;">🚨 INCOMING BREAKDOWN DISPATCH</h3>
+          <small>30s Auto-Rejection Timer Active</small>
+        </div>
+      </div>
+      <div class="modal-body" id="mechanic-alert-body">
+        <!-- Rendered dynamically by JS with timer & audio preview -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Mechanic Final Billing Cost Input Modal -->
+  <div id="mechanic-billing-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header-simple">
+        <h3>🔧 Generate Final Service Bill</h3>
+        <button class="close-modal-btn" onclick="window.closeMechanicBillingModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Base Visiting & Inspection Charge (Fixed):</label>
+          <input type="number" id="bill-base-input" value="150" readonly class="brutal-input" style="background:#f1f5f9;" />
+        </div>
+        <div class="input-group" style="margin-top: 10px;">
+          <label>Spare Parts Cost (₹):</label>
+          <input type="number" id="bill-parts-input" value="100" class="brutal-input" placeholder="e.g. 100 for puncture plug/patch" oninput="window.calcBillTotal()" />
+        </div>
+        <div class="input-group" style="margin-top: 10px;">
+          <label>Labor & Service Charges (₹):</label>
+          <input type="number" id="bill-labor-input" value="100" class="brutal-input" placeholder="e.g. 100" oninput="window.calcBillTotal()" />
+        </div>
+        <div class="rate-card-summary" style="margin-top: 12px;">
+          <div class="rate-item"><span>Visiting Fee</span><span id="calc-base-text">₹150</span></div>
+          <div class="rate-item"><span>Parts & Materials</span><span id="calc-parts-text">₹100</span></div>
+          <div class="rate-item"><span>Labor Fee</span><span id="calc-labor-text">₹100</span></div>
+          <div class="rate-item total"><span>Customer Total</span><span id="calc-total-text" style="color:#00C851;">₹350</span></div>
+        </div>
+        <button class="btn btn-green full-width" style="margin-top: 14px; padding: 12px;" onclick="window.submitMechanicBill()">
+          <i data-lucide="check"></i> Submit Bill & Request Payment
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Shop Owner Add Spare Part Modal -->
+  <div id="add-part-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header-simple">
+        <h3>📦 Add New Wholesale Spare Part</h3>
+        <button class="close-modal-btn" onclick="window.closeAddPartModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Part Name (English):</label>
+          <input type="text" id="new-part-name" placeholder="e.g. Amaron Hi-Life 35Ah Battery" class="brutal-input" />
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <label>Part Name (Tamil):</label>
+          <input type="text" id="new-part-nameta" placeholder="e.g. அமரான் ஹை-லைஃப் 35Ah பேட்டரி" class="brutal-input" />
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <label>Category:</label>
+          <select id="new-part-category" class="brutal-input">
+            <option value="Battery">Battery</option>
+            <option value="Oil">Engine Oil</option>
+            <option value="Brakes">Brake Pads & Shoes</option>
+            <option value="Tire">Tire & Tube</option>
+            <option value="Electrical">Electricals & Spark Plugs</option>
+            <option value="Filters">Air / Oil Filters</option>
+            <option value="Clutch">Clutch Plates & Cables</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+          <div class="input-group">
+            <label>Wholesale Price (₹):</label>
+            <input type="number" id="new-part-price" value="2800" class="brutal-input" />
+          </div>
+          <div class="input-group">
+            <label>Retail MRP (₹):</label>
+            <input type="number" id="new-part-retail" value="3600" class="brutal-input" />
+          </div>
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <label>Initial Stock Quantity:</label>
+          <input type="number" id="new-part-stock" value="12" class="brutal-input" />
+        </div>
+        <button class="btn btn-yellow full-width" style="margin-top: 14px; padding: 12px;" onclick="window.saveNewSparePart()">
+          <i data-lucide="plus-circle"></i> Add to Wholesale Catalog
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Towing Partner Register Truck Modal -->
+  <div id="add-tow-truck-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header-simple">
+        <h3>🚚 Register Recovery Vehicle</h3>
+        <button class="close-modal-btn" onclick="window.closeAddTowModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Vehicle Type:</label>
+          <select id="tow-type-input" class="brutal-input">
+            <option value="Flatbed Hydraulic">Flatbed Hydraulic (Zero Ground Touch)</option>
+            <option value="Wheel-Lift Crane">Wheel-Lift Crane (Fast Under-Lift)</option>
+            <option value="Heavy Commercial Rig">Heavy Commercial 12-Ton Rig</option>
+          </select>
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <label>Registration Number (e.g. TN-60-T-9005):</label>
+          <input type="text" id="tow-reg-input" placeholder="TN-60-T-9005" class="brutal-input" />
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <label>Driver Name & Mobile:</label>
+          <input type="text" id="tow-driver-input" placeholder="Ramanathan (+91 98421 99999)" class="brutal-input" />
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <label>Winch / Load Capacity (Tons):</label>
+          <input type="text" id="tow-cap-input" placeholder="4.5 Tons" class="brutal-input" />
+        </div>
+        <button class="btn btn-yellow full-width" style="margin-top: 14px; padding: 12px;" onclick="window.saveNewTowTruck()">
+          <i data-lucide="plus"></i> Register Fleet Vehicle
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Customer Post-Service Rating & Feedback Modal -->
+  <div id="rating-feedback-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header-simple">
+        <h3>⭐ Rate Your Service Experience</h3>
+        <button class="close-modal-btn" onclick="window.closeRatingModal()">✕</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <div style="font-size: 32px; margin: 8px 0; display: flex; justify-content: center; gap: 8px; cursor: pointer;">
+          <span class="star-rating" data-val="1" onclick="window.setStarRating(1)">★</span>
+          <span class="star-rating" data-val="2" onclick="window.setStarRating(2)">★</span>
+          <span class="star-rating" data-val="3" onclick="window.setStarRating(3)">★</span>
+          <span class="star-rating" data-val="4" onclick="window.setStarRating(4)">★</span>
+          <span class="star-rating active" data-val="5" onclick="window.setStarRating(5)">★</span>
+        </div>
+        <p id="star-rating-label" style="font-weight: 800; font-size: 13px; color: #166534;">Excellent (5/5 Stars)</p>
+        
+        <textarea id="feedback-text-input" placeholder="Share your feedback about mechanic arrival, repair speed, and professionalism..." class="brutal-input" style="width: 100%; height: 75px; margin-top: 10px;"></textarea>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding: 8px 12px; background: #f8fafc; border: 1.5px solid #0D0D0D; border-radius: 8px;">
+          <div style="text-align: left;">
+            <strong style="font-size: 12px;">❤️ Rebook Mechanic Toggle</strong>
+            <small style="display: block; font-size: 10px; color: #64748b;">Save as favorite trusted partner</small>
+          </div>
+          <input type="checkbox" id="rebook-toggle-check" checked style="width: 20px; height: 20px; accent-color: #00C851; cursor: pointer;" />
+        </div>
+
+        <button class="btn btn-green full-width" style="margin-top: 14px; padding: 12px;" onclick="window.submitServiceRating()">
+          <i data-lucide="check-circle"></i> Submit Rating & Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic Entrypoint -->
+  <script src="app.js"></script>
 </body>
 
 </html>
