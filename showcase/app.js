@@ -48,14 +48,13 @@ let confirmationResultGlobal = null;
 
 // Send Real SMS OTP Function
 function sendOTP() {
-  const phoneNumberInput = document.getElementById("phone-number").value.trim();
+  const phoneNumberInput = document.getElementById("phone-number") ? document.getElementById("phone-number").value : "";
 
-  if (phoneNumberInput.length < 10) {
+  if (!phoneNumberInput || phoneNumberInput.length < 10) {
     alert("Please enter a valid 10-digit mobile number!");
     return;
   }
 
-  // Format phone number with country code (+91 for India)
   const formattedPhoneNumber = "+91" + phoneNumberInput.slice(-10);
   const appVerifier = window.recaptchaVerifier;
 
@@ -63,19 +62,37 @@ function sendOTP() {
     auth.signInWithPhoneNumber(formattedPhoneNumber, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResultGlobal = confirmationResult;
-        alert(`Real SMS OTP sent to ${formattedPhoneNumber}! Check your mobile.`);
-
-        // Display OTP input section
-        document.getElementById("otp-section").style.display = "block";
+        alert(`Real SMS OTP sent to ${formattedPhoneNumber}! Check your phone.`);
       })
       .catch((error) => {
         console.error("SMS Error:", error);
-        alert("Error sending SMS: " + error.message);
+        alert("OTP Sending Failed: " + error.message);
       });
   } else {
-    alert(`[Demo Mode] OTP sent to ${formattedPhoneNumber}! Use 123456 or Auto-fill.`);
+    alert("Firebase Auth initialized aagala!");
   }
 }
+// Format phone number with country code (+91 for India)
+const formattedPhoneNumber = "+91" + phoneNumberInput.slice(-10);
+const appVerifier = window.recaptchaVerifier;
+
+if (auth) {
+  auth.signInWithPhoneNumber(formattedPhoneNumber, appVerifier)
+    .then((confirmationResult) => {
+      window.confirmationResultGlobal = confirmationResult;
+      alert(`Real SMS OTP sent to ${formattedPhoneNumber}! Check your mobile.`);
+
+      // Display OTP input section
+      document.getElementById("otp-section").style.display = "block";
+    })
+    .catch((error) => {
+      console.error("SMS Error:", error);
+      alert("Error sending SMS: " + error.message);
+    });
+} else {
+  alert(`[Demo Mode] OTP sent to ${formattedPhoneNumber}! Use 123456 or Auto-fill.`);
+}
+
 
 // Verify SMS OTP Function
 function verifyOTP() {
@@ -1810,3 +1827,134 @@ document.addEventListener('DOMContentLoaded', () => {
     switchAppMode('gateway');
   }
 });
+// ==========================================================================
+// ULLUR MECHANIC - CUSTOMER MODULE LOGIC & HANDLERS
+// ==========================================================================
+
+// 1. Vehicle Setup & Selection
+let selectedVehicleType = "Bike";
+let selectedIssueType = "Breakdown";
+
+function selectVehicleType(type) {
+  selectedVehicleType = type;
+  document.querySelectorAll('.vehicle-chip').forEach(chip => {
+    chip.classList.remove('active');
+    if (chip.innerText.includes(type)) chip.classList.add('active');
+  });
+}
+
+function saveVehicleProfile() {
+  const model = document.getElementById("vehicle-model-input").value;
+  const plate = document.getElementById("vehicle-plate-input").value;
+
+  if (!model || !plate) {
+    alert("Kandippa Model and Plate Number enter pannunggal!");
+    return;
+  }
+
+  const user = firebase.auth().currentUser;
+  if (user) {
+    firebase.firestore().collection("users").doc(user.uid).set({
+      vehicle: { type: selectedVehicleType, model: model, plate: plate }
+    }, { merge: true })
+      .then(() => {
+        alert("Vehicle Details Saved Successfully!");
+        document.getElementById("vehicle-setup-modal").style.display = "none";
+      });
+  } else {
+    alert("Vehicle Profile Saved Locally!");
+    document.getElementById("vehicle-setup-modal").style.display = "none";
+  }
+}
+
+// 2. Issue Selection
+function selectIssue(issue, element) {
+  selectedIssueType = issue;
+  document.querySelectorAll('.issue-card').forEach(card => card.classList.remove('selected'));
+  element.classList.add('selected');
+}
+
+// 3. Audio Voice Note Recorder (MediaRecorder API)
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+function toggleVoiceRecording() {
+  const btn = document.getElementById("btn-record");
+  const status = document.getElementById("recording-status");
+
+  if (!isRecording) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          status.innerText = "Voice Note Attached! 🎤";
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        btn.classList.add("recording");
+        status.innerText = "Recording... Tap to Stop";
+      })
+      .catch(err => alert("Microphone Permission Denied: " + err.message));
+  } else {
+    mediaRecorder.stop();
+    isRecording = false;
+    btn.classList.remove("recording");
+  }
+}
+
+// 4. Photo Attachment Preview Handler
+function handlePhotoUpload(input) {
+  if (input.files && input.files[0]) {
+    alert("Photo attached: " + input.files[0].name);
+  }
+}
+
+// 5. Haversine 3km Matching Radius Simulation
+function initiateHaversineMatch() {
+  const btn = document.getElementById("btn-request-help");
+  btn.innerText = "SEARCHING MECHANICS (3KM RADIUS)...";
+  btn.disabled = true;
+
+  // 2.5s Simulation for Finding Nearest Mechanic
+  setTimeout(() => {
+    document.getElementById("mechanic-matched-card").style.display = "flex";
+    document.getElementById("mech-name").innerText = "Senthil Kumar (Verified)";
+    document.getElementById("mech-rating-eta").innerText = "⭐ 4.9 • ETA: 6 Mins away";
+    btn.innerText = "MECHANIC MATCHED & EN ROUTE";
+
+    // Auto-display Bill Rate Card after mechanic completes job
+    setTimeout(() => {
+      document.getElementById("rate-card-modal").style.display = "block";
+    }, 4000);
+  }, 2500);
+}
+
+// 6. Direct Call Mechanic
+function callMechanic() {
+  window.location.href = "tel:+919876543210";
+}
+
+// 7. Razorpay Payment Gateway Trigger
+function triggerRazorpayPayment() {
+  alert("Razorpay Payment Gateway Modal Triggered!\nTotal: ₹350\n(Connecting to Razorpay Test/Live Sandbox)");
+}
+
+// 8. 3-Second Hold Emergency SOS Logic
+let sosTimer;
+function startSOSHold() {
+  const progress = document.getElementById("sos-progress");
+  progress.style.width = "100%";
+
+  sosTimer = setTimeout(() => {
+    alert("🚨 EMERGENCY SOS ACTIVATED!\nSending live location broadcast to your Emergency Contacts chain.");
+    progress.style.width = "0%";
+  }, 3000);
+}
+
+function cancelSOSHold() {
+  clearTimeout(sosTimer);
+  document.getElementById("sos-progress").style.width = "0%";
+}

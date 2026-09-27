@@ -219,7 +219,93 @@
 
             <!-- Screen Viewport Container -->
             <div class="screen-inner-content" id="customer-inner-content">
-              <!-- Content dynamically rendered via JS -->
+              <!-- Customer App Inner Content Components -->
+              <div class="customer-inner-content"
+                style="padding: 12px; display: flex; flex-direction: column; gap: 12px;">
+
+                <!-- 1. Vehicle Setup Modal (Onboarding) -->
+                <div id="vehicle-setup-modal" class="customer-setup-modal" style="display: none;">
+                  <h4 style="margin: 0 0 8px 0;">Vehicle Details</h4>
+                  <div class="vehicle-selector">
+                    <div class="vehicle-chip active" onclick="selectVehicleType('Bike')">🏍️ Bike</div>
+                    <div class="vehicle-chip" onclick="selectVehicleType('Car')">🚗 Car</div>
+                    <div class="vehicle-chip" onclick="selectVehicleType('Auto')">🛺 Auto</div>
+                  </div>
+                  <input type="text" id="vehicle-model-input" placeholder="Model (e.g. Swift / FZ)"
+                    style="margin-top: 8px; padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                  <input type="text" id="vehicle-plate-input" placeholder="Plate No (e.g. TN 57 AB 1234)"
+                    style="margin-top: 6px; padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                  <button class="btn-primary" style="margin-top: 8px; padding: 8px; width: 100%;"
+                    onclick="saveVehicleProfile()">Save Profile</button>
+                </div>
+
+                <!-- 2. Leaflet GPS Map Container with Pin Drop -->
+                <div class="map-wrapper">
+                  <div id="leaflet-map"></div>
+                  <div class="pin-drop-crosshair">
+                    <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Pin Drop">
+                  </div>
+                </div>
+
+                <!-- 3. Issue Selection & Audio Voice Note -->
+                <div class="issue-section">
+                  <h4 style="margin: 0 0 6px 0;">Select Issue Type</h4>
+                  <div class="issue-grid">
+                    <div class="issue-card" onclick="selectIssue('Breakdown', this)">🚨 Breakdown</div>
+                    <div class="issue-card" onclick="selectIssue('Puncture', this)">🛞 Puncture</div>
+                    <div class="issue-card" onclick="selectIssue('Battery Jump', this)">🔋 Battery</div>
+                    <div class="issue-card" onclick="selectIssue('Fuel', this)">⛽ Fuel</div>
+                  </div>
+
+                  <div class="voice-record-bar">
+                    <button id="btn-record" class="btn-mic-record" onclick="toggleVoiceRecording()">🎙️</button>
+                    <span id="recording-status" style="font-size: 11px; color: #64748b;">Tap for voice note</span>
+                    <input type="file" id="issue-photo" accept="image/*" style="display:none;"
+                      onchange="handlePhotoUpload(this)">
+                    <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;"
+                      onclick="document.getElementById('issue-photo').click()">📷 Photo</button>
+                  </div>
+                </div>
+
+                <!-- Request Help CTA -->
+                <button id="btn-request-help" class="btn-primary" style="width: 100%; padding: 10px; font-weight: bold;"
+                  onclick="initiateHaversineMatch()">
+                  REQUEST HELP (3KM SEARCH)
+                </button>
+
+                <!-- 4. Matched Mechanic Live Card -->
+                <div id="mechanic-matched-card" class="mechanic-match-card" style="display: none;">
+                  <img id="mech-avatar" src="https://via.placeholder.com/50" alt="Mechanic" class="mechanic-avatar">
+                  <div class="mechanic-details">
+                    <h4 id="mech-name" style="margin:0;">Searching Mechanic...</h4>
+                    <p id="mech-rating-eta" style="margin:2px 0;">⭐ 4.8 • ETA: 8 Mins</p>
+                    <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="callMechanic()">📞
+                      Call Mechanic</button>
+                  </div>
+                </div>
+
+                <!-- 5. Razorpay Rate Card Summary Modal -->
+                <div id="rate-card-modal" class="rate-card-summary" style="display: none;">
+                  <h4 style="margin:0 0 8px 0;">Service Bill Summary</h4>
+                  <div class="rate-item"><span>Visiting Charge</span><span>₹150</span></div>
+                  <div class="rate-item"><span>Spare Parts / Labor</span><span id="labor-cost-text">₹200</span></div>
+                  <div class="rate-item total"><span>Total Payable</span><span id="total-cost-text">₹350</span></div>
+                  <button class="btn-primary" style="width: 100%; margin-top: 8px; padding: 8px;"
+                    onclick="triggerRazorpayPayment()">
+                    PAY VIA RAZORPAY
+                  </button>
+                </div>
+
+                <!-- 6. 3-Second Hold SOS Emergency Button -->
+                <div style="margin-top: 8px;">
+                  <button class="sos-hold-button" onmousedown="startSOSHold()" onmouseup="cancelSOSHold()"
+                    onmouseleave="cancelSOSHold()" ontouchstart="startSOSHold()" ontouchend="cancelSOSHold()">
+                    <div id="sos-progress" class="sos-progress-bar"></div>
+                    <span style="position: relative; z-index: 2;">🚨 HOLD 3 SECS FOR SOS</span>
+                  </button>
+                </div>
+
+              </div>
             </div>
 
             <!-- Customer Bottom Navigation Bar (Active on Mobile < 768px) -->
