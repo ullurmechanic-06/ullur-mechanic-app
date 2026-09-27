@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 /* global firebase, L, Razorpay, lucide */
 // ==========================================================================
-// ULLUR MECHANIC — COMPLETE MULTI-ROLE ROAD BREAKDOWN & EMERGENCY SUPER APP
-// High-Fidelity Bilingual Architecture, 5 Stakeholder Portals, Leaflet & Razorpay
+// ULLUR MECHANIC — COMPLETE FULL-WIDTH MULTI-STAKEHOLDER SUPER APP
+// High-Fidelity Bilingual Architecture, 5 Full-Width Portals, Leaflet & Razorpay
 // ==========================================================================
 
 // --------------------------------------------------------------------------
@@ -38,7 +38,6 @@ try {
 // Global window reference for confirmation result
 window.confirmationResultGlobal = null;
 
-// Setup reCAPTCHA verifier if container exists
 function setupRecaptcha() {
   try {
     if (typeof firebase !== "undefined" && firebase.auth && document.getElementById('recaptcha-container')) {
@@ -136,7 +135,7 @@ const APP_STATE = {
       lat: 10.0180,
       lng: 77.4820,
       isOnline: true,
-      status: 'Verified', // 'Verified' | 'Pending Verification' | 'Suspended'
+      status: 'Verified',
       radiusKm: 15,
       tools: ['Puncture Kit', 'Battery Booster', 'Diagnostic OBD Scanner', 'Hydraulic Jack'],
       experience: '8 Years',
@@ -265,11 +264,11 @@ const STRINGS = {
     roleCard4Desc: 'ஹைட்ராலிக் பிளாட்பெட் லாரிகள் & டோயிங் வாகனங்கள் மேலாண்மை, நெடுஞ்சாலை விபத்து மீட்பு கோரிக்கைகள்.',
     roleCard4Btn: 'டோயிங் உள்நுழைவு (Towing Login)',
 
-    navHome: 'முகப்பு',
+    navHome: 'முகப்பு / உதவி',
     navParts: 'உதிரிபாகங்கள்',
-    navTow: 'டோயிங்',
-    navSos: 'காவலன் SOS',
-    navProfile: 'சுயவிவரம்',
+    navTow: 'டோயிங் & மீட்பு',
+    navSos: 'காவலன் 112 SOS',
+    navProfile: 'எனது வாகனம்',
     locTitle: 'தற்போதைய இடம்',
     locSub: 'தேனி பைபாஸ் (NH-85), தமிழ்நாடு',
     sosBannerTitle: '🚨 காவலன் அவசர போலீஸ் உதவி (112 SOS)',
@@ -299,26 +298,8 @@ const STRINGS = {
     sirenBtn: '🔊 அலார ஒலி எழுப்பு (Siren)',
     reportMisbehavior: 'மெக்கானிக் தகாத நடத்தை மீது புகார் அளி',
 
-    guideTitle: 'நேரலை சோதனை வழிகாட்டி',
-    guideIntro: 'இந்த திரையில் நீங்கள் நேரடியாக அனைத்து அம்சங்களையும் தொட்டு இயக்கலாம்:',
-    guideStep1Title: '1. பழுது நீக்க கோரிக்கை:',
-    guideStep1Desc: "'வாகன பழுது நீக்கம்' தொட்டு GPS அல்லது மேப்பில் பின் வைத்து 3km->6km->10km ரேடார் தேடலை இயக்கவும்.",
-    guideStep2Title: '2. நேரலை டிரேக்கிங் & Razorpay:',
-    guideStep2Desc: 'Leaflet வரைபடத்தில் மெக்கானிக் நகர்வை பார்த்துவிட்டு Razorpay மூலம் ₹350 செலுத்தி ரசீது பெறவும்.',
-    guideStep3Title: '3. 🚨 3-வினாடி காவலன் SOS:',
-    guideStep3Desc: '3 வினாடிகள் தொடர்ந்து அழுத்தி 112 காவல்துறைக்கு நேரலை GPS அனுப்பவும்.',
-    guideStep4Title: '4. மொத்த உதிரிபாகங்கள் அங்காடி:',
-    guideStep4Desc: '30% நேரடி தொழிற்சாலை தள்ளுபடியில் உதிரிபாகங்களை கூடையில் சேர்த்து ஆர்டர் செய்யவும்.',
-    guideBtnHome: 'முகப்பு திரை',
-    guideBtnSos: '112 SOS சோதனை',
-    guideBtnParts: 'உதிரிபாகங்கள் கூடை',
-
     mechDutyTitle: 'மெக்கானிக் பார்ட்னர் கன்சோல்',
     mechDutyIntro: 'செல்வம் ஆட்டோ ஒர்க்ஸ் பார்ட்னர் அம்சங்கள்:',
-    mechStep1: 'ஆன்லைன்/ஆஃப்லைன் ஸ்விட்ச் & ரேடியஸ் ஸ்லைடர் (15km).',
-    mechStep2: 'Google Maps டர்ன்-பை-டர்ன் நேவிகேஷன் இணைப்பு.',
-    mechStep3: 'பணி நிலை: Arrived ➔ In Progress ➔ Final Bill ➔ Completed.',
-    mechStep4: 'வருமான கணக்கு & கமிஷன் விவரங்கள் (10% Platform Fee).',
     mechTodayEarnings: "இன்றைய வருமானம்",
     mechCompletedJobs: 'முடிந்த பணிகள்',
     mechActiveJob: '🔥 நேரலை பழுது பணி',
@@ -394,11 +375,11 @@ const STRINGS = {
     roleCard4Desc: 'Hydraulic flatbed & wheel-lift recovery fleet management, highway breakdown tow requests & toll road emergency routing.',
     roleCard4Btn: 'Towing Fleet Login ➔',
 
-    navHome: 'Home',
+    navHome: 'Home / Help',
     navParts: 'Spares',
-    navTow: 'Towing',
-    navSos: 'Police SOS',
-    navProfile: 'Profile',
+    navTow: 'Towing & Recovery',
+    navSos: 'Kavalan 112 SOS',
+    navProfile: 'My Vehicle',
     locTitle: 'CURRENT LOCATION',
     locSub: 'Theni Highway Bypass (NH-85), TN',
     sosBannerTitle: '🚨 KAVALAN POLICE SOS (112 ALERT)',
@@ -428,26 +409,8 @@ const STRINGS = {
     sirenBtn: '🔊 Sound High-Decibel Siren',
     reportMisbehavior: 'Report Mechanic Misbehavior',
 
-    guideTitle: 'Interactive Live Guide',
-    guideIntro: 'You can directly touch and test all features on this screen:',
-    guideStep1Title: '1. Breakdown Request:',
-    guideStep1Desc: "Tap 'Breakdown Repair' to select issue, drop pin on Leaflet map, and initiate 3km->6km->10km radar search.",
-    guideStep2Title: '2. Live Tracking & Razorpay:',
-    guideStep2Desc: 'Watch real-time mechanic animation on map, test grace cancellation, and pay ₹350 for itemized receipt.',
-    guideStep3Title: '3. 🚨 3-Sec Hold SOS:',
-    guideStep3Desc: 'Press and hold 3 seconds to test the anti-accidental Kavalan 112 emergency broadcast.',
-    guideStep4Title: '4. Wholesale Spares Store:',
-    guideStep4Desc: 'Order batteries and engine oils directly at 30% factory wholesale discounts.',
-    guideBtnHome: 'Home Screen',
-    guideBtnSos: 'Test 112 SOS',
-    guideBtnParts: 'Test Spares Cart',
-
     mechDutyTitle: 'Mechanic Partner Console',
     mechDutyIntro: 'Selvam Auto Works Partner features:',
-    mechStep1: 'Online/Offline Duty Toggle & Radius slider (15km).',
-    mechStep2: 'Google Maps Navigation: Turn-by-turn routing to customer breakdown location.',
-    mechStep3: 'Job Stage Progression: Arrived ➔ In Progress ➔ Final Bill ➔ Completed.',
-    mechStep4: "Earnings Wallet: Track today's revenue and completed service jobs (10% platform fee).",
     mechTodayEarnings: "Today's Earnings",
     mechCompletedJobs: 'Jobs Completed',
     mechActiveJob: '🔥 ACTIVE BREAKDOWN JOB',
@@ -521,7 +484,7 @@ function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c;
-  return Math.round(d * 10) / 10; // 1 decimal place
+  return Math.round(d * 10) / 10;
 }
 
 // --------------------------------------------------------------------------
@@ -628,7 +591,7 @@ window.verifyAdminLogin = function () {
 };
 
 // --------------------------------------------------------------------------
-// 6. APP MODE SWITCHER & DESKTOP NAVIGATION
+// 6. APP MODE SWITCHER & DESKTOP HEADER NAVIGATION
 // --------------------------------------------------------------------------
 window.switchAppMode = function (mode) {
   document.querySelectorAll('.app-mode-view').forEach((view) => view.classList.remove('active'));
@@ -649,7 +612,6 @@ window.switchAppMode = function (mode) {
       if (sessionRoleLabel) sessionRoleLabel.innerText = APP_STATE.lang === 'ta' ? '🧑 வாடிக்கையாளர்' : 'Customer View';
     }
     window.customerNavigate(APP_STATE.customerScreen);
-    renderCustomerGuidePanel();
     renderDesktopHeaderNav('customer');
   } else if (mode === 'mechanic') {
     const mm = document.getElementById('mechanic-mode');
@@ -659,7 +621,6 @@ window.switchAppMode = function (mode) {
       if (sessionRoleLabel) sessionRoleLabel.innerText = APP_STATE.lang === 'ta' ? '🔧 மெக்கானிக் பார்ட்னர்' : 'Mechanic Partner';
     }
     renderMechanicScreen();
-    renderMechanicGuidePanel();
     renderDesktopHeaderNav('mechanic');
   } else if (mode === 'shop') {
     const sm = document.getElementById('shop-mode');
@@ -706,10 +667,10 @@ function renderDesktopHeaderNav(role) {
     `;
   } else if (role === 'customer') {
     container.innerHTML = `
-      <button class="d-nav-btn ${APP_STATE.customerScreen === 'home' ? 'active' : ''}" id="dnav-home" onclick="window.customerNavigate('home')">
+      <button class="d-nav-btn ${APP_STATE.customerScreen === 'home' || APP_STATE.customerScreen === 'request' ? 'active' : ''}" id="dnav-home" onclick="window.customerNavigate('home')">
         <i data-lucide="home"></i> <span>${t('navHome')}</span>
       </button>
-      <button class="d-nav-btn ${APP_STATE.customerScreen === 'parts' ? 'active' : ''}" id="dnav-parts" onclick="window.customerNavigate('parts')">
+      <button class="d-nav-btn ${APP_STATE.customerScreen === 'parts' || APP_STATE.customerScreen === 'cart' ? 'active' : ''}" id="dnav-parts" onclick="window.customerNavigate('parts')">
         <i data-lucide="shopping-bag"></i> <span>${t('navParts')}</span>
       </button>
       <button class="d-nav-btn ${APP_STATE.customerScreen === 'tow' ? 'active' : ''}" id="dnav-tow" onclick="window.customerNavigate('tow')">
@@ -823,26 +784,10 @@ window.setAppLanguage = function (lang) {
   const rc4B = document.getElementById('role-card-4-btn');
   if (rc4B) rc4B.innerText = t('roleCard4Btn');
 
-  // Customer Top/Bottom Texts
-  const cLocT = document.getElementById('c-loc-title');
-  if (cLocT) cLocT.innerText = t('locTitle');
-  const cLocS = document.getElementById('c-loc-sub');
-  if (cLocS) cLocS.innerText = t('locSub');
-  const cnavHome = document.getElementById('cnav-home-txt');
-  if (cnavHome) cnavHome.innerText = t('navHome');
-  const cnavParts = document.getElementById('cnav-parts-txt');
-  if (cnavParts) cnavParts.innerText = t('navParts');
-  const cnavTow = document.getElementById('cnav-tow-txt');
-  if (cnavTow) cnavTow.innerText = t('navTow');
-  const cnavSos = document.getElementById('cnav-sos-txt');
-  if (cnavSos) cnavSos.innerText = t('navSos');
-
   if (APP_STATE.role === 'customer') {
     window.customerNavigate(APP_STATE.customerScreen);
-    renderCustomerGuidePanel();
   } else if (APP_STATE.role === 'mechanic') {
     renderMechanicScreen();
-    renderMechanicGuidePanel();
   } else if (APP_STATE.role === 'shop') {
     renderShopOwnerScreen();
   } else if (APP_STATE.role === 'towing') {
@@ -856,7 +801,7 @@ window.setAppLanguage = function (lang) {
 };
 
 // --------------------------------------------------------------------------
-// 8. CUSTOMER MODULE — NAVIGATION & SCREENS
+// 8. CUSTOMER MODULE — NATIVE RESPONSIVE FULL-WIDTH VIEWS
 // --------------------------------------------------------------------------
 let leafletCustomerMap = null;
 let leafletTrackingMap = null;
@@ -872,7 +817,7 @@ let graceSecondsLeft = 120; // 2 minutes free cancellation
 
 window.customerNavigate = function (screen) {
   APP_STATE.customerScreen = screen;
-  const container = document.getElementById('customer-inner-content');
+  const container = document.getElementById('customer-panel-container');
   if (!container) return;
 
   // Clear timers if moving away from tracking
@@ -881,233 +826,234 @@ window.customerNavigate = function (screen) {
     if (gracePeriodInterval) clearInterval(gracePeriodInterval);
   }
 
-  // Sync Bottom Nav Active State
-  document.querySelectorAll('.c-nav-item').forEach((item) => item.classList.remove('active'));
-  const activeMobile = document.getElementById(`cnav-${screen}`);
-  if (activeMobile) activeMobile.classList.add('active');
+  // Update Desktop Header Nav
+  renderDesktopHeaderNav('customer');
 
-  // Sync Desktop Nav Active State
-  document.querySelectorAll('.d-nav-btn').forEach((btn) => btn.classList.remove('active'));
-  const activeDesk = document.getElementById(`dnav-${screen}`);
-  if (activeDesk) activeDesk.classList.add('active');
+  // Render Sub-header bar + Screen body
+  container.innerHTML = `
+    <!-- Full-Width Customer Sub-Header Bar -->
+    <div class="dashboard-sub-header">
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <div class="loc-indicator" onclick="window.customerNavigate('request')">
+          <i data-lucide="map-pin" class="loc-icon" style="color: #FF3B30; width: 22px; height: 22px;"></i>
+          <div>
+            <small style="font-size: 10px; font-weight: 900; color: #64748B;">CURRENT GPS LOCATION</small>
+            <strong style="font-size: 13.5px; display: block;">${APP_STATE.customer.location.name}</strong>
+          </div>
+        </div>
+
+        <div style="padding-left: 12px; border-left: 2px solid #E2E8F0; display: flex; align-items: center; gap: 8px;">
+          <span class="badge black">🚗 ${APP_STATE.customer.vehicle.plate}</span>
+          <span style="font-size: 12px; font-weight: 800;">${APP_STATE.customer.vehicle.model}</span>
+        </div>
+      </div>
+
+      <!-- Customer Sub-Navigation Tabs Bar -->
+      <div class="customer-sub-nav">
+        <button class="c-subnav-btn ${screen === 'home' || screen === 'request' ? 'active' : ''}" onclick="window.customerNavigate('home')">
+          <i data-lucide="home"></i> <span>${t('navHome')}</span>
+        </button>
+        <button class="c-subnav-btn ${screen === 'parts' || screen === 'cart' ? 'active' : ''}" onclick="window.customerNavigate('parts')">
+          <i data-lucide="shopping-bag"></i> <span>${t('navParts')}</span>
+        </button>
+        <button class="c-subnav-btn ${screen === 'tow' ? 'active' : ''}" onclick="window.customerNavigate('tow')">
+          <i data-lucide="truck"></i> <span>${t('navTow')}</span>
+        </button>
+        <button class="c-subnav-btn ${screen === 'profile' ? 'active' : ''}" onclick="window.customerNavigate('profile')">
+          <i data-lucide="user"></i> <span>${t('navProfile')}</span>
+        </button>
+        <button class="c-subnav-btn sos-btn ${screen === 'sos' ? 'active' : ''}" onclick="window.customerNavigate('sos')">
+          <i data-lucide="shield-alert"></i> <span>${t('navSos')}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Screen Viewport Area -->
+    <div id="customer-active-view-body" style="width: 100%;"></div>
+  `;
+
+  const bodyContainer = document.getElementById('customer-active-view-body');
+  if (!bodyContainer) return;
 
   switch (screen) {
     case 'home':
-      renderCustomerHomeScreen(container);
-      break;
     case 'request':
-      renderCustomerRequestScreen(container);
+      renderCustomerHomeSplitScreen(bodyContainer);
       break;
     case 'tracking':
-      renderCustomerTrackingScreen(container);
+      renderCustomerTrackingSplitScreen(bodyContainer);
       break;
     case 'parts':
-      renderCustomerPartsScreen(container);
+      renderCustomerPartsCatalog(bodyContainer);
       break;
     case 'cart':
-      renderCustomerCartScreen(container);
+      renderCustomerCartView(bodyContainer);
       break;
     case 'tow':
-      renderCustomerTowScreen(container);
+      renderCustomerTowView(bodyContainer);
       break;
     case 'sos':
-      renderCustomerSosScreen(container);
+      renderCustomerSosView(bodyContainer);
       break;
     case 'profile':
-      renderCustomerProfileScreen(container);
+      renderCustomerProfileView(bodyContainer);
       break;
     default:
-      renderCustomerHomeScreen(container);
+      renderCustomerHomeSplitScreen(bodyContainer);
   }
 
   if (window.lucide) lucide.createIcons();
 };
 
-// Customer Screen 1: Home Dashboard
-function renderCustomerHomeScreen(container) {
+// Customer Screen: Full-Width 2-Column Responsive Breakdown & Request Screen
+function renderCustomerHomeSplitScreen(container) {
   const verifiedMechs = APP_STATE.mechanics.filter((m) => m.status === 'Verified');
 
   container.innerHTML = `
-    <!-- Kavalan Police SOS Banner -->
-    <div class="b-card red" style="cursor: pointer;" onclick="window.customerNavigate('sos')">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="background: white; color: #FF3B30; padding: 8px; border-radius: 8px; border: 2px solid #0D0D0D;">
-          <i data-lucide="shield-alert" style="width: 24px; height: 24px;"></i>
-        </div>
-        <div style="flex: 1;">
-          <strong style="font-size: 13px; display: block;">${t('sosBannerTitle')}</strong>
-          <small style="font-size: 10.5px; font-weight: 700;">${t('sosBannerSub')}</small>
-        </div>
-        <button class="btn btn-yellow" style="padding: 4px 8px; font-size: 11px;">${t('sosFixBtn')}</button>
-      </div>
-    </div>
-
-    <!-- 3 Quick Action Tiles -->
-    <div class="quick-grid">
-      <div class="quick-tile" style="background: #FFD600;" onclick="window.customerNavigate('request')">
-        <i data-lucide="car-crash"></i>
-        <span>${t('actBreakdown')}</span>
-      </div>
-      <div class="quick-tile" style="background: #CCFF90;" onclick="window.customerNavigate('parts')">
-        <i data-lucide="package"></i>
-        <span>${t('actSpares')}</span>
-      </div>
-      <div class="quick-tile" style="background: #B3E5FC;" onclick="window.customerNavigate('tow')">
-        <i data-lucide="truck"></i>
-        <span>${t('actTow')}</span>
-      </div>
-    </div>
-
-    <!-- Active Vehicle Chip -->
-    <div class="b-card" style="padding: 10px; background: #F8FAFC;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <small style="font-size: 9.5px; font-weight: 900; color: #64748b;">ACTIVE REGISTERED VEHICLE</small>
-          <strong style="font-size: 12.5px; display: block;">🚗 ${APP_STATE.customer.vehicle.model}</strong>
-          <span style="font-size: 11px; font-weight: 900; color: #DC2626;">${APP_STATE.customer.vehicle.plate}</span>
-        </div>
-        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="window.customerNavigate('profile')">
-          <i data-lucide="edit-2"></i> Edit
-        </button>
-      </div>
-    </div>
-
-    <!-- Nearby Mechanics Radar Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <strong style="font-size: 13px; font-weight: 900;">${t('nearbyMechs')} (${verifiedMechs.length})</strong>
-      <span class="pill green" style="display: flex; align-items: center; gap: 4px;">
-        <span class="pulse-dot" style="width: 6px; height: 6px;"></span> ${t('liveRadar')}
-      </span>
-    </div>
-
-    <!-- Mechanics Cards List -->
-    ${verifiedMechs
-      .map((mech) => {
-        const dist = calculateHaversineDistance(
-          APP_STATE.customer.location.lat,
-          APP_STATE.customer.location.lng,
-          mech.lat,
-          mech.lng
-        );
-        return `
-        <div class="b-card">
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <img src="${mech.avatar}" alt="${mech.name}" class="mechanic-avatar" />
+    <!-- 2-Column Responsive Desktop Grid -->
+    <div class="desktop-split-grid">
+      <!-- Left Column: Request Form, Issue Selection, Voice Note, Vehicle details -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Kavalan Police SOS Alert Bar -->
+        <div class="b-card red" style="cursor: pointer;" onclick="window.customerNavigate('sos')">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: white; color: #FF3B30; padding: 10px; border-radius: 10px; border: 2px solid #0D0D0D;">
+              <i data-lucide="shield-alert" style="width: 28px; height: 28px;"></i>
+            </div>
             <div style="flex: 1;">
-              <strong style="font-size: 13.5px;">${APP_STATE.lang === 'ta' ? mech.nameTa : mech.name}</strong>
-              <div style="font-size: 11px; font-weight: 700; color: #555;">⭐ ${mech.rating} (${mech.jobsDone} jobs) • <span style="color: #00C851; font-weight: 900;">ONLINE</span></div>
-              <small style="display: block; font-size: 10px; color: #666;">📍 ${mech.serviceArea}</small>
+              <strong style="font-size: 14px; display: block;">${t('sosBannerTitle')}</strong>
+              <small style="font-size: 11.5px; font-weight: 700;">${t('sosBannerSub')}</small>
             </div>
-            <div style="text-align: right;">
-              <strong style="font-size: 13px;">${dist} km</strong>
-              <small style="display: block; font-size: 10px; color: #777;">~${Math.round(dist * 6)} mins</small>
+            <button class="btn btn-yellow" style="padding: 6px 12px; font-size: 12px;">${t('sosFixBtn')}</button>
+          </div>
+        </div>
+
+        <!-- Vehicle Details Selector -->
+        <div class="b-card yellow">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <small style="font-size: 10px; font-weight: 900; color: #64748B;">VEHICLE REPAIR PROFILE</small>
+              <strong style="font-size: 14px; display: block;">🚗 ${APP_STATE.customer.vehicle.type}: ${APP_STATE.customer.vehicle.model}</strong>
+            </div>
+            <span class="badge black">${APP_STATE.customer.vehicle.plate}</span>
+          </div>
+          <div class="vehicle-selector" style="margin-top: 10px;">
+            <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Bike' ? 'active' : ''}" onclick="window.updateVehicleType('Bike')">🏍️ Bike</div>
+            <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Car' ? 'active' : ''}" onclick="window.updateVehicleType('Car')">🚗 Car</div>
+            <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Auto' ? 'active' : ''}" onclick="window.updateVehicleType('Auto')">🛺 Auto</div>
+          </div>
+        </div>
+
+        <!-- Issue Category Grid -->
+        <div class="b-card">
+          <strong style="font-size: 13.5px;">Select Breakdown Issue Type:</strong>
+          <div class="issue-grid" style="margin-top: 8px;">
+            <div class="issue-card ${APP_STATE.customer.issue.category === 'Breakdown' ? 'selected' : ''}" onclick="window.selectIssueCategory('Breakdown', this)">🚨 General Breakdown</div>
+            <div class="issue-card ${APP_STATE.customer.issue.category === 'Puncture' ? 'selected' : ''}" onclick="window.selectIssueCategory('Puncture', this)">🛞 Tire Puncture</div>
+            <div class="issue-card ${APP_STATE.customer.issue.category === 'Battery Jump' ? 'selected' : ''}" onclick="window.selectIssueCategory('Battery Jump', this)">🔋 Battery Jumpstart</div>
+            <div class="issue-card ${APP_STATE.customer.issue.category === 'Fuel' ? 'selected' : ''}" onclick="window.selectIssueCategory('Fuel', this)">⛽ Emergency Fuel</div>
+            <div class="issue-card ${APP_STATE.customer.issue.category === 'Other' ? 'selected' : ''}" onclick="window.selectIssueCategory('Other', this)">🛠️ Mechanical Fault</div>
+          </div>
+        </div>
+
+        <!-- Voice Note & Photo Capture -->
+        <div class="b-card">
+          <strong style="font-size: 13px;">Attach Voice Note & Photo (Optional):</strong>
+          <div class="voice-record-bar" style="margin-top: 8px;">
+            <button id="btn-record" class="btn-mic-record ${isVoiceRecording ? 'recording' : ''}" onclick="window.toggleVoiceRecording()" title="Record Audio Note">
+              🎙️
+            </button>
+            <div style="flex: 1;">
+              <span id="recording-status-txt" style="font-size: 12px; font-weight: 700; color: #334155;">
+                ${isVoiceRecording ? `Recording Voice Note... (${voiceRecordSeconds}s)` : (APP_STATE.customer.issue.audioBlobUrl ? '✅ Voice Note Attached!' : 'Tap mic to record audio message')}
+              </span>
+              ${APP_STATE.customer.issue.audioBlobUrl ? `<audio controls src="${APP_STATE.customer.issue.audioBlobUrl}" style="height: 30px; width: 100%; margin-top: 4px;"></audio>` : ''}
+            </div>
+            <input type="file" id="issue-photo-input" accept="image/*" style="display:none;" onchange="window.handlePhotoUpload(this)" />
+            <button class="btn btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="document.getElementById('issue-photo-input').click()">
+              📷 Photo
+            </button>
+          </div>
+
+          ${APP_STATE.customer.issue.photoData ? `
+            <div class="photo-preview-container">
+              <img src="${APP_STATE.customer.issue.photoData}" alt="Uploaded preview" class="photo-thumb" />
+              <div style="flex: 1;">
+                <strong style="font-size: 12px;">Breakdown Photo Attached</strong>
+                <button class="btn btn-logout-sm" style="margin-left: 8px; padding: 2px 6px; font-size: 10px;" onclick="window.removePhoto()">Remove</button>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Dispatch CTA Button -->
+        <button id="btn-request-help" class="btn btn-yellow full-width" style="padding: 16px; font-size: 15px;" onclick="window.initiateSmartHaversineMatch()">
+          <i data-lucide="zap"></i> REQUEST HELP (3KM ➔ 6KM ➔ 10KM RADAR MATCH)
+        </button>
+      </div>
+
+      <!-- Right Column: Interactive Leaflet Map & Nearby Mechanics Pool -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Leaflet Map Container with Pin Drop Crosshair -->
+        <div class="b-card" style="padding: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="pill green"><span class="pulse-dot"></span> LIVE HIGHWAY RADAR</span>
+              <strong style="font-size: 12.5px;">Drag Map to Pin Highway Location</strong>
+            </div>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="window.autoDetectGps()">
+              <i data-lucide="crosshair"></i> Auto GPS
+            </button>
+          </div>
+
+          <div class="map-wrapper" style="height: 340px;">
+            <div id="leaflet-map"></div>
+            <div class="pin-drop-crosshair">
+              <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Pin Drop" />
+              <span class="crosshair-milestone-pill" id="crosshair-label">Drag to adjust breakdown pin</span>
             </div>
           </div>
-          <div style="margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap;">
-            ${mech.tools.slice(0, 3).map((tool) => `<span class="pill yellow" style="font-size: 9px;">${tool}</span>`).join('')}
+          <small id="current-pinned-coords" style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-top: 6px;">
+            📌 Lat: ${APP_STATE.customer.location.lat.toFixed(4)}, Lng: ${APP_STATE.customer.location.lng.toFixed(4)} • ${APP_STATE.customer.location.name}
+          </small>
+        </div>
+
+        <!-- Available Mechanics Radar Pool -->
+        <div class="b-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="font-size: 14px; font-weight: 900;">${t('nearbyMechs')} (${verifiedMechs.length})</strong>
+            <span class="badge green">100% KYC Verified</span>
           </div>
-          <button class="btn btn-yellow full-width" style="margin-top: 8px; font-size: 12px; padding: 8px;" onclick="window.prepareBreakdownRequest('${mech.id}')">
-            <i data-lucide="send"></i> ${t('reqMechBtn')}
-          </button>
-        </div>
-      `;
-      })
-      .join('')}
-  `;
-}
 
-window.prepareBreakdownRequest = function (mechId) {
-  if (mechId) APP_STATE.activeJob.mechanicId = mechId;
-  window.customerNavigate('request');
-};
-
-// Customer Screen 2: Breakdown Assistance Request (Leaflet + Voice Note + Photo + Dynamic Matching)
-function renderCustomerRequestScreen(container) {
-  container.innerHTML = `
-    <!-- Mandatory Vehicle Details Card -->
-    <div class="b-card yellow" style="padding: 10px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 12.5px;">🚗 ${APP_STATE.customer.vehicle.type}: ${APP_STATE.customer.vehicle.model}</strong>
-        <span class="badge black">${APP_STATE.customer.vehicle.plate}</span>
-      </div>
-      <div style="display: flex; gap: 6px; margin-top: 6px;">
-        <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Bike' ? 'active' : ''}" style="flex:1; padding: 4px; font-size: 11px;" onclick="window.updateVehicleType('Bike')">🏍️ Bike</div>
-        <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Car' ? 'active' : ''}" style="flex:1; padding: 4px; font-size: 11px;" onclick="window.updateVehicleType('Car')">🚗 Car</div>
-        <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Auto' ? 'active' : ''}" style="flex:1; padding: 4px; font-size: 11px;" onclick="window.updateVehicleType('Auto')">🛺 Auto</div>
-      </div>
-    </div>
-
-    <!-- Interactive Leaflet Map with Manual Pin-Drop Crosshair Overlay -->
-    <div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <strong style="font-size: 12px;">📍 Pin Breakdown Location on Highway:</strong>
-        <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 10px;" onclick="window.autoDetectGps()">
-          <i data-lucide="crosshair"></i> Auto GPS
-        </button>
-      </div>
-      <div class="map-wrapper">
-        <div id="leaflet-map"></div>
-        <div class="pin-drop-crosshair">
-          <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Pin Drop" />
-          <span class="crosshair-milestone-pill" id="crosshair-label">Drag Map to Pin Location</span>
-        </div>
-      </div>
-      <small id="current-pinned-coords" style="font-size: 10px; font-weight: 700; color: #475569; display: block; margin-top: 3px;">
-        📌 Lat: ${APP_STATE.customer.location.lat.toFixed(4)}, Lng: ${APP_STATE.customer.location.lng.toFixed(4)} • ${APP_STATE.customer.location.name}
-      </small>
-    </div>
-
-    <!-- Issue Category Selection Grid -->
-    <div>
-      <strong style="font-size: 12.5px;">Select Breakdown Issue:</strong>
-      <div class="issue-grid" style="margin-top: 6px;">
-        <div class="issue-card ${APP_STATE.customer.issue.category === 'Breakdown' ? 'selected' : ''}" onclick="window.selectIssueCategory('Breakdown', this)">🚨 General Breakdown</div>
-        <div class="issue-card ${APP_STATE.customer.issue.category === 'Puncture' ? 'selected' : ''}" onclick="window.selectIssueCategory('Puncture', this)">🛞 Tire Puncture</div>
-        <div class="issue-card ${APP_STATE.customer.issue.category === 'Battery Jump' ? 'selected' : ''}" onclick="window.selectIssueCategory('Battery Jump', this)">🔋 Battery Jumpstart</div>
-        <div class="issue-card ${APP_STATE.customer.issue.category === 'Fuel' ? 'selected' : ''}" onclick="window.selectIssueCategory('Fuel', this)">⛽ Emergency Fuel</div>
-        <div class="issue-card ${APP_STATE.customer.issue.category === 'Other' ? 'selected' : ''}" onclick="window.selectIssueCategory('Other', this)">🛠️ Mechanical / Other</div>
-      </div>
-    </div>
-
-    <!-- Photo Preview & MediaRecorder Voice Note Bar -->
-    <div class="b-card" style="padding: 10px;">
-      <strong style="font-size: 11.5px;">Attach Photo & Voice Note (Optional):</strong>
-      
-      <div class="voice-record-bar" style="margin-top: 6px;">
-        <button id="btn-record" class="btn-mic-record ${isVoiceRecording ? 'recording' : ''}" onclick="window.toggleVoiceRecording()" title="Hold/Tap to Record">
-          🎙️
-        </button>
-        <div style="flex: 1;">
-          <span id="recording-status-txt" style="font-size: 11px; font-weight: 700; color: #334155;">
-            ${isVoiceRecording ? `Recording... (${voiceRecordSeconds}s)` : (APP_STATE.customer.issue.audioBlobUrl ? '✅ Voice Note Attached!' : 'Tap mic for voice note')}
-          </span>
-          ${APP_STATE.customer.issue.audioBlobUrl ? `<audio controls src="${APP_STATE.customer.issue.audioBlobUrl}" style="height: 28px; width: 100%; margin-top: 4px;"></audio>` : ''}
-        </div>
-
-        <input type="file" id="issue-photo-input" accept="image/*" style="display:none;" onchange="window.handlePhotoUpload(this)" />
-        <button class="btn btn-secondary" style="font-size: 11px; padding: 6px 8px;" onclick="document.getElementById('issue-photo-input').click()">
-          📷 Photo
-        </button>
-      </div>
-
-      ${APP_STATE.customer.issue.photoData ? `
-        <div class="photo-preview-container">
-          <img src="${APP_STATE.customer.issue.photoData}" alt="Uploaded preview" class="photo-thumb" />
-          <div style="flex: 1;">
-            <small style="font-weight: 800;">Breakdown Photo Attached</small>
-            <button class="btn btn-logout-sm" style="margin-left: 8px; padding: 2px 6px; font-size: 10px;" onclick="window.removePhoto()">Remove</button>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 6px;">
+            ${verifiedMechs
+              .map((mech) => {
+                const dist = calculateHaversineDistance(
+                  APP_STATE.customer.location.lat,
+                  APP_STATE.customer.location.lng,
+                  mech.lat,
+                  mech.lng
+                );
+                return `
+                <div class="b-card" style="padding: 12px; background: #F8FAFC;">
+                  <div style="display: flex; gap: 10px; align-items: center;">
+                    <img src="${mech.avatar}" alt="${mech.name}" class="mechanic-avatar" style="width: 44px; height: 44px;" />
+                    <div style="flex: 1;">
+                      <strong style="font-size: 13px;">${APP_STATE.lang === 'ta' ? mech.nameTa : mech.name}</strong>
+                      <div style="font-size: 11px; font-weight: 700; color: #555;">⭐ ${mech.rating} (${mech.jobsDone} jobs)</div>
+                      <small style="font-size: 10.5px; color: #166534; font-weight: 800;">${dist} km away (~${Math.round(dist * 6)} mins)</small>
+                    </div>
+                  </div>
+                </div>
+              `;
+              })
+              .join('')}
           </div>
         </div>
-      ` : ''}
+      </div>
     </div>
-
-    <!-- Smart Haversine Search & Match CTA -->
-    <button id="btn-request-help" class="btn btn-yellow full-width" style="padding: 12px; font-size: 13.5px;" onclick="window.initiateSmartHaversineMatch()">
-      <i data-lucide="zap"></i> FIND NEAREST MECHANIC (3KM RADAR)
-    </button>
   `;
 
-  // Initialize Leaflet Map after DOM insertion
   setTimeout(() => {
     initLeafletCustomerMap();
   }, 100);
@@ -1124,7 +1070,7 @@ function initLeafletCustomerMap() {
 
   const { lat, lng } = APP_STATE.customer.location;
   leafletCustomerMap = L.map('leaflet-map', {
-    zoomControl: false,
+    zoomControl: true,
     attributionControl: false
   }).setView([lat, lng], 14);
 
@@ -1137,14 +1083,13 @@ function initLeafletCustomerMap() {
     if (m.isOnline) {
       const mechIcon = L.divIcon({
         className: 'custom-mech-icon',
-        html: `<div style="background:#FFD600; border:2px solid #0D0D0D; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:2px 2px 0 #0D0D0D;">🔧</div>`,
-        iconSize: [28, 28]
+        html: `<div style="background:#FFD600; border:2px solid #0D0D0D; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:15px; box-shadow:2px 2px 0 #0D0D0D;">🔧</div>`,
+        iconSize: [32, 32]
       });
       L.marker([m.lat, m.lng], { icon: mechIcon }).addTo(leafletCustomerMap).bindPopup(`<b>${m.name}</b><br>⭐ ${m.rating}`);
     }
   });
 
-  // Map move listener for crosshair pin drop
   leafletCustomerMap.on('moveend', () => {
     const center = leafletCustomerMap.getCenter();
     APP_STATE.customer.location.lat = center.lat;
@@ -1154,6 +1099,10 @@ function initLeafletCustomerMap() {
       label.innerText = `📌 Lat: ${center.lat.toFixed(4)}, Lng: ${center.lng.toFixed(4)} • Theni Bypass Highway`;
     }
   });
+
+  setTimeout(() => {
+    if (leafletCustomerMap) leafletCustomerMap.invalidateSize();
+  }, 200);
 }
 
 window.autoDetectGps = function () {
@@ -1178,7 +1127,7 @@ window.autoDetectGps = function () {
 
 window.updateVehicleType = function (type) {
   APP_STATE.customer.vehicle.type = type;
-  window.customerNavigate('request');
+  window.customerNavigate('home');
 };
 
 window.selectIssueCategory = function (category, el) {
@@ -1204,7 +1153,7 @@ window.toggleVoiceRecording = function () {
             const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
             APP_STATE.customer.issue.audioBlobUrl = URL.createObjectURL(audioBlob);
             APP_STATE.activeJob.audioBlobUrl = APP_STATE.customer.issue.audioBlobUrl;
-            window.customerNavigate('request');
+            window.customerNavigate('home');
           };
 
           mediaRecorderInstance.start();
@@ -1220,14 +1169,12 @@ window.toggleVoiceRecording = function () {
         })
         .catch((err) => {
           console.warn("Mic permission deferred:", err);
-          // Fallback simulation
           simulateVoiceNoteAttachment();
         });
     } else {
       simulateVoiceNoteAttachment();
     }
   } else {
-    // Stop recording
     if (mediaRecorderInstance && mediaRecorderInstance.state !== 'inactive') {
       mediaRecorderInstance.stop();
     }
@@ -1240,7 +1187,7 @@ function simulateVoiceNoteAttachment() {
   APP_STATE.customer.issue.audioBlobUrl = 'https://actions.google.com/sounds/v1/emergency/siren_emergency_truck.ogg';
   APP_STATE.activeJob.audioBlobUrl = APP_STATE.customer.issue.audioBlobUrl;
   alert("🎤 Voice Note Recorded & Attached!");
-  window.customerNavigate('request');
+  window.customerNavigate('home');
 }
 
 window.handlePhotoUpload = function (input) {
@@ -1249,7 +1196,7 @@ window.handlePhotoUpload = function (input) {
     reader.onload = function (e) {
       APP_STATE.customer.issue.photoData = e.target.result;
       APP_STATE.activeJob.photoData = e.target.result;
-      window.customerNavigate('request');
+      window.customerNavigate('home');
     };
     reader.readAsDataURL(input.files[0]);
   }
@@ -1258,7 +1205,7 @@ window.handlePhotoUpload = function (input) {
 window.removePhoto = function () {
   APP_STATE.customer.issue.photoData = null;
   APP_STATE.activeJob.photoData = null;
-  window.customerNavigate('request');
+  window.customerNavigate('home');
 };
 
 // Sequential Haversine Matching: 3km -> 6km -> 10km Sequential Expansion
@@ -1269,7 +1216,6 @@ window.initiateSmartHaversineMatch = function () {
     btn.disabled = true;
   }
 
-  // Phase 1: 3km
   setTimeout(() => {
     let matches = APP_STATE.mechanics.filter((m) => {
       const d = calculateHaversineDistance(APP_STATE.customer.location.lat, APP_STATE.customer.location.lng, m.lat, m.lng);
@@ -1278,18 +1224,17 @@ window.initiateSmartHaversineMatch = function () {
 
     if (!matches.length) {
       if (btn) btn.innerText = "⚡ EXPANDING TO 6KM RADAR...";
-      // Phase 2: 6km
       setTimeout(() => {
         matches = APP_STATE.mechanics.filter((m) => {
           const d = calculateHaversineDistance(APP_STATE.customer.location.lat, APP_STATE.customer.location.lng, m.lat, m.lng);
           return m.isOnline && m.status === 'Verified' && d <= 6.0;
         });
         assignTopMatch(matches);
-      }, 1500);
+      }, 1400);
     } else {
       assignTopMatch(matches);
     }
-  }, 1200);
+  }, 1000);
 };
 
 function assignTopMatch(matches) {
@@ -1301,9 +1246,8 @@ function assignTopMatch(matches) {
   APP_STATE.activeJob.etaMins = Math.max(4, Math.round(dist * 6));
   APP_STATE.activeJob.status = 'Accepted';
   APP_STATE.activeJob.acceptedAt = Date.now();
-  graceSecondsLeft = 120; // 2 minutes free cancellation
+  graceSecondsLeft = 120;
 
-  // Sync to Firestore if initialized
   if (firestoreDb) {
     try {
       firestoreDb.collection("breakdown_jobs").doc(APP_STATE.activeJob.id).set(APP_STATE.activeJob, { merge: true });
@@ -1315,26 +1259,26 @@ function assignTopMatch(matches) {
   window.customerNavigate('tracking');
 }
 
-// Customer Screen 3: Real-Time Tracking & Service Flow
-function renderCustomerTrackingScreen(container) {
+// Customer Screen 3: Full-Width 2-Column Responsive Live Tracking Screen
+function renderCustomerTrackingSplitScreen(container) {
   const job = APP_STATE.activeJob;
   const mech = APP_STATE.mechanics.find((m) => m.id === job.mechanicId) || APP_STATE.mechanics[0];
   const stages = ['Requested', 'Accepted', 'Arrived', 'In Progress', 'Completed'];
   const currentStageIndex = stages.indexOf(job.status);
 
   container.innerHTML = `
-    <!-- Live Status Stepper Progress Bar -->
-    <div class="b-card" style="padding: 8px 10px;">
-      <div style="display: flex; justify-content: space-between;">
+    <!-- Live Status Stepper Bar -->
+    <div class="b-card" style="padding: 12px 18px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
         ${stages
           .map((st, i) => {
             const isPassed = i <= currentStageIndex;
             return `
             <div style="text-align: center; flex: 1;">
-              <div style="width: 20px; height: 20px; border-radius: 50%; background: ${isPassed ? '#00C851' : '#E2E8F0'}; color: ${isPassed ? 'white' : '#64748B'}; border: 1.5px solid #0D0D0D; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 900;">
+              <div style="width: 28px; height: 28px; border-radius: 50%; background: ${isPassed ? '#00C851' : '#E2E8F0'}; color: ${isPassed ? 'white' : '#64748B'}; border: 2px solid #0D0D0D; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; box-shadow: 2px 2px 0 #0D0D0D;">
                 ${isPassed ? '✓' : i + 1}
               </div>
-              <small style="font-size: 7.5px; font-weight: 900; margin-top: 2px; display: block;">${st}</small>
+              <small style="font-size: 11px; font-weight: 900; margin-top: 4px; display: block;">${st}</small>
             </div>
           `;
           })
@@ -1342,76 +1286,83 @@ function renderCustomerTrackingScreen(container) {
       </div>
     </div>
 
-    <!-- Live Animated Leaflet Tracking Map -->
-    <div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <span class="pill green"><span class="pulse-dot"></span> LIVE MECHANIC DISPATCH</span>
-        <strong style="font-size: 12px; color: #166534;">ETA: ~${job.etaMins} Mins (${job.distanceKm} km)</strong>
-      </div>
-      <div class="map-wrapper" style="height: 190px;">
-        <div id="tracking-leaflet-map"></div>
-      </div>
-    </div>
-
-    <!-- Matched Mechanic Card with Call Button -->
-    <div class="b-card" style="border-left: 6px solid #00C851;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="${mech.avatar}" alt="${mech.name}" class="mechanic-avatar" />
-        <div style="flex: 1;">
-          <strong style="font-size: 13.5px;">${APP_STATE.lang === 'ta' ? mech.nameTa : mech.name}</strong>
-          <small style="display: block; font-size: 11px; font-weight: 700; color: #475569;">⭐ ${mech.rating} • Verified Partner</small>
-          <small style="display: block; font-size: 10px; color: #166534; font-weight: 900;">Vehicle: Hero Splendor (TN-60-M-4421)</small>
+    <!-- 2-Column Desktop Grid for Tracking -->
+    <div class="desktop-split-grid">
+      <!-- Left Column: Mechanic Details, Grace Cancellation, Rate Card, Razorpay -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Matched Partner Card with Direct Phone Call -->
+        <div class="mechanic-match-card">
+          <img src="${mech.avatar}" alt="${mech.name}" class="mechanic-avatar" />
+          <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <strong style="font-size: 15px;">${APP_STATE.lang === 'ta' ? mech.nameTa : mech.name}</strong>
+                <div style="font-size: 12px; font-weight: 700; color: #475569;">⭐ ${mech.rating} (148 jobs) • Verified Partner</div>
+                <small style="display: block; font-size: 11px; color: #166534; font-weight: 800; margin-top: 2px;">🛵 Hero Splendor (TN-60-M-4421)</small>
+              </div>
+              <span class="pill green">ETA ~${job.etaMins} Mins</span>
+            </div>
+          </div>
+          <a href="tel:${mech.phone}" class="btn btn-yellow" style="padding: 10px 14px; font-size: 13px; text-decoration: none;">
+            <i data-lucide="phone-call"></i> Call Partner
+          </a>
         </div>
-        <a href="tel:${mech.phone}" class="btn btn-yellow" style="padding: 8px 10px; font-size: 12px; text-decoration: none;">
-          <i data-lucide="phone-call"></i> Call
-        </a>
-      </div>
-    </div>
 
-    <!-- Grace Period Cancellation Timer Card -->
-    <div class="b-card" style="background: #F8FAFC; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <small style="font-size: 9.5px; font-weight: 900; color: #64748b;">GRACE PERIOD CANCELLATION</small>
-        <div id="grace-timer-text" style="font-size: 11.5px; font-weight: 900; color: ${graceSecondsLeft > 0 ? '#15803d' : '#b91c1c'};">
-          ${graceSecondsLeft > 0 ? `Free cancel for ${Math.floor(graceSecondsLeft / 60)}:${(graceSecondsLeft % 60).toString().padStart(2, '0')}` : '₹50 late cancellation fee applies'}
+        <!-- Grace Period Cancellation Timer Card -->
+        <div class="b-card" style="background: #F8FAFC; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <small style="font-size: 10px; font-weight: 900; color: #64748b;">GRACE PERIOD CANCELLATION</small>
+            <div id="grace-timer-text" style="font-size: 13px; font-weight: 900; color: ${graceSecondsLeft > 0 ? '#15803d' : '#b91c1c'};">
+              ${graceSecondsLeft > 0 ? `Free cancellation active: ${Math.floor(graceSecondsLeft / 60)}:${(graceSecondsLeft % 60).toString().padStart(2, '0')}` : '₹50 late cancellation fee applies'}
+            </div>
+          </div>
+          <button class="btn btn-logout-sm" onclick="window.cancelActiveJob()">
+            Cancel Request
+          </button>
+        </div>
+
+        <!-- Itemized Rate Card Breakdown -->
+        <div class="rate-card-summary">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #E2E8F0; padding-bottom: 6px;">
+            <strong style="font-size: 13.5px;">Service Rate Card Summary</strong>
+            <span class="badge green">Itemized Breakdown</span>
+          </div>
+          <div class="rate-item"><span>Base Visiting & Inspection Fee</span><span>₹${job.bill.base}</span></div>
+          <div class="rate-item"><span>Materials & Spare Parts</span><span>₹${job.bill.parts}</span></div>
+          <div class="rate-item"><span>Labor & Mechanical Service</span><span>₹${job.bill.labor}</span></div>
+          <div class="rate-item total"><span>Total Amount Payable</span><span style="color: #16A34A; font-size: 18px;">₹${job.bill.total}</span></div>
+        </div>
+
+        <!-- Payment Trigger CTA -->
+        <button class="btn ${job.isPaid ? 'btn-black' : 'btn-green'} full-width" style="padding: 14px; font-size: 14px;" onclick="window.openRazorpayModal(${job.bill.total})">
+          <i data-lucide="credit-card"></i> ${job.isPaid ? '✓ PAYMENT COMPLETED — VIEW DIGITAL TAX INVOICE' : `PAY ₹${job.bill.total} VIA RAZORPAY`}
+        </button>
+      </div>
+
+      <!-- Right Column: Live Animated Leaflet Tracking Map -->
+      <div class="b-card" style="padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span class="pill green"><span class="pulse-dot"></span> REAL-TIME GPS TRACKING</span>
+          <strong style="font-size: 13px; color: #166534;">Distance: ${job.distanceKm} km</strong>
+        </div>
+        <div class="map-wrapper" style="height: 420px;">
+          <div id="tracking-leaflet-map"></div>
         </div>
       </div>
-      <button class="btn btn-logout-sm" style="font-size: 10.5px;" onclick="window.cancelActiveJob()">
-        Cancel Request
-      </button>
     </div>
-
-    <!-- Itemized Rate Card Breakdown & Pay Trigger -->
-    <div class="rate-card-summary">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 4px;">
-        <strong style="font-size: 12px;">Service Rate Card Summary</strong>
-        <span class="badge green">Itemized Breakdown</span>
-      </div>
-      <div class="rate-item"><span>Base Visiting & Inspection Fee</span><span>₹${job.bill.base}</span></div>
-      <div class="rate-item"><span>Materials & Spare Parts</span><span>₹${job.bill.parts}</span></div>
-      <div class="rate-item"><span>Labor & Repair Charge</span><span>₹${job.bill.labor}</span></div>
-      <div class="rate-item total"><span>Total Payable</span><span style="color: #16A34A; font-size: 16px;">₹${job.bill.total}</span></div>
-    </div>
-
-    <!-- Payment Trigger CTA -->
-    <button class="btn ${job.isPaid ? 'btn-black' : 'btn-green'} full-width" style="padding: 12px; font-size: 13px;" onclick="window.openRazorpayModal(${job.bill.total})">
-      <i data-lucide="credit-card"></i> ${job.isPaid ? '✓ PAYMENT COMPLETED — VIEW RECEIPT' : `PAY ₹${job.bill.total} VIA RAZORPAY`}
-    </button>
   `;
 
-  // Start Leaflet Tracking Map
   setTimeout(() => {
     initLeafletTrackingMap(job, mech);
   }, 100);
 
-  // Start Grace Period Countdown
   if (gracePeriodInterval) clearInterval(gracePeriodInterval);
   gracePeriodInterval = setInterval(() => {
     if (graceSecondsLeft > 0) {
       graceSecondsLeft--;
       const label = document.getElementById('grace-timer-text');
       if (label) {
-        label.innerText = `Free cancel for ${Math.floor(graceSecondsLeft / 60)}:${(graceSecondsLeft % 60).toString().padStart(2, '0')}`;
+        label.innerText = `Free cancellation active: ${Math.floor(graceSecondsLeft / 60)}:${(graceSecondsLeft % 60).toString().padStart(2, '0')}`;
       }
     } else {
       const label = document.getElementById('grace-timer-text');
@@ -1436,42 +1387,38 @@ function initLeafletTrackingMap(job, mech) {
   const custLng = APP_STATE.customer.location.lng;
 
   leafletTrackingMap = L.map('tracking-leaflet-map', {
-    zoomControl: false,
+    zoomControl: true,
     attributionControl: false
   }).setView([custLat, custLng], 14);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(leafletTrackingMap);
 
-  // Customer Pin
   const userIcon = L.divIcon({
     className: 'custom-user-icon',
-    html: `<div style="background:#FF3B30; color:white; border:2px solid #0D0D0D; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:15px; box-shadow:2px 2px 0 #0D0D0D;">🚗</div>`,
-    iconSize: [32, 32]
+    html: `<div style="background:#FF3B30; color:white; border:2px solid #0D0D0D; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:2px 2px 0 #0D0D0D;">🚗</div>`,
+    iconSize: [34, 34]
   });
   L.marker([custLat, custLng], { icon: userIcon }).addTo(leafletTrackingMap).bindPopup("<b>Your Breakdown Location</b>");
 
-  // Mechanic Moving Pin
   let currentMechLat = mech.lat;
   let currentMechLng = mech.lng;
 
   const mechIcon = L.divIcon({
     className: 'custom-mech-tracking-icon',
-    html: `<div style="background:#FFD600; color:#0D0D0D; border:2px solid #0D0D0D; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:15px; box-shadow:2px 2px 0 #0D0D0D; animation:pulseDot 1s infinite;">🛵</div>`,
-    iconSize: [32, 32]
+    html: `<div style="background:#FFD600; color:#0D0D0D; border:2px solid #0D0D0D; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:2px 2px 0 #0D0D0D; animation:pulseDot 1s infinite;">🛵</div>`,
+    iconSize: [34, 34]
   });
 
   trackingMechanicMarker = L.marker([currentMechLat, currentMechLng], { icon: mechIcon }).addTo(leafletTrackingMap);
 
-  // Polyline Route
   const routeLine = L.polyline([[currentMechLat, currentMechLng], [custLat, custLng]], {
     color: '#2563EB',
-    weight: 4,
+    weight: 5,
     dashArray: '6, 8'
   }).addTo(leafletTrackingMap);
 
-  leafletTrackingMap.fitBounds(routeLine.getBounds(), { padding: [25, 25] });
+  leafletTrackingMap.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
 
-  // Simulate Mechanic Movement Animation towards customer
   if (trackingAnimTimer) clearInterval(trackingAnimTimer);
   trackingAnimTimer = setInterval(() => {
     currentMechLat += (custLat - currentMechLat) * 0.12;
@@ -1482,6 +1429,10 @@ function initLeafletTrackingMap(job, mech) {
       routeLine.setLatLngs([[currentMechLat, currentMechLng], [custLat, custLng]]);
     }
   }, 2000);
+
+  setTimeout(() => {
+    if (leafletTrackingMap) leafletTrackingMap.invalidateSize();
+  }, 200);
 }
 
 window.cancelActiveJob = function () {
@@ -1495,45 +1446,54 @@ window.cancelActiveJob = function () {
   }
 };
 
-// Customer Screen 4: Wholesale Spare Parts Marketplace
-function renderCustomerPartsScreen(container) {
+// Customer Screen 4: Full-Width Wholesale Spare Parts Marketplace
+function renderCustomerPartsCatalog(container) {
   container.innerHTML = `
-    <div class="b-card" style="background: #0D0D0D; color: white; padding: 10px 14px;">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="check-circle" style="color: #FFD600;"></i>
-        <strong style="font-size: 11px;">${t('wholesaleBanner')}</strong>
+    <div class="b-card" style="background: #0D0D0D; color: white; padding: 14px 20px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i data-lucide="check-circle" style="color: #FFD600; width: 24px; height: 24px;"></i>
+          <div>
+            <strong style="font-size: 14px;">${t('wholesaleBanner')}</strong>
+            <small style="display: block; color: #94A3B8;">Verified Theni Spares Hub • 100% Genuine Certified OEM Spares</small>
+          </div>
+        </div>
+        <button class="btn btn-yellow" onclick="window.customerNavigate('cart')">
+          <i data-lucide="shopping-cart"></i> View Cart (${APP_STATE.customer.cart.length})
+        </button>
       </div>
     </div>
 
-    ${APP_STATE.shopInventory
-      .map(
-        (p) => `
-      <div class="b-card" style="padding: 10px;">
-        <div style="display: flex; gap: 10px;">
-          <div style="width: 46px; height: 46px; background: #F6F6F2; border-radius: 8px; border: 2px solid #0D0D0D; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-            ${p.category === 'Battery' ? '🔋' : p.category === 'Oil' ? '🛢️' : p.category === 'Brakes' ? '🛑' : p.category === 'Tire' ? '🛞' : '⚡'}
-          </div>
-          <div style="flex: 1;">
-            <strong style="font-size: 12.5px;">${APP_STATE.lang === 'ta' ? p.nameTa : p.name}</strong>
-            <small style="display: block; font-size: 10px; color: #666;">Stock: ${p.stock} units • Theni Spares Hub</small>
-            <div style="margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-              <strong style="font-size: 14px; color: #00C851;">₹${p.price}</strong>
-              <small style="text-decoration: line-through; color: #888; font-size: 11px;">₹${p.retail}</small>
-              <span class="pill yellow" style="font-size: 8.5px;">${Math.round(((p.retail - p.price) / p.retail) * 100)}% OFF</span>
+    <!-- Responsive Parts Catalog Grid -->
+    <div class="parts-catalog-grid">
+      ${APP_STATE.shopInventory
+        .map(
+          (p) => `
+        <div class="b-card" style="padding: 16px;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <div style="width: 52px; height: 52px; background: #F6F6F2; border-radius: 10px; border: 2px solid #0D0D0D; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+              ${p.category === 'Battery' ? '🔋' : p.category === 'Oil' ? '🛢️' : p.category === 'Brakes' ? '🛑' : p.category === 'Tire' ? '🛞' : '⚡'}
+            </div>
+            <div style="flex: 1;">
+              <strong style="font-size: 14px; display: block;">${APP_STATE.lang === 'ta' ? p.nameTa : p.name}</strong>
+              <small style="display: block; font-size: 11px; color: #64748B;">Category: ${p.category} • In Stock: ${p.stock} units</small>
             </div>
           </div>
-          <button class="btn btn-yellow" style="padding: 6px 10px; align-self: center;" onclick="window.addToCustomerCart(${p.id})">
-            <i data-lucide="plus"></i> Add
-          </button>
+          <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="font-size: 18px; color: #00C851;">₹${p.price}</strong>
+              <small style="text-decoration: line-through; color: #888; font-size: 12px; margin-left: 4px;">₹${p.retail}</small>
+              <span class="pill yellow" style="font-size: 9px; margin-left: 4px;">${Math.round(((p.retail - p.price) / p.retail) * 100)}% OFF</span>
+            </div>
+            <button class="btn btn-yellow" style="padding: 8px 14px;" onclick="window.addToCustomerCart(${p.id})">
+              <i data-lucide="plus"></i> Add
+            </button>
+          </div>
         </div>
-      </div>
-    `
-      )
-      .join('')}
-
-    <button class="btn btn-black full-width" style="padding: 12px;" onclick="window.customerNavigate('cart')">
-      <i data-lucide="shopping-cart"></i> ${t('viewCart')} (${APP_STATE.customer.cart.length})
-    </button>
+      `
+        )
+        .join('')}
+    </div>
   `;
 }
 
@@ -1546,106 +1506,120 @@ window.addToCustomerCart = function (id) {
   }
 };
 
-// Customer Screen 5: Cart & Checkout
-function renderCustomerCartScreen(container) {
+// Customer Screen 5: Full-Width Cart View
+function renderCustomerCartView(container) {
   const cart = APP_STATE.customer.cart.length ? APP_STATE.customer.cart : [APP_STATE.shopInventory[0]];
   const total = cart.reduce((acc, curr) => acc + curr.price, 0);
 
   container.innerHTML = `
-    <div class="b-card yellow">
-      <strong style="font-size: 13px;">🛍️ ${APP_STATE.lang === 'ta' ? 'எனது உதிரிபாகங்கள் கூடை' : 'My Spare Parts Cart'} (${cart.length})</strong>
-    </div>
-
-    ${cart
-      .map(
-        (c) => `
-      <div class="b-card" style="padding: 10px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <strong style="font-size: 12.5px;">${APP_STATE.lang === 'ta' ? c.nameTa : c.name}</strong>
-            <small style="display: block; font-size: 10px; color: #64748b;">Wholesale Direct • Theni Hub</small>
-          </div>
-          <strong style="font-size: 14px; color: #00C851;">₹${c.price}</strong>
+    <div class="desktop-split-grid">
+      <div class="b-card">
+        <div class="card-header">
+          <h3><i data-lucide="shopping-cart"></i> Cart Items (${cart.length})</h3>
+          <span class="badge green">Wholesale Discount Applied</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          ${cart
+            .map(
+              (c) => `
+            <div class="inventory-row">
+              <div class="inventory-info">
+                <strong>${APP_STATE.lang === 'ta' ? c.nameTa : c.name}</strong>
+                <small>${c.category} • Direct Theni Spares Hub Delivery</small>
+              </div>
+              <strong style="font-size: 16px; color: #00C851;">₹${c.price}</strong>
+            </div>
+          `
+            )
+            .join('')}
         </div>
       </div>
-    `
-      )
-      .join('')}
 
-    <div class="b-card">
-      <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-        <span>Wholesale Discount:</span>
-        <span style="color: #16A34A; font-weight: 800;">- 30% Saved</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-        <span>Express Highway Delivery:</span>
-        <span style="color: #16A34A; font-weight: 800;">FREE</span>
-      </div>
-      <hr style="border: 1px solid #0D0D0D; margin: 6px 0;" />
-      <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 900;">
-        <span>Total Payable:</span>
-        <span style="color: #16A34A;">₹${total}</span>
+      <div class="b-card">
+        <div class="card-header">
+          <h3>Order Settlement Summary</h3>
+        </div>
+        <div class="rate-card-summary" style="margin-top: 10px;">
+          <div class="rate-item"><span>Wholesale Discount</span><span style="color: #16A34A; font-weight: 800;">- 30% SAVED</span></div>
+          <div class="rate-item"><span>Express Highway Delivery</span><span style="color: #16A34A; font-weight: 800;">FREE</span></div>
+          <div class="rate-item total"><span>Total Payable</span><span style="color: #16A34A; font-size: 20px;">₹${total}</span></div>
+        </div>
+        <button class="btn btn-green full-width" style="margin-top: 16px; padding: 14px; font-size: 15px;" onclick="window.openRazorpayModal(${total})">
+          <i data-lucide="lock"></i> Place Order via Razorpay (₹${total})
+        </button>
       </div>
     </div>
-
-    <button class="btn btn-green full-width" style="padding: 12px; font-size: 13px;" onclick="window.openRazorpayModal(${total})">
-      <i data-lucide="lock"></i> ${t('cartCheckout')} (₹${total})
-    </button>
   `;
 }
 
-// Customer Screen 6: Towing Calculator & Dispatch
-function renderCustomerTowScreen(container) {
+// Customer Screen 6: Full-Width Towing View
+function renderCustomerTowView(container) {
   let towKm = 8.5;
-  let towRate = 500 + towKm * 40; // Base ₹500 + ₹40/km
+  let towRate = 500 + towKm * 40;
 
   container.innerHTML = `
-    <div class="b-card">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="map-pin" style="color: #FF3B30;"></i>
-        <div>
-          <small style="font-size: 9px; font-weight: 900;">PICKUP LOCATION</small>
-          <strong style="font-size: 12px; display: block;">Theni Highway Bypass (NH-85 Tollgate)</strong>
+    <div class="desktop-split-grid">
+      <!-- Left Column: Distance & Rate Card -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="b-card">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="map-pin" style="color: #FF3B30; width: 24px; height: 24px;"></i>
+            <div>
+              <small style="font-size: 10px; font-weight: 900; color: #64748b;">PICKUP LOCATION</small>
+              <strong style="font-size: 13.5px; display: block;">Theni Highway Bypass (NH-85 Tollgate)</strong>
+            </div>
+          </div>
+          <hr style="border: 1px dashed #0D0D0D; margin: 10px 0;" />
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="home" style="color: #00C851; width: 24px; height: 24px;"></i>
+            <div>
+              <small style="font-size: 10px; font-weight: 900; color: #64748b;">DROP LOCATION / GARAGE</small>
+              <strong style="font-size: 13.5px; display: block;">Madurai Road Auto Clinic (${towKm} km)</strong>
+            </div>
+          </div>
         </div>
+
+        <div class="b-card yellow">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 14px;">Towing Distance Calculator:</strong>
+            <span class="badge black" id="tow-dist-badge">${towKm} km</span>
+          </div>
+          <input type="range" min="2" max="40" value="${towKm}" style="width: 100%; margin-top: 10px; accent-color: #0D0D0D;" oninput="window.updateTowCalc(this.value)" />
+          <div class="rate-card-summary" style="margin-top: 10px;">
+            <div class="rate-item"><span>Base Hook & Winch Charge</span><span>₹500</span></div>
+            <div class="rate-item"><span>Distance Rate (₹40/km)</span><span id="tow-dist-rate-txt">₹340</span></div>
+            <div class="rate-item total"><span>Estimated Fare</span><span id="tow-total-fare-txt" style="color: #00C851; font-size: 18px;">₹${towRate}</span></div>
+          </div>
+        </div>
+
+        <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px;" onclick="window.dispatchTowTruck()">
+          <i data-lucide="truck"></i> DISPATCH RECOVERY TRUCK NOW ➔
+        </button>
       </div>
-      <hr style="border: 1px dashed #0D0D0D; margin: 8px 0;" />
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="home" style="color: #00C851;"></i>
-        <div>
-          <small style="font-size: 9px; font-weight: 900;">DROP LOCATION / GARAGE</small>
-          <strong style="font-size: 12px; display: block;">Madurai Road Auto Clinic (${towKm} km)</strong>
+
+      <!-- Right Column: Recovery Fleet Specifications -->
+      <div class="b-card">
+        <div class="card-header">
+          <h3><i data-lucide="truck"></i> Available Highway Recovery Fleet</h3>
+          <span class="pill green">24/7 Active</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+          ${APP_STATE.towingFleet
+            .map(
+              (f) => `
+            <div class="inventory-row">
+              <div class="inventory-info">
+                <strong>${f.type} (${f.reg})</strong>
+                <small>Driver: ${f.driver} • Max Load: ${f.capacity}</small>
+              </div>
+              <span class="pill ${f.status === 'Available' ? 'green' : 'yellow'}">${f.status} (${f.eta})</span>
+            </div>
+          `
+            )
+            .join('')}
         </div>
       </div>
     </div>
-
-    <!-- Distance Rate-Card Calculator Slider -->
-    <div class="b-card yellow" style="padding: 12px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 12.5px;">Towing Distance Calculator:</strong>
-        <span class="badge black" id="tow-dist-badge">${towKm} km</span>
-      </div>
-      <input type="range" id="tow-slider" min="2" max="40" value="${towKm}" style="width: 100%; margin-top: 8px; accent-color: #0D0D0D;" oninput="window.updateTowCalc(this.value)" />
-      <div class="rate-card-summary" style="margin-top: 8px;">
-        <div class="rate-item"><span>Base Hook & Winch Charge</span><span>₹500</span></div>
-        <div class="rate-item"><span>Distance Rate (₹40/km)</span><span id="tow-dist-rate-txt">₹340</span></div>
-        <div class="rate-item total"><span>Estimated Fare</span><span id="tow-total-fare-txt" style="color: #00C851;">₹${towRate}</span></div>
-      </div>
-    </div>
-
-    <strong style="font-size: 12.5px;">${t('selectTowType')}</strong>
-    <div class="b-card yellow" style="cursor: pointer;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <strong style="font-size: 12.5px;">Flatbed Hydraulic Recovery Truck</strong>
-          <small style="display: block; font-size: 10px; color: #444;">Safe zero-ground touch for Cars & SUVs</small>
-        </div>
-        <span class="pill green">Available (6 mins)</span>
-      </div>
-    </div>
-
-    <button class="btn btn-yellow full-width" style="padding: 12px; font-size: 13px;" onclick="window.dispatchTowTruck()">
-      <i data-lucide="truck"></i> ${t('dispatchTowBtn')}
-    </button>
   `;
 }
 
@@ -1666,57 +1640,66 @@ window.dispatchTowTruck = function () {
   APP_STATE.towingRequests[0].status = 'En Route';
 };
 
-// Customer Screen 7: Kavalan 112 Emergency SOS with 3-Second Hold Logic
-function renderCustomerSosScreen(container) {
+// Customer Screen 7: Full-Width Kavalan 112 SOS Screen
+function renderCustomerSosView(container) {
   container.innerHTML = `
-    <div style="text-align: center;">
-      <span class="badge red" style="font-size: 10.5px; padding: 4px 10px;">🚨 KAVALAN SAFETY 24/7</span>
-      <h3 style="font-size: 15px; font-weight: 900; margin-top: 6px;">${t('sosTitle')}</h3>
-      <p style="font-size: 11px; font-weight: 700; color: #444; margin-top: 2px;">${t('sosSubtitle')}</p>
-    </div>
-
-    <!-- 3-Second Continuous Hold Anti-Accidental SOS Button -->
-    <div style="margin: 12px 0;">
-      <button class="sos-hold-button" id="sos-hold-btn" 
-        onmousedown="window.startSOSHold()" onmouseup="window.cancelSOSHold()" onmouseleave="window.cancelSOSHold()"
-        ontouchstart="window.startSOSHold()" ontouchend="window.cancelSOSHold()">
-        <div id="sos-progress" class="sos-progress-bar"></div>
-        <span style="position: relative; z-index: 2;">🚨 HOLD 3 SECS FOR 112 SOS</span>
-      </button>
-      <small style="display: block; text-align: center; font-size: 10px; color: #64748b; margin-top: 4px;">
-        Continuous 3-second hold prevents accidental clicks
-      </small>
-    </div>
-
-    <!-- Speed Dialers -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-      <a href="tel:112" class="btn btn-yellow" style="font-size: 10px; padding: 8px 4px; text-decoration: none;">
-        📞 112 Police
-      </a>
-      <a href="tel:1091" class="btn" style="font-size: 10px; padding: 8px 4px; background: #FF80AB; color: #0D0D0D; text-decoration: none;">
-        👩 1091 Women
-      </a>
-      <a href="tel:1033" class="btn" style="font-size: 10px; padding: 8px 4px; background: #80D8FF; color: #0D0D0D; text-decoration: none;">
-        🛣️ 1033 Highway
-      </a>
-    </div>
-
-    <!-- Nearest Police Station Card -->
-    <div class="b-card" style="margin-top: 8px;">
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <i data-lucide="shield" style="color: #FF3B30;"></i>
-        <div style="flex: 1;">
-          <strong style="font-size: 12px;">Theni Town Police Station (1.4 km)</strong>
-          <small style="display: block; font-size: 10px; color: #555;">04546-252222 • 112 Emergency Dispatch</small>
+    <div class="desktop-split-grid">
+      <!-- Left Column: SOS 3s Hold Trigger & Siren -->
+      <div class="b-card red">
+        <div style="text-align: center;">
+          <span class="badge red" style="font-size: 11px; padding: 4px 12px;">🚨 KAVALAN SAFETY 24/7 PROTOCOL</span>
+          <h3 style="font-size: 18px; font-weight: 900; margin-top: 8px;">${t('sosTitle')}</h3>
+          <p style="font-size: 12px; font-weight: 700; color: #444; margin-top: 4px;">${t('sosSubtitle')}</p>
         </div>
-        <span class="pill green" style="font-size: 9px;">Ready</span>
+
+        <div style="margin: 20px 0;">
+          <button class="sos-hold-button" id="sos-hold-btn" 
+            onmousedown="window.startSOSHold()" onmouseup="window.cancelSOSHold()" onmouseleave="window.cancelSOSHold()"
+            ontouchstart="window.startSOSHold()" ontouchend="window.cancelSOSHold()">
+            <div id="sos-progress" class="sos-progress-bar"></div>
+            <span style="position: relative; z-index: 2;">🚨 HOLD 3 SECS FOR 112 POLICE SOS</span>
+          </button>
+          <small style="display: block; text-align: center; font-size: 11px; color: #64748b; margin-top: 6px;">
+            Continuous 3-second hold prevents accidental clicks
+          </small>
+        </div>
+
+        <button class="btn ${APP_STATE.isSirenPlaying ? 'btn-red' : 'btn-black'} full-width" style="padding: 12px; font-size: 13px;" onclick="window.toggleEmergencySiren()">
+          ${APP_STATE.isSirenPlaying ? '🔊 SIREN ACTIVE (Tap to Stop)' : t('sirenBtn')}
+        </button>
+      </div>
+
+      <!-- Right Column: Speed Dialers & Nearest Police Station -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="b-card">
+          <div class="card-header">
+            <h3><i data-lucide="phone-call"></i> Emergency Police Speed Dialers</h3>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+            <a href="tel:112" class="btn btn-yellow" style="font-size: 12px; padding: 12px 6px; text-decoration: none;">
+              📞 112 Police
+            </a>
+            <a href="tel:1091" class="btn" style="font-size: 12px; padding: 12px 6px; background: #FF80AB; color: #0D0D0D; text-decoration: none;">
+              👩 1091 Women
+            </a>
+            <a href="tel:1033" class="btn" style="font-size: 12px; padding: 12px 6px; background: #80D8FF; color: #0D0D0D; text-decoration: none;">
+              🛣️ 1033 Highway
+            </a>
+          </div>
+        </div>
+
+        <div class="b-card">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <i data-lucide="shield" style="color: #FF3B30; width: 32px; height: 32px;"></i>
+            <div style="flex: 1;">
+              <strong style="font-size: 14px;">Theni Town Police Station (1.4 km)</strong>
+              <small style="display: block; font-size: 12px; color: #555;">04546-252222 • 112 Highway Emergency Dispatch Unit</small>
+            </div>
+            <span class="pill green">Active Guard</span>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- High-Decibel Siren Alarm Button -->
-    <button class="btn ${APP_STATE.isSirenPlaying ? 'btn-red' : 'btn-black'} full-width" style="padding: 10px; font-size: 12px;" onclick="window.toggleEmergencySiren()">
-      ${APP_STATE.isSirenPlaying ? '🔊 SIREN ACTIVE (Tap to Stop)' : t('sirenBtn')}
-    </button>
   `;
 }
 
@@ -1731,7 +1714,7 @@ window.startSOSHold = function () {
 
   if (sosHoldProgressTimer) clearInterval(sosHoldProgressTimer);
   sosHoldProgressTimer = setInterval(() => {
-    sosProgressPercent += 3.33; // 100% over 3000ms
+    sosProgressPercent += 3.33;
     if (progressBar) progressBar.style.width = `${Math.min(100, sosProgressPercent)}%`;
   }, 100);
 
@@ -1757,7 +1740,6 @@ function triggerKavalan112EmergencyBroadcast() {
     "3. Highway Patrol vehicle NH-85 alerted."
   );
 
-  // Log in Admin desk
   APP_STATE.adminIncidents.unshift({
     id: `SOS-${Date.now().toString().slice(-5)}`,
     victim: `${APP_STATE.customer.name} (${APP_STATE.customer.phone})`,
@@ -1803,34 +1785,37 @@ window.toggleEmergencySiren = function () {
   window.customerNavigate('sos');
 };
 
-// Customer Screen 8: Profile & Vehicle Details
-function renderCustomerProfileScreen(container) {
+// Customer Screen 8: Full-Width Profile View
+function renderCustomerProfileView(container) {
   container.innerHTML = `
-    <div class="b-card yellow">
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <div style="width: 44px; height: 44px; background: #0D0D0D; color: #FFD600; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900;">
-          M
-        </div>
-        <div>
-          <strong style="font-size: 14px;">${APP_STATE.customer.name}</strong>
-          <small style="display: block; font-size: 11px; font-weight: 700;">${APP_STATE.customer.phone} • Theni, TN</small>
+    <div class="desktop-split-grid">
+      <div class="b-card yellow">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div style="width: 52px; height: 52px; background: #0D0D0D; color: #FFD600; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900;">
+            M
+          </div>
+          <div>
+            <strong style="font-size: 16px;">${APP_STATE.customer.name}</strong>
+            <small style="display: block; font-size: 12px; font-weight: 700;">${APP_STATE.customer.phone} • Theni, Tamil Nadu</small>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Vehicle Setup Form -->
-    <div class="b-card">
-      <strong style="font-size: 12.5px;">Update Registered Vehicle:</strong>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px;">
-        <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Bike' ? 'active' : ''}" onclick="window.updateVehicleType('Bike')">🏍️ Bike</div>
-        <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Car' ? 'active' : ''}" onclick="window.updateVehicleType('Car')">🚗 Car</div>
-        <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Auto' ? 'active' : ''}" onclick="window.updateVehicleType('Auto')">🛺 Auto</div>
+      <div class="b-card">
+        <div class="card-header">
+          <h3>Update Registered Vehicle</h3>
+        </div>
+        <div class="vehicle-selector" style="margin-top: 10px;">
+          <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Bike' ? 'active' : ''}" onclick="window.updateVehicleType('Bike')">🏍️ Bike</div>
+          <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Car' ? 'active' : ''}" onclick="window.updateVehicleType('Car')">🚗 Car</div>
+          <div class="vehicle-chip ${APP_STATE.customer.vehicle.type === 'Auto' ? 'active' : ''}" onclick="window.updateVehicleType('Auto')">🛺 Auto</div>
+        </div>
+        <input type="text" id="profile-vehicle-model" value="${APP_STATE.customer.vehicle.model}" class="brutal-input" style="margin-top: 10px;" placeholder="Model (e.g. Swift / FZ)" />
+        <input type="text" id="profile-vehicle-plate" value="${APP_STATE.customer.vehicle.plate}" class="brutal-input" style="margin-top: 8px;" placeholder="Plate Number (e.g. TN 57 AB 1234)" />
+        <button class="btn btn-yellow full-width" style="margin-top: 12px; padding: 10px;" onclick="window.saveVehicleProfileForm()">
+          Save Vehicle Details
+        </button>
       </div>
-      <input type="text" id="profile-vehicle-model" value="${APP_STATE.customer.vehicle.model}" class="brutal-input" style="margin-top: 8px;" placeholder="Model (e.g. Swift / FZ)" />
-      <input type="text" id="profile-vehicle-plate" value="${APP_STATE.customer.vehicle.plate}" class="brutal-input" style="margin-top: 6px;" placeholder="Plate Number (e.g. TN 57 AB 1234)" />
-      <button class="btn btn-yellow full-width" style="margin-top: 8px; padding: 8px;" onclick="window.saveVehicleProfileForm()">
-        Save Profile
-      </button>
     </div>
   `;
 }
@@ -1847,32 +1832,8 @@ window.saveVehicleProfileForm = function () {
   }
 };
 
-function renderCustomerGuidePanel() {
-  const container = document.getElementById('guide-panel-container');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div class="guide-header">
-      <h3><i data-lucide="sparkles"></i> ${t('guideTitle')}</h3>
-      <span class="pill green">Live Ready</span>
-    </div>
-    <p class="guide-intro">${t('guideIntro')}</p>
-    <ul class="guide-steps">
-      <li><strong>${t('guideStep1Title')}</strong> <span>${t('guideStep1Desc')}</span></li>
-      <li><strong>${t('guideStep2Title')}</strong> <span>${t('guideStep2Desc')}</span></li>
-      <li><strong>${t('guideStep3Title')}</strong> <span>${t('guideStep3Desc')}</span></li>
-      <li><strong>${t('guideStep4Title')}</strong> <span>${t('guideStep4Desc')}</span></li>
-    </ul>
-    <div class="guide-actions">
-      <button class="btn btn-yellow" onclick="window.customerNavigate('home')"><i data-lucide="home"></i> ${t('guideBtnHome')}</button>
-      <button class="btn btn-red" onclick="window.customerNavigate('sos')"><i data-lucide="shield-alert"></i> ${t('guideBtnSos')}</button>
-      <button class="btn btn-black" onclick="window.customerNavigate('parts')"><i data-lucide="shopping-bag"></i> ${t('guideBtnParts')}</button>
-    </div>
-  `;
-}
-
 // --------------------------------------------------------------------------
-// 9. MECHANIC PARTNER MODULE
+// 9. MECHANIC PARTNER MODULE — FULL-WIDTH RESPONSIVE DASHBOARD
 // --------------------------------------------------------------------------
 function renderMechanicScreen() {
   const container = document.getElementById('mechanic-screen-viewport');
@@ -1881,18 +1842,13 @@ function renderMechanicScreen() {
   const selMech = APP_STATE.mechanics.find((m) => m.id === 'MEC-01') || APP_STATE.mechanics[0];
   const job = APP_STATE.activeJob;
 
-  // If KYC is pending
   if (selMech.status === 'Pending Verification') {
     container.innerHTML = `
-      <div style="padding: 16px; background: #FFD600; border-bottom: 3px solid #0D0D0D;">
-        <strong style="font-size: 14px;">🔧 MECHANIC PARTNER ONBOARDING</strong>
-      </div>
-      <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
-        <div class="b-card red">
-          <span class="badge red">ACCOUNT STATUS: PENDING KYC REVIEW</span>
-          <p style="font-size: 12px; margin-top: 4px;">Your Aadhaar and Garage License documents are under verification by the Tamil Nadu Admin Desk.</p>
-        </div>
-        <button class="btn btn-green full-width" onclick="window.simulateAdminKycApproval('MEC-01')">
+      <div class="b-card red" style="padding: 24px; text-align: center;">
+        <span class="badge red" style="font-size: 12px; padding: 6px 14px;">ACCOUNT STATUS: PENDING KYC REVIEW</span>
+        <h3 style="margin-top: 12px; font-size: 18px;">Your Partner KYC is Under Verification by Tamil Nadu Staff Desk</h3>
+        <p style="font-size: 13px; color: #555; margin-top: 6px;">Your Aadhaar and Garage License documents are being reviewed. Once approved, you will be active on the highway radar grid.</p>
+        <button class="btn btn-green" style="margin-top: 16px; padding: 10px 20px;" onclick="window.simulateAdminKycApproval('MEC-01')">
           ⚡ Simulate Admin Instant Approval
         </button>
       </div>
@@ -1904,114 +1860,108 @@ function renderMechanicScreen() {
   const currentStageIndex = stages.indexOf(job.status) !== -1 ? stages.indexOf(job.status) : 0;
 
   container.innerHTML = `
-    <!-- Mechanic Header with Duty Toggle -->
-    <div style="padding: 14px 16px; background: #FFD600; border-bottom: 3px solid #0D0D0D; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <small style="font-size: 9.5px; font-weight: 900;">${t('mechDutyTitle')}</small>
-        <strong style="font-size: 13.5px; display: block;">${APP_STATE.lang === 'ta' ? selMech.nameTa : selMech.name}</strong>
+    <!-- Full-Width Mechanic Header -->
+    <div class="role-dashboard-header">
+      <div class="role-profile-info">
+        <div class="role-avatar-circle" style="background: #CCFF90; color: #1B5E20;">🔧</div>
+        <div>
+          <h2 style="font-size: 18px; font-weight: 900;">${APP_STATE.lang === 'ta' ? selMech.nameTa : selMech.name}</h2>
+          <span style="font-size: 12px; font-weight: 700; color: #4B5563;">⭐ ${selMech.rating} Rating • Partner ID: ${selMech.id} • ${selMech.serviceArea}</span>
+        </div>
       </div>
-      <button class="pill ${selMech.isOnline ? 'green' : 'black'}" style="cursor: pointer;" onclick="window.toggleMechanicDuty()">
-        ${selMech.isOnline ? '● ONLINE' : '○ OFFLINE'}
-      </button>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <button class="pill ${selMech.isOnline ? 'green' : 'black'}" style="cursor: pointer; padding: 6px 14px; font-size: 12px;" onclick="window.toggleMechanicDuty()">
+          ${selMech.isOnline ? '● DUTY ONLINE' : '○ DUTY OFFLINE'}
+        </button>
+        <button class="btn btn-yellow" onclick="window.openIncomingJobAlert()">
+          <i data-lucide="bell"></i> Simulate Incoming Alert (30s Timer)
+        </button>
+      </div>
     </div>
 
-    <div style="flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
-      <!-- Operational Radius Slider -->
-      <div class="b-card" style="padding: 10px; background: #F8FAFC;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <small style="font-size: 10px; font-weight: 900;">OPERATIONAL RADIUS</small>
-          <span class="badge black" id="mech-radius-val">${selMech.radiusKm} km</span>
-        </div>
-        <input type="range" min="3" max="30" value="${selMech.radiusKm}" style="width: 100%; margin-top: 6px; accent-color: #0D0D0D;" oninput="window.updateMechRadius(this.value)" />
-      </div>
-
-      <!-- Today's Earnings & Commission Breakdown -->
-      <div class="b-card" style="background: #0D0D0D; color: white;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <small style="color: #AAA; font-size: 10px; font-weight: 700;">${t('mechTodayEarnings')}</small>
-            <h2 style="color: #FFD600; font-size: 22px; font-weight: 900;">₹${selMech.earnings.today}</h2>
-            <small style="color: #4ADE80; font-size: 9.5px;">Net Payout (10% platform fee deducted)</small>
+    <!-- 2-Column Responsive Dashboard Grid -->
+    <div class="role-dashboard-grid">
+      <!-- Left Column: Active Job Console & Google Maps Routing -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="b-card">
+          <div class="card-header">
+            <h3><i data-lucide="zap" style="color: #FF3B30;"></i> ${t('mechActiveJob')}</h3>
+            <span class="badge green">₹${job.bill.total} Customer Bill</span>
           </div>
-          <div style="text-align: right;">
-            <small style="color: #AAA; font-size: 10px;">${t('mechCompletedJobs')}</small>
-            <h3 style="font-size: 16px; font-weight: 900;">5 Jobs Done</h3>
-            <small style="color: #FFD600; font-size: 10px;">⭐ 4.9 Rating</small>
+          <div style="margin-top: 8px;">
+            <strong style="font-size: 15px;">${t('mechCustomerLabel')} ${job.customerName}</strong>
+            <p style="font-size: 13px; font-weight: 700; color: #334155; margin-top: 2px;">${t('mechVehicleLabel')} ${job.vehicleDetails}</p>
+            <p style="font-size: 12px; color: #475569;">📍 ${t('mechLocLabel')} ${job.location.name} (0.8 km away)</p>
+          </div>
+
+          <!-- Google Maps Deep Link -->
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${job.location.lat},${job.location.lng}" target="_blank" class="btn btn-yellow full-width" style="margin-top: 10px; padding: 10px; text-decoration: none;">
+            <i data-lucide="navigation"></i> Open Google Maps Turn-by-Turn Navigation
+          </a>
+
+          <!-- Stage Stepper -->
+          <div style="display: flex; gap: 6px; margin-top: 12px;">
+            ${stages
+              .map((st, i) => `
+              <div style="flex: 1; text-align: center; padding: 8px 4px; border: 2px solid #0D0D0D; border-radius: 6px; font-size: 11px; font-weight: 900; background: ${i <= currentStageIndex ? '#FFD600' : '#E0E0E0'};">
+                ${st}
+              </div>
+            `)
+              .join('')}
+          </div>
+
+          <div style="margin-top: 12px; display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="flex: 1; padding: 10px;" onclick="window.advanceMechanicStatus()">
+              <i data-lucide="arrow-right"></i> Next: ${stages[(currentStageIndex + 1) % stages.length]}
+            </button>
+            <button class="btn btn-green" style="flex: 1; padding: 10px;" onclick="window.openMechanicBillingModal()">
+              <i data-lucide="file-text"></i> Finalize Bill
+            </button>
           </div>
         </div>
-      </div>
 
-      <!-- Active Breakdown Job Console -->
-      <div class="b-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-          <span class="badge red">${t('mechActiveJob')}</span>
-          <strong style="font-size: 13.5px; color: #00C851;">₹${job.bill.total} Fee</strong>
-        </div>
-        <strong style="font-size: 13px;">${t('mechCustomerLabel')} ${job.customerName}</strong>
-        <p style="font-size: 11.5px; font-weight: 700;">${t('mechVehicleLabel')} ${job.vehicleDetails}</p>
-        <p style="font-size: 11px; color: #555;">📍 ${t('mechLocLabel')} ${job.location.name} (0.8 km)</p>
-
-        <!-- Google Maps Turn-by-Turn Deep Link -->
-        <a href="https://www.google.com/maps/dir/?api=1&destination=${job.location.lat},${job.location.lng}" target="_blank" class="btn btn-yellow full-width" style="margin-top: 6px; font-size: 11px; padding: 6px; text-decoration: none;">
-          <i data-lucide="navigation"></i> Open Google Maps Navigation
-        </a>
-
-        <!-- Stage Progression Stepper -->
-        <div style="display: flex; gap: 4px; margin-top: 8px;">
-          ${stages
-            .map((st, i) => `
-            <div style="flex: 1; text-align: center; padding: 4px 2px; border: 1.5px solid #0D0D0D; border-radius: 4px; font-size: 8.5px; font-weight: 900; background: ${i <= currentStageIndex ? '#FFD600' : '#E0E0E0'};">
-              ${st}
+        <!-- Mid-job Spare Parts Ordering -->
+        <div class="b-card yellow">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="font-size: 13.5px;">Need Spares on Highway?</strong>
+              <small style="display: block; font-size: 11px; color: #444;">Request Battery or Engine Oil from Theni Spares Hub</small>
             </div>
-          `)
-            .join('')}
-        </div>
-
-        <div style="margin-top: 8px; display: flex; gap: 6px;">
-          <button class="btn btn-secondary" style="flex: 1; font-size: 11px; padding: 6px;" onclick="window.advanceMechanicStatus()">
-            <i data-lucide="arrow-right"></i> Next: ${stages[(currentStageIndex + 1) % stages.length]}
-          </button>
-          <button class="btn btn-green" style="flex: 1; font-size: 11px; padding: 6px;" onclick="window.openMechanicBillingModal()">
-            <i data-lucide="file-text"></i> Enter Bill
-          </button>
-        </div>
-      </div>
-
-      <!-- Mid-Job Spare Parts Request Shortcut -->
-      <div class="b-card yellow" style="padding: 10px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <strong style="font-size: 11.5px;">Need Spares on Highway?</strong>
-            <small style="display: block; font-size: 10px; color: #444;">Order battery or oil from Theni Spares Hub</small>
+            <button class="btn btn-black" onclick="window.requestMidJobSparePart()">
+              Order Part
+            </button>
           </div>
-          <button class="btn btn-black" style="padding: 4px 8px; font-size: 10px;" onclick="window.requestMidJobSparePart()">
-            Order Part
-          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Earnings Analytics & Radius Slider -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Radius Slider -->
+        <div class="b-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 13px;">OPERATIONAL DISPATCH RADIUS</strong>
+            <span class="badge black" id="mech-radius-val">${selMech.radiusKm} km</span>
+          </div>
+          <input type="range" min="3" max="30" value="${selMech.radiusKm}" style="width: 100%; margin-top: 10px; accent-color: #0D0D0D;" oninput="window.updateMechRadius(this.value)" />
+        </div>
+
+        <!-- Earnings Box -->
+        <div class="b-card" style="background: #0D0D0D; color: white;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <small style="color: #AAA; font-size: 11px; font-weight: 700;">${t('mechTodayEarnings')}</small>
+              <h2 style="color: #FFD600; font-size: 26px; font-weight: 900;">₹${selMech.earnings.today}</h2>
+              <small style="color: #4ADE80; font-size: 11px;">Direct Bank Wallet Payout (10% platform fee)</small>
+            </div>
+            <div style="text-align: right;">
+              <small style="color: #AAA; font-size: 11px;">Completed Jobs</small>
+              <h3 style="font-size: 20px; font-weight: 900;">148 Done</h3>
+              <small style="color: #FFD600; font-size: 11.5px;">⭐ 4.9 Rating</small>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  `;
-}
-
-function renderMechanicGuidePanel() {
-  const container = document.getElementById('mechanic-guide-container');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div class="guide-header">
-      <h3><i data-lucide="tool"></i> ${t('mechDutyTitle')}</h3>
-      <span class="pill yellow">Partner Mode</span>
-    </div>
-    <p class="guide-intro">${t('mechDutyIntro')}</p>
-    <ul class="guide-steps">
-      <li><strong>${t('mechStep1')}</strong></li>
-      <li><strong>${t('mechStep2')}</strong></li>
-      <li><strong>${t('mechStep3')}</strong></li>
-      <li><strong>${t('mechStep4')}</strong></li>
-    </ul>
-    <button class="btn btn-green full-width" style="margin-top: 8px;" onclick="window.openIncomingJobAlert()">
-      ⚡ Simulate Incoming Dispatch Alert (30s Timer)
-    </button>
   `;
 }
 
@@ -2073,21 +2023,21 @@ window.openIncomingJobAlert = function () {
 
   dispatchSecondsLeft = 30;
   body.innerHTML = `
-    <div style="text-align: center; margin-bottom: 12px;">
-      <div style="width: 54px; height: 54px; border-radius: 50%; border: 3px solid #FF3B30; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900;" id="dispatch-timer-circle">
+    <div style="text-align: center; margin-bottom: 14px;">
+      <div style="width: 58px; height: 58px; border-radius: 50%; border: 3px solid #FF3B30; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900;" id="dispatch-timer-circle">
         ${dispatchSecondsLeft}s
       </div>
-      <small style="font-weight: 800; color: #64748b;">Auto-Decline Countdown</small>
+      <small style="font-weight: 800; color: #64748b; margin-top: 4px; display: block;">Auto-Decline Countdown</small>
     </div>
 
-    <div class="b-card yellow" style="padding: 10px;">
-      <strong style="font-size: 13px;">🧑 Customer: Murugan Swamy</strong>
-      <p style="font-size: 11.5px; font-weight: 700; margin-top: 2px;">🚗 Vehicle: Hyundai i20 (TN-60-AZ-1234)</p>
-      <p style="font-size: 11px; color: #475569;">📍 Location: Theni Bypass Tollgate (0.8 km away)</p>
-      <p style="font-size: 11px; font-weight: 800; color: #DC2626; margin-top: 2px;">🚨 Issue: Tire Puncture & Engine Check</p>
+    <div class="b-card yellow" style="padding: 12px;">
+      <strong style="font-size: 14px;">🧑 Customer: Murugan Swamy</strong>
+      <p style="font-size: 12.5px; font-weight: 700; margin-top: 2px;">🚗 Vehicle: Hyundai i20 (TN-60-AZ-1234)</p>
+      <p style="font-size: 12px; color: #475569;">📍 Location: Theni Bypass Tollgate (0.8 km away)</p>
+      <p style="font-size: 12px; font-weight: 800; color: #DC2626; margin-top: 4px;">🚨 Issue: Tire Puncture & Engine Check</p>
     </div>
 
-    <div style="display: flex; gap: 8px; margin-top: 14px;">
+    <div style="display: flex; gap: 10px; margin-top: 16px;">
       <button class="btn btn-green full-width" onclick="window.acceptDispatchJob()">
         <i data-lucide="check"></i> Accept Dispatch
       </button>
@@ -2173,7 +2123,7 @@ window.submitMechanicBill = function () {
 };
 
 // --------------------------------------------------------------------------
-// 10. SPARE PARTS SHOP OWNER MODULE
+// 10. SPARE PARTS SHOP OWNER MODULE — FULL-WIDTH DASHBOARD
 // --------------------------------------------------------------------------
 function renderShopOwnerScreen() {
   const container = document.getElementById('shop-panel-container');
@@ -2189,10 +2139,10 @@ function renderShopOwnerScreen() {
         <div class="role-avatar-circle shop">🏪</div>
         <div>
           <h2 style="font-size: 18px; font-weight: 900;">${t('shopTitle')}</h2>
-          <span style="font-size: 11.5px; font-weight: 700; color: #4B5563;">${t('shopSub')} • Theni Spares Hub</span>
+          <span style="font-size: 12px; font-weight: 700; color: #4B5563;">${t('shopSub')} • Theni Spares Hub</span>
         </div>
       </div>
-      <div style="display: flex; gap: 8px;">
+      <div style="display: flex; gap: 10px;">
         <button class="btn btn-yellow" onclick="window.openAddPartModal()"><i data-lucide="plus-circle"></i> Add Spare Part</button>
       </div>
     </div>
@@ -2254,7 +2204,7 @@ function renderShopOwnerScreen() {
                 <span class="stock-pill ${item.stock >= 6 ? 'in-stock' : 'low-stock'}">
                   ${item.stock} in stock
                 </span>
-                <button class="btn btn-yellow" style="padding: 4px 8px; font-size: 11px;" onclick="window.restockPartItem(${item.id})">+ Stock</button>
+                <button class="btn btn-yellow" style="padding: 6px 10px; font-size: 11.5px;" onclick="window.restockPartItem(${item.id})">+ Stock</button>
               </div>
             </div>
           `
@@ -2269,26 +2219,26 @@ function renderShopOwnerScreen() {
           <h3><i data-lucide="shopping-cart" style="color: #00C851;"></i> ${t('shopOrdersTitle')}</h3>
           <span class="pill red animate-pulse">Dual Channel Feed</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
           ${APP_STATE.shopOrders
             .map(
               (ord) => `
-            <div class="b-card ${ord.status === 'Preparing' ? 'yellow' : ''}" style="padding: 10px;">
+            <div class="b-card ${ord.status === 'Preparing' ? 'yellow' : ''}" style="padding: 12px;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
                   <span class="badge ${ord.channel.includes('Mechanic') ? 'red' : 'blue'}">${ord.channel}</span>
-                  <strong style="display: block; font-size: 12.5px; margin-top: 4px;">${ord.partName}</strong>
+                  <strong style="display: block; font-size: 13.5px; margin-top: 4px;">${ord.partName}</strong>
                   <small style="font-weight: 700; color: #475569;">${ord.requestedBy} • ${ord.time}</small>
                 </div>
-                <strong style="font-size: 14px; color: #166534;">₹${ord.amount}</strong>
+                <strong style="font-size: 15px; color: #166534;">₹${ord.amount}</strong>
               </div>
-              <div style="margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
-                <span class="pill ${ord.status === 'Delivered' ? 'green' : 'yellow'}" style="font-size: 10px;">
+              <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <span class="pill ${ord.status === 'Delivered' ? 'green' : 'yellow'}" style="font-size: 11px;">
                   Status: ${ord.status}
                 </span>
                 ${
                   ord.status === 'Preparing'
-                    ? `<button class="btn btn-green" style="padding: 4px 8px; font-size: 11px;" onclick="window.advanceShopOrderStatus('${ord.id}')">Dispatch Now ➔</button>`
+                    ? `<button class="btn btn-green" style="padding: 6px 12px; font-size: 11.5px;" onclick="window.advanceShopOrderStatus('${ord.id}')">Dispatch Now ➔</button>`
                     : ''
                 }
               </div>
@@ -2356,7 +2306,7 @@ window.saveNewSparePart = function () {
 };
 
 // --------------------------------------------------------------------------
-// 11. TOWING / RECOVERY PARTNER MODULE
+// 11. TOWING / RECOVERY PARTNER MODULE — FULL-WIDTH DASHBOARD
 // --------------------------------------------------------------------------
 function renderTowingPartnerScreen() {
   const container = document.getElementById('towing-panel-container');
@@ -2369,10 +2319,10 @@ function renderTowingPartnerScreen() {
         <div class="role-avatar-circle towing">🚚</div>
         <div>
           <h2 style="font-size: 18px; font-weight: 900;">${t('towingTitle')}</h2>
-          <span style="font-size: 11.5px; font-weight: 700; color: #4B5563;">${t('towingSub')}</span>
+          <span style="font-size: 12px; font-weight: 700; color: #4B5563;">${t('towingSub')}</span>
         </div>
       </div>
-      <div style="display: flex; gap: 8px;">
+      <div style="display: flex; gap: 10px;">
         <button class="btn btn-yellow" onclick="window.openAddTowModal()"><i data-lucide="plus"></i> Register Tow Truck</button>
       </div>
     </div>
@@ -2427,9 +2377,9 @@ function renderTowingPartnerScreen() {
               (f) => `
             <div class="fleet-truck-card">
               <span class="badge black">${f.id}</span>
-              <strong>${f.type}</strong>
+              <strong style="font-size: 14px;">${f.type}</strong>
               <small style="font-weight: 700; color: #444;">${f.reg} • Driver: ${f.driver}</small>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
                 <span class="pill ${f.status === 'Available' ? 'green' : 'yellow'}">${f.status}</span>
                 <small style="font-weight: 900;">ETA: ${f.eta}</small>
               </div>
@@ -2446,17 +2396,17 @@ function renderTowingPartnerScreen() {
           <h3><i data-lucide="alert-triangle" style="color: #FF3B30;"></i> ${t('liveTowReqTitle')}</h3>
           <span class="pill red">Emergency Queue</span>
         </div>
-        <div class="b-card yellow" style="padding: 14px;">
+        <div class="b-card yellow" style="padding: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="badge red">#TOW-REQ-901</span>
-            <strong style="font-size: 16px; color: #166534;">₹840 Fare</strong>
+            <strong style="font-size: 18px; color: #166534;">₹840 Fare</strong>
           </div>
-          <p style="font-size: 13px; font-weight: 900; margin-top: 6px;">Vehicle: Hyundai i20 Asta (TN-60-AZ-1234)</p>
-          <p style="font-size: 11.5px; font-weight: 700; color: #333;">📍 Pickup: Theni Highway Junction (Near Tollgate)</p>
-          <p style="font-size: 11.5px; font-weight: 700; color: #333;">🏁 Drop: Madurai Road Auto Clinic (8.5 km)</p>
-          <p style="font-size: 11px; color: #666; margin-top: 4px;">Issue: Transmission breakdown. Flatbed required.</p>
+          <p style="font-size: 14px; font-weight: 900; margin-top: 8px;">Vehicle: Hyundai i20 Asta (TN-60-AZ-1234)</p>
+          <p style="font-size: 12px; font-weight: 700; color: #333;">📍 Pickup: Theni Highway Junction (Near Tollgate)</p>
+          <p style="font-size: 12px; font-weight: 700; color: #333;">🏁 Drop: Madurai Road Auto Clinic (8.5 km)</p>
+          <p style="font-size: 11.5px; color: #666; margin-top: 4px;">Issue: Transmission breakdown. Flatbed required.</p>
 
-          <button class="btn btn-green full-width" style="margin-top: 10px; font-size: 12px;" onclick="window.acceptTowingDispatch('TOW-REQ-901')">
+          <button class="btn btn-green full-width" style="margin-top: 14px; font-size: 13px;" onclick="window.acceptTowingDispatch('TOW-REQ-901')">
             <i data-lucide="check"></i> ${t('acceptTowBtn')}
           </button>
         </div>
@@ -2569,19 +2519,19 @@ function renderAdminPanel() {
         ${APP_STATE.adminIncidents
           .map(
             (inc) => `
-          <div class="b-card red" style="padding: 12px;">
+          <div class="b-card red" style="padding: 14px;">
             <div style="display: flex; justify-content: space-between;">
               <span class="badge red">${inc.id}</span>
-              <span style="font-size: 10.5px; font-weight: 800;">${inc.time}</span>
+              <span style="font-size: 11px; font-weight: 800;">${inc.time}</span>
             </div>
-            <strong style="font-size: 13px; margin-top: 4px; display: block;">${inc.victim}</strong>
-            <p style="font-size: 11px; color: #333;"><strong>Location:</strong> ${inc.loc}</p>
-            <p style="font-size: 11px; color: #DC2626;"><strong>Issue:</strong> ${inc.issue}</p>
-            <div style="display: flex; gap: 6px; margin-top: 8px;">
-              <a href="tel:112" class="btn btn-red" style="flex: 1; font-size: 11px; padding: 6px; text-decoration: none;">
+            <strong style="font-size: 14px; margin-top: 6px; display: block;">${inc.victim}</strong>
+            <p style="font-size: 12px; color: #333;"><strong>Location:</strong> ${inc.loc}</p>
+            <p style="font-size: 12px; color: #DC2626;"><strong>Issue:</strong> ${inc.issue}</p>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <a href="tel:112" class="btn btn-red" style="flex: 1; font-size: 11.5px; padding: 8px; text-decoration: none;">
                 <i data-lucide="phone-call"></i> Call Patrol
               </a>
-              <button class="btn btn-black" style="flex: 1; font-size: 11px; padding: 6px;" onclick="window.resolveAdminIncident('${inc.id}')">
+              <button class="btn btn-black" style="flex: 1; font-size: 11.5px; padding: 8px;" onclick="window.resolveAdminIncident('${inc.id}')">
                 Mark Safe
               </button>
             </div>
@@ -2598,7 +2548,7 @@ function renderAdminPanel() {
         <h3><i data-lucide="user-check"></i> Partner KYC Verification Queue</h3>
         <span class="pill yellow">Pending Approvals</span>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
         ${APP_STATE.mechanics
           .map(
             (m) => `
@@ -2607,12 +2557,12 @@ function renderAdminPanel() {
               <strong>${m.name} (${m.serviceArea})</strong>
               <small>Experience: ${m.experience} • Tools: ${m.tools.join(', ')}</small>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
               <span class="pill ${m.status === 'Verified' ? 'green' : 'yellow'}">${m.status}</span>
               ${
                 m.status !== 'Verified'
-                  ? `<button class="btn btn-green" style="padding: 4px 8px; font-size: 11px;" onclick="window.adminApproveKyc('${m.id}')">Approve KYC</button>`
-                  : `<button class="btn btn-logout-sm" style="padding: 4px 8px; font-size: 11px;" onclick="window.adminSuspendPartner('${m.id}')">Suspend</button>`
+                  ? `<button class="btn btn-green" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminApproveKyc('${m.id}')">Approve KYC</button>`
+                  : `<button class="btn btn-logout-sm" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminSuspendPartner('${m.id}')">Suspend</button>`
               }
             </div>
           </div>
@@ -2623,7 +2573,6 @@ function renderAdminPanel() {
     </div>
   `;
 
-  // Start Leaflet Admin Map
   setTimeout(() => {
     initLeafletAdminMap();
   }, 100);
@@ -2645,23 +2594,25 @@ function initLeafletAdminMap() {
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(adminLeafletMap);
 
-  // Mark all mechanics
   APP_STATE.mechanics.forEach((m) => {
     const icon = L.divIcon({
       className: 'admin-m-icon',
-      html: `<div style="background:#FFD600; border:2px solid black; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px;">🔧</div>`
+      html: `<div style="background:#FFD600; border:2px solid black; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:13px;">🔧</div>`
     });
     L.marker([m.lat, m.lng], { icon }).addTo(adminLeafletMap).bindPopup(`<b>${m.name}</b><br>Status: ${m.status}`);
   });
 
-  // Mark Active Job
   const jobIcon = L.divIcon({
     className: 'admin-job-icon',
-    html: `<div style="background:#FF3B30; border:2px solid black; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px; animation:pulseDot 1s infinite;">🚨</div>`
+    html: `<div style="background:#FF3B30; border:2px solid black; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:15px; animation:pulseDot 1s infinite;">🚨</div>`
   });
   L.marker([APP_STATE.activeJob.location.lat, APP_STATE.activeJob.location.lng], { icon: jobIcon })
     .addTo(adminLeafletMap)
     .bindPopup(`<b>Emergency Breakdown</b><br>${APP_STATE.activeJob.customerName}`);
+
+  setTimeout(() => {
+    if (adminLeafletMap) adminLeafletMap.invalidateSize();
+  }, 200);
 }
 
 window.adminApproveKyc = function (mechId) {
@@ -2712,8 +2663,6 @@ window.completeRazorpayPayment = function () {
   window.closeRazorpayModal();
   APP_STATE.activeJob.isPaid = true;
   APP_STATE.activeJob.status = 'Completed';
-
-  // Generate Digital Tax Invoice Receipt
   window.openReceiptModal();
 };
 
@@ -2733,31 +2682,31 @@ window.openReceiptModal = function () {
   });
 
   body.innerHTML = `
-    <div style="text-align: center; margin-bottom: 12px;">
-      <span class="badge green" style="font-size: 11px; padding: 4px 10px;">✓ PAYMENT CAPTURED (RAZORPAY)</span>
-      <h3 style="font-size: 20px; color: #166534; font-weight: 900; margin-top: 4px;">₹${job.bill.total}.00</h3>
+    <div style="text-align: center; margin-bottom: 14px;">
+      <span class="badge green" style="font-size: 11px; padding: 4px 12px;">✓ PAYMENT CAPTURED (RAZORPAY)</span>
+      <h3 style="font-size: 22px; color: #166534; font-weight: 900; margin-top: 6px;">₹${job.bill.total}.00</h3>
       <small style="color: #64748b;">Txn ID: rzp_live_${Date.now().toString().slice(-8)} • ${dateStr}</small>
     </div>
 
-    <div class="b-card" style="font-size: 12px; padding: 10px;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+    <div class="b-card" style="font-size: 12.5px; padding: 12px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
         <span><strong>Invoice No:</strong> ${invoiceNo}</span>
         <span><strong>Vehicle:</strong> ${APP_STATE.customer.vehicle.plate}</span>
       </div>
       <div style="display: flex; justify-content: space-between;">
         <span><strong>Customer:</strong> ${APP_STATE.customer.name}</span>
-        <span><strong>Mechanic:</strong> Selvam Auto</span>
+        <span><strong>Mechanic:</strong> Selvam Auto Works</span>
       </div>
     </div>
 
-    <div class="rate-card-summary" style="margin-top: 10px;">
+    <div class="rate-card-summary" style="margin-top: 12px;">
       <div class="rate-item"><span>Visiting & Highway Inspection Charge</span><span>₹${job.bill.base}</span></div>
       <div class="rate-item"><span>Spare Parts & Consumables</span><span>₹${job.bill.parts}</span></div>
       <div class="rate-item"><span>Labor & Mechanical Service</span><span>₹${job.bill.labor}</span></div>
       <div class="rate-item total"><span>Total Amount Paid</span><span style="color: #00C851;">₹${job.bill.total}</span></div>
     </div>
 
-    <div style="display: flex; gap: 8px; margin-top: 14px;">
+    <div style="display: flex; gap: 10px; margin-top: 16px;">
       <button class="btn btn-yellow full-width" onclick="window.printOrDownloadReceipt()">
         <i data-lucide="download"></i> Download / Print
       </button>

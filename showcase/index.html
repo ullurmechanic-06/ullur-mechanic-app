@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <!-- Desktop Header Horizontal Navigation Bar (Visible on Desktop >= 768px when authenticated) -->
+      <!-- Desktop Header Horizontal Navigation Bar -->
       <nav class="desktop-nav-bar" id="desktop-header-nav">
         <!-- Injected dynamically based on active role -->
       </nav>
@@ -200,108 +200,37 @@
       </div>
     </section>
 
-    <!-- 1. CUSTOMER MOBILE & RESPONSIVE APP VIEW -->
+    <!-- 1. CUSTOMER FULL-WIDTH RESPONSIVE DASHBOARD VIEW -->
     <section id="customer-mode" class="app-mode-view">
-      <div class="phone-frame-container">
-        <!-- Phone Device Shell -->
-        <div class="phone-device">
-          <!-- Dynamic Island / Notch -->
-          <div class="phone-notch">
-            <div class="camera"></div>
-            <div class="speaker"></div>
-          </div>
-
-          <!-- Customer App Screen Body -->
-          <div class="phone-screen" id="customer-screen-viewport">
-
-            <!-- Screen Top Bar -->
-            <div class="screen-top-bar">
-              <div class="loc-indicator" onclick="window.customerNavigate('request')">
-                <i data-lucide="map-pin" class="loc-icon"></i>
-                <div>
-                  <small id="c-loc-title">தற்போதைய இடம்</small>
-                  <strong id="c-loc-sub">தேனி பைபாஸ் (NH-85), தமிழ்நாடு</strong>
-                </div>
-              </div>
-              <div class="screen-top-actions">
-                <button class="mini-sos-btn" onclick="window.customerNavigate('sos')" title="Kavalan Police SOS">
-                  <i data-lucide="shield-alert"></i> SOS
-                </button>
-                <div class="mini-avatar" onclick="window.customerNavigate('profile')">M</div>
-              </div>
-            </div>
-
-            <!-- Screen Viewport Container for Customer Sub-screens -->
-            <div class="screen-inner-content" id="customer-inner-content">
-              <!-- Dynamically populated by JS: Home, Request, Tracking, Parts, Cart, Tow, SOS, Profile -->
-            </div>
-
-            <!-- Customer Bottom Navigation Bar -->
-            <nav class="customer-bottom-bar">
-              <button class="c-nav-item active" id="cnav-home" onclick="window.customerNavigate('home')">
-                <i data-lucide="home"></i>
-                <span id="cnav-home-txt">முகப்பு</span>
-              </button>
-              <button class="c-nav-item" id="cnav-parts" onclick="window.customerNavigate('parts')">
-                <i data-lucide="shopping-bag"></i>
-                <span id="cnav-parts-txt">உதிரிபாகங்கள்</span>
-              </button>
-              <button class="c-nav-item" id="cnav-tow" onclick="window.customerNavigate('tow')">
-                <i data-lucide="truck"></i>
-                <span id="cnav-tow-txt">டோயிங்</span>
-              </button>
-              <button class="c-nav-item" id="cnav-sos" onclick="window.customerNavigate('sos')">
-                <i data-lucide="shield-alert" style="color: #FF3B30;"></i>
-                <span style="color: #FF3B30;" id="cnav-sos-txt">காவலன் SOS</span>
-              </button>
-            </nav>
-
-          </div>
-        </div>
-
-        <!-- Simulator Instructions Panel -->
-        <div class="simulator-guide-card" id="guide-panel-container">
-          <!-- Guide content rendered dynamically in selected language -->
-        </div>
+      <div class="full-viewport-dashboard" id="customer-panel-container">
+        <!-- Customer Dashboard and Sub-views rendered dynamically by JS -->
       </div>
     </section>
 
-    <!-- 2. MECHANIC PARTNER APP VIEW -->
+    <!-- 2. MECHANIC PARTNER FULL-WIDTH RESPONSIVE VIEW -->
     <section id="mechanic-mode" class="app-mode-view">
-      <div class="phone-frame-container">
-        <div class="phone-device">
-          <div class="phone-notch">
-            <div class="camera"></div>
-            <div class="speaker"></div>
-          </div>
-          <div class="phone-screen" id="mechanic-screen-viewport">
-            <!-- Mechanic Screen Content injected via JS -->
-          </div>
-        </div>
-
-        <div class="simulator-guide-card" id="mechanic-guide-container">
-          <!-- Mechanic guide rendered dynamically -->
-        </div>
+      <div class="full-viewport-dashboard" id="mechanic-screen-viewport">
+        <!-- Mechanic Dashboard injected dynamically via JS -->
       </div>
     </section>
 
-    <!-- 3. SPARE PARTS SHOP OWNER VIEW -->
+    <!-- 3. SPARE PARTS SHOP OWNER FULL-WIDTH RESPONSIVE VIEW -->
     <section id="shop-mode" class="app-mode-view">
-      <div class="role-full-dashboard" id="shop-panel-container">
+      <div class="full-viewport-dashboard" id="shop-panel-container">
         <!-- Spare Parts Shop Owner Dashboard injected via JS -->
       </div>
     </section>
 
-    <!-- 4. BACKUP TRAVEL / TOWING SERVICE VIEW -->
+    <!-- 4. BACKUP TRAVEL / TOWING SERVICE FULL-WIDTH RESPONSIVE VIEW -->
     <section id="towing-mode" class="app-mode-view">
-      <div class="role-full-dashboard" id="towing-panel-container">
+      <div class="full-viewport-dashboard" id="towing-panel-container">
         <!-- Towing Partner Dashboard injected via JS -->
       </div>
     </section>
 
     <!-- 5. ISOLATED KAVALAN POLICE & SUPER ADMIN DESK (Hidden / Staff Only) -->
     <section id="admin-mode" class="app-mode-view">
-      <div class="admin-full-panel" id="admin-panel-container">
+      <div class="full-viewport-dashboard" id="admin-panel-container">
         <!-- Admin dashboard content rendered dynamically -->
       </div>
     </section>
