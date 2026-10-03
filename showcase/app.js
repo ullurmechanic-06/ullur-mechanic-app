@@ -8,8 +8,9 @@
 // --------------------------------------------------------------------------
 // 1. FIREBASE & AUTHENTICATION CONFIGURATION
 // --------------------------------------------------------------------------
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAdAvhgZy29k_Cn_yFxLKVzOgPBNq2bis",
+  apiKey: "AIzaSyADeAvhgZy29k_Cn_yFxlKVzOgPBNq2bis",
   authDomain: "ullur-mechanic.firebaseapp.com",
   projectId: "ullur-mechanic",
   storageBucket: "ullur-mechanic.firebasestorage.app",
@@ -512,9 +513,9 @@ function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c;
   return Math.round(d * 10) / 10;
@@ -710,7 +711,7 @@ window.dismissSmsToast = function (btn) {
 
 window.copyOtpFromToast = function (code, btn) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(code).catch(() => {});
+    navigator.clipboard.writeText(code).catch(() => { });
   }
   const txt = btn.querySelector('.copy-btn-text');
   if (txt) {
@@ -1415,14 +1416,14 @@ function renderCustomerHomeSplitScreen(container) {
 
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 6px;">
             ${verifiedMechs
-              .map((mech) => {
-                const dist = calculateHaversineDistance(
-                  APP_STATE.customer.location.lat,
-                  APP_STATE.customer.location.lng,
-                  mech.lat,
-                  mech.lng
-                );
-                return `
+      .map((mech) => {
+        const dist = calculateHaversineDistance(
+          APP_STATE.customer.location.lat,
+          APP_STATE.customer.location.lng,
+          mech.lat,
+          mech.lng
+        );
+        return `
                 <div class="b-card" style="padding: 12px; background: #F8FAFC;">
                   <div style="display: flex; gap: 10px; align-items: center;">
                     <img src="${mech.avatar}" alt="${mech.name}" class="mechanic-avatar" style="width: 44px; height: 44px;" />
@@ -1434,8 +1435,8 @@ function renderCustomerHomeSplitScreen(container) {
                   </div>
                 </div>
               `;
-              })
-              .join('')}
+      })
+      .join('')}
           </div>
         </div>
       </div>
@@ -1659,9 +1660,9 @@ function renderCustomerTrackingSplitScreen(container) {
     <div class="b-card" style="padding: 12px 18px; margin-bottom: 16px;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         ${stages
-          .map((st, i) => {
-            const isPassed = i <= currentStageIndex;
-            return `
+      .map((st, i) => {
+        const isPassed = i <= currentStageIndex;
+        return `
             <div style="text-align: center; flex: 1;">
               <div style="width: 28px; height: 28px; border-radius: 50%; background: ${isPassed ? '#00C851' : '#E2E8F0'}; color: ${isPassed ? 'white' : '#64748B'}; border: 2px solid #0D0D0D; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; box-shadow: 2px 2px 0 #0D0D0D;">
                 ${isPassed ? '✓' : i + 1}
@@ -1669,8 +1670,8 @@ function renderCustomerTrackingSplitScreen(container) {
               <small style="font-size: 11px; font-weight: 900; margin-top: 4px; display: block;">${st}</small>
             </div>
           `;
-          })
-          .join('')}
+      })
+      .join('')}
       </div>
     </div>
 
@@ -1855,8 +1856,8 @@ function renderCustomerPartsCatalog(container) {
     <!-- Responsive Parts Catalog Grid -->
     <div class="parts-catalog-grid">
       ${APP_STATE.shopInventory
-        .map(
-          (p) => `
+      .map(
+        (p) => `
         <div class="b-card" style="padding: 16px;">
           <div style="display: flex; gap: 12px; align-items: center;">
             <div style="width: 52px; height: 52px; background: #F6F6F2; border-radius: 10px; border: 2px solid #0D0D0D; display: flex; align-items: center; justify-content: center; font-size: 24px;">
@@ -1879,8 +1880,8 @@ function renderCustomerPartsCatalog(container) {
           </div>
         </div>
       `
-        )
-        .join('')}
+      )
+      .join('')}
     </div>
   `;
 }
@@ -1908,8 +1909,8 @@ function renderCustomerCartView(container) {
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
           ${cart
-            .map(
-              (c) => `
+      .map(
+        (c) => `
             <div class="inventory-row">
               <div class="inventory-info">
                 <strong>${APP_STATE.lang === 'ta' ? c.nameTa : c.name}</strong>
@@ -1918,8 +1919,8 @@ function renderCustomerCartView(container) {
               <strong style="font-size: 16px; color: #00C851;">₹${c.price}</strong>
             </div>
           `
-            )
-            .join('')}
+      )
+      .join('')}
         </div>
       </div>
 
@@ -1993,8 +1994,8 @@ function renderCustomerTowView(container) {
         </div>
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
           ${APP_STATE.towingFleet
-            .map(
-              (f) => `
+      .map(
+        (f) => `
             <div class="inventory-row">
               <div class="inventory-info">
                 <strong>${f.type} (${f.reg})</strong>
@@ -2003,8 +2004,8 @@ function renderCustomerTowView(container) {
               <span class="pill ${f.status === 'Available' ? 'green' : 'yellow'}">${f.status} (${f.eta})</span>
             </div>
           `
-            )
-            .join('')}
+      )
+      .join('')}
         </div>
       </div>
     </div>
@@ -2290,12 +2291,12 @@ function renderMechanicScreen() {
           <!-- Stage Stepper -->
           <div style="display: flex; gap: 6px; margin-top: 12px;">
             ${stages
-              .map((st, i) => `
+      .map((st, i) => `
               <div style="flex: 1; text-align: center; padding: 8px 4px; border: 2px solid #0D0D0D; border-radius: 6px; font-size: 11px; font-weight: 900; background: ${i <= currentStageIndex ? '#FFD600' : '#E0E0E0'};">
                 ${st}
               </div>
             `)
-              .join('')}
+      .join('')}
           </div>
 
           <div style="margin-top: 12px; display: flex; gap: 8px;">
@@ -2581,8 +2582,8 @@ function renderShopOwnerScreen() {
         </div>
         <div class="inventory-table-container">
           ${APP_STATE.shopInventory
-            .map(
-              (item) => `
+      .map(
+        (item) => `
             <div class="inventory-row">
               <div class="inventory-info">
                 <strong>${APP_STATE.lang === 'ta' ? item.nameTa : item.name}</strong>
@@ -2596,8 +2597,8 @@ function renderShopOwnerScreen() {
               </div>
             </div>
           `
-            )
-            .join('')}
+      )
+      .join('')}
         </div>
       </div>
 
@@ -2609,8 +2610,8 @@ function renderShopOwnerScreen() {
         </div>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           ${APP_STATE.shopOrders
-            .map(
-              (ord) => `
+      .map(
+        (ord) => `
             <div class="b-card ${ord.status === 'Preparing' ? 'yellow' : ''}" style="padding: 12px;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
@@ -2624,16 +2625,15 @@ function renderShopOwnerScreen() {
                 <span class="pill ${ord.status === 'Delivered' ? 'green' : 'yellow'}" style="font-size: 11px;">
                   Status: ${ord.status}
                 </span>
-                ${
-                  ord.status === 'Preparing'
-                    ? `<button class="btn btn-green" style="padding: 6px 12px; font-size: 11.5px;" onclick="window.advanceShopOrderStatus('${ord.id}')">Dispatch Now ➔</button>`
-                    : ''
-                }
+                ${ord.status === 'Preparing'
+            ? `<button class="btn btn-green" style="padding: 6px 12px; font-size: 11.5px;" onclick="window.advanceShopOrderStatus('${ord.id}')">Dispatch Now ➔</button>`
+            : ''
+          }
               </div>
             </div>
           `
-            )
-            .join('')}
+      )
+      .join('')}
         </div>
       </div>
     </div>
@@ -2761,8 +2761,8 @@ function renderTowingPartnerScreen() {
         </div>
         <div class="fleet-grid">
           ${APP_STATE.towingFleet
-            .map(
-              (f) => `
+      .map(
+        (f) => `
             <div class="fleet-truck-card">
               <span class="badge black">${f.id}</span>
               <strong style="font-size: 14px;">${f.type}</strong>
@@ -2773,8 +2773,8 @@ function renderTowingPartnerScreen() {
               </div>
             </div>
           `
-            )
-            .join('')}
+      )
+      .join('')}
         </div>
       </div>
 
@@ -2905,8 +2905,8 @@ function renderAdminPanel() {
           <span class="pill red">Police Desk</span>
         </div>
         ${APP_STATE.adminIncidents
-          .map(
-            (inc) => `
+      .map(
+        (inc) => `
           <div class="b-card red" style="padding: 14px;">
             <div style="display: flex; justify-content: space-between;">
               <span class="badge red">${inc.id}</span>
@@ -2925,8 +2925,8 @@ function renderAdminPanel() {
             </div>
           </div>
         `
-          )
-          .join('')}
+      )
+      .join('')}
       </div>
     </div>
 
@@ -2938,8 +2938,8 @@ function renderAdminPanel() {
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
         ${APP_STATE.mechanics
-          .map(
-            (m) => `
+      .map(
+        (m) => `
           <div class="inventory-row">
             <div class="inventory-info">
               <strong>${m.name} (${m.serviceArea})</strong>
@@ -2947,16 +2947,15 @@ function renderAdminPanel() {
             </div>
             <div style="display: flex; align-items: center; gap: 10px;">
               <span class="pill ${m.status === 'Verified' ? 'green' : 'yellow'}">${m.status}</span>
-              ${
-                m.status !== 'Verified'
-                  ? `<button class="btn btn-green" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminApproveKyc('${m.id}')">Approve KYC</button>`
-                  : `<button class="btn btn-logout-sm" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminSuspendPartner('${m.id}')">Suspend</button>`
-              }
+              ${m.status !== 'Verified'
+            ? `<button class="btn btn-green" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminApproveKyc('${m.id}')">Approve KYC</button>`
+            : `<button class="btn btn-logout-sm" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminSuspendPartner('${m.id}')">Suspend</button>`
+          }
             </div>
           </div>
         `
-          )
-          .join('')}
+      )
+      .join('')}
       </div>
     </div>
   `;
