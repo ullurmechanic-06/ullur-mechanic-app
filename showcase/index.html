@@ -5,34 +5,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ULLUR MECHANIC — Tamil Nadu's #1 Emergency Breakdown & Spares Platform</title>
-  
+
   <!-- Modern Typography: Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
   <!-- Leaflet.js Mapping Library CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
   <!-- Custom Neo-Brutalist Stylesheet -->
   <link rel="stylesheet" href="style.css" />
-  
+
   <!-- Leaflet.js Mapping Library JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  
+
   <!-- Firebase Web SDK Compatibility CDN -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  
+
   <!-- Razorpay Checkout SDK CDN -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
 <body>
+  <!-- Dynamic Simulated SMS Alert / Notification Toast Banner -->
+  <div id="sms-toast-container" class="sms-toast-container" aria-live="polite"></div>
+
   <!-- Master Navigation Header -->
   <header class="master-header">
     <div class="header-left">
@@ -99,7 +105,8 @@
               <span class="badge yellow">PUBLIC USER</span>
             </div>
             <h3 id="role-card-1-title">1. வாடிக்கையாளர் / User</h3>
-            <p id="role-card-1-desc">நெடுஞ்சாலை வாகன பழுது, பஞ்சர், பேட்டரி ஜம்ப், 30% மொத்த உதிரிபாகங்கள், டோயிங் & 24/7 காவலன் போலீஸ் SOS உதவி.</p>
+            <p id="role-card-1-desc">நெடுஞ்சாலை வாகன பழுது, பஞ்சர், பேட்டரி ஜம்ப், 30% மொத்த உதிரிபாகங்கள், டோயிங் &
+              24/7 காவலன் போலீஸ் SOS உதவி.</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> 6 நிமிடம் மெக்கானிக் ரேடார்</li>
               <li><i data-lucide="check"></i> நேரடி பேக்டரி விலை உதிரிபாகங்கள்</li>
@@ -119,7 +126,8 @@
               <span class="badge green">PARTNER</span>
             </div>
             <h3 id="role-card-2-title">2. மெக்கானிக் பார்ட்னர் / Partner</h3>
-            <p id="role-card-2-desc">டியூட்டி ஆன்/ஆஃப் சுவிட்ச், Google Maps வழிசெலுத்தல், நேரலை பழுது கோரிக்கைகள் & தினசரி வருமான கணக்கு (₹2,450+).</p>
+            <p id="role-card-2-desc">டியூட்டி ஆன்/ஆஃப் சுவிட்ச், Google Maps வழிசெலுத்தல், நேரலை பழுது கோரிக்கைகள் &
+              தினசரி வருமான கணக்கு (₹2,450+).</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> உடனடி வேலை அறிவிப்புகள்</li>
               <li><i data-lucide="check"></i> டர்ன்-பை-டர்ன் GPS நேவிகேஷன்</li>
@@ -139,7 +147,8 @@
               <span class="badge blue">MERCHANT</span>
             </div>
             <h3 id="role-card-3-title">3. உதிரிபாக விற்பனையாளர் / Shop Owner</h3>
-            <p id="role-card-3-desc">மொத்த உதிரிபாகங்கள் விற்பனை, நேரலை வாடிக்கையாளர் ஆர்டர்கள், இருப்பு மேலாண்மை & உடனடி டெலிவரி டிஸ்பாட்ச்.</p>
+            <p id="role-card-3-desc">மொத்த உதிரிபாகங்கள் விற்பனை, நேரலை வாடிக்கையாளர் ஆர்டர்கள், இருப்பு மேலாண்மை &
+              உடனடி டெலிவரி டிஸ்பாட்ச்.</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> இன்வென்டரி & ஸ்டாக் கண்ட்ரோல்</li>
               <li><i data-lucide="check"></i> மெக்கானிக் உடனடி ஆர்டர்கள்</li>
@@ -159,7 +168,8 @@
               <span class="badge yellow">FLEET RECOVERY</span>
             </div>
             <h3 id="role-card-4-title">4. மீட்பு & டோயிங் சேவை / Towing Partner</h3>
-            <p id="role-card-4-desc">ஹைட்ராலிக் பிளாட்பெட் லாரிகள் & டோயிங் வாகனங்கள் மேலாண்மை, நெடுஞ்சாலை விபத்து மீட்பு கோரிக்கைகள்.</p>
+            <p id="role-card-4-desc">ஹைட்ராலிக் பிளாட்பெட் லாரிகள் & டோயிங் வாகனங்கள் மேலாண்மை, நெடுஞ்சாலை விபத்து
+              மீட்பு கோரிக்கைகள்.</p>
             <ul class="role-features-list">
               <li><i data-lucide="check"></i> பிளாட்பெட் / வீல்லிஃப்ட் ஃப்ளீட்</li>
               <li><i data-lucide="check"></i> நெடுஞ்சாலை அவசர பிக்கப்</li>
@@ -252,7 +262,8 @@
           <i data-lucide="shield-check"></i> Kavalan 112 Live Grid
         </span>
         <!-- Hidden Secret Trigger for Admin Login -->
-        <a href="#/admin-login" class="admin-secret-link" onclick="window.openAdminLoginModal(event)" title="Authorized Staff Only (Ctrl+Shift+A)">
+        <a href="#/admin-login" class="admin-secret-link" onclick="window.openAdminLoginModal(event)"
+          title="Authorized Staff Only (Ctrl+Shift+A)">
           <i data-lucide="lock"></i> <span id="admin-link-txt">நிர்வாக அறை (Staff Desk)</span>
         </a>
       </div>
@@ -263,7 +274,7 @@
   <!-- MODALS & OVERLAYS CONTAINER                                               -->
   <!-- ========================================================================= -->
 
-  <!-- 1. Streamlined Role Authentication Modal (Phone Number & OTP) -->
+  <!-- 1. Streamlined Role Authentication Modal (Phone Number & Dynamic OTP) -->
   <div id="auth-modal" class="modal-overlay">
     <div class="modal-box auth-modal-box">
       <div class="auth-modal-header">
@@ -282,23 +293,47 @@
             <label id="auth-phone-label">மொபைல் எண் (Mobile Phone):</label>
             <div class="phone-input-wrapper">
               <span class="phone-prefix">🇮🇳 +91</span>
-              <input type="tel" id="auth-phone-input" placeholder="98765 43210" value="9876543210" />
+              <input type="tel" id="auth-phone-input" placeholder="98765 43210" value="9876543210" maxlength="10" />
             </div>
-            
+
             <div id="recaptcha-container" style="margin-top: 8px;"></div>
 
+            <!-- Dynamic OTP Input Block -->
             <div class="input-group" style="margin-top: 14px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <label id="auth-otp-label">அனுப்பப்பட்ட OTP எண்:</label>
-                <button type="button" class="btn-demo-autofill" onclick="window.autofillDemoOtp()">⚡ Auto-fill (123456)</button>
+                <label id="auth-otp-label" style="font-weight: 800; font-size: 13px;">அனுப்பப்பட்ட 6-இலக்க OTP எண்:</label>
+                <div id="auth-otp-status-badge" class="otp-timer-badge" title="OTP Validity Timer">
+                  <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
+                  <span id="auth-otp-timer-text">02:00</span>
+                </div>
               </div>
-              <div class="otp-inputs-row">
-                <input type="text" class="otp-digit" maxlength="1" value="1" />
-                <input type="text" class="otp-digit" maxlength="1" value="2" />
-                <input type="text" class="otp-digit" maxlength="1" value="3" />
-                <input type="text" class="otp-digit" maxlength="1" value="4" />
-                <input type="text" class="otp-digit" maxlength="1" value="5" />
-                <input type="text" class="otp-digit" maxlength="1" value="6" />
+
+              <!-- 6-digit input boxes strictly blank by default -->
+              <div class="otp-inputs-row" id="otp-inputs-container">
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="0" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="1" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="2" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="3" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="4" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="5" placeholder="•" />
+              </div>
+
+              <!-- Resend OTP & Expiry info row -->
+              <div class="otp-resend-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <div class="otp-expiry-hint" id="otp-expiry-hint" style="font-size: 11px; font-weight: 700; color: #64748B; display: flex; align-items: center; gap: 4px;">
+                  <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #F59E0B;"></i>
+                  <span id="otp-hint-text">OTP 2 நிமிடங்களுக்கு மட்டுமே செல்லுபடியாகும் (120 விநாடிகள்)</span>
+                </div>
+                <button type="button" id="btn-resend-otp" class="btn-resend-otp" onclick="window.resendAuthOtp()" disabled>
+                  <i data-lucide="rotate-cw" style="width: 12px; height: 12px;"></i>
+                  <span id="resend-otp-label">Resend in 02:00</span>
+                </button>
+              </div>
+
+              <!-- Inline Auth Error Display Banner -->
+              <div id="auth-error-banner" class="auth-error-banner" style="display: none;">
+                <i data-lucide="alert-circle" style="width: 16px; height: 16px; flex-shrink: 0;"></i>
+                <span id="auth-error-msg">Invalid OTP</span>
               </div>
             </div>
 
@@ -307,7 +342,8 @@
               <span id="auth-perks-text">உடனடி சரிபார்ப்பு & நேரலை ஜி.பி.எஸ் இணைப்பு செயல்படுத்தப்படும்.</span>
             </div>
 
-            <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;" onclick="window.submitRoleAuth()">
+            <button class="btn btn-yellow full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
+              onclick="window.submitRoleAuth()" id="btn-submit-auth">
               <i data-lucide="log-in"></i> <span id="auth-submit-btn-txt">சரிபார்த்து உள்நுழைக (VERIFY & ENTER)</span>
             </button>
           </div>
@@ -346,10 +382,12 @@
         </div>
 
         <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-          <button type="button" class="btn-demo-autofill" onclick="window.autofillAdminDemo()">⚡ Staff Key Demo Fill</button>
+          <button type="button" class="btn-demo-autofill" onclick="window.autofillAdminDemo()">⚡ Staff Key Demo
+            Fill</button>
         </div>
 
-        <button class="btn btn-red full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;" onclick="window.verifyAdminLogin()">
+        <button class="btn btn-red full-width" style="padding: 14px; font-size: 14px; margin-top: 16px;"
+          onclick="window.verifyAdminLogin()">
           <i data-lucide="lock"></i> <span>நிர்வாக அறையில் நுழைக (VERIFY STAFF ACCESS)</span>
         </button>
       </div>
@@ -449,23 +487,28 @@
       <div class="modal-body">
         <div class="input-group">
           <label>Base Visiting & Inspection Charge (Fixed):</label>
-          <input type="number" id="bill-base-input" value="150" readonly class="brutal-input" style="background:#f1f5f9;" />
+          <input type="number" id="bill-base-input" value="150" readonly class="brutal-input"
+            style="background:#f1f5f9;" />
         </div>
         <div class="input-group" style="margin-top: 10px;">
           <label>Spare Parts Cost (₹):</label>
-          <input type="number" id="bill-parts-input" value="100" class="brutal-input" placeholder="e.g. 100 for puncture plug/patch" oninput="window.calcBillTotal()" />
+          <input type="number" id="bill-parts-input" value="100" class="brutal-input"
+            placeholder="e.g. 100 for puncture plug/patch" oninput="window.calcBillTotal()" />
         </div>
         <div class="input-group" style="margin-top: 10px;">
           <label>Labor & Service Charges (₹):</label>
-          <input type="number" id="bill-labor-input" value="100" class="brutal-input" placeholder="e.g. 100" oninput="window.calcBillTotal()" />
+          <input type="number" id="bill-labor-input" value="100" class="brutal-input" placeholder="e.g. 100"
+            oninput="window.calcBillTotal()" />
         </div>
         <div class="rate-card-summary" style="margin-top: 12px;">
           <div class="rate-item"><span>Visiting Fee</span><span id="calc-base-text">₹150</span></div>
           <div class="rate-item"><span>Parts & Materials</span><span id="calc-parts-text">₹100</span></div>
           <div class="rate-item"><span>Labor Fee</span><span id="calc-labor-text">₹100</span></div>
-          <div class="rate-item total"><span>Customer Total</span><span id="calc-total-text" style="color:#00C851;">₹350</span></div>
+          <div class="rate-item total"><span>Customer Total</span><span id="calc-total-text"
+              style="color:#00C851;">₹350</span></div>
         </div>
-        <button class="btn btn-green full-width" style="margin-top: 14px; padding: 12px;" onclick="window.submitMechanicBill()">
+        <button class="btn btn-green full-width" style="margin-top: 14px; padding: 12px;"
+          onclick="window.submitMechanicBill()">
           <i data-lucide="check"></i> Submit Bill & Request Payment
         </button>
       </div>
@@ -486,7 +529,8 @@
         </div>
         <div class="input-group" style="margin-top: 8px;">
           <label>Part Name (Tamil):</label>
-          <input type="text" id="new-part-nameta" placeholder="e.g. அமரான் ஹை-லைஃப் 35Ah பேட்டரி" class="brutal-input" />
+          <input type="text" id="new-part-nameta" placeholder="e.g. அமரான் ஹை-லைஃப் 35Ah பேட்டரி"
+            class="brutal-input" />
         </div>
         <div class="input-group" style="margin-top: 8px;">
           <label>Category:</label>
@@ -514,7 +558,8 @@
           <label>Initial Stock Quantity:</label>
           <input type="number" id="new-part-stock" value="12" class="brutal-input" />
         </div>
-        <button class="btn btn-yellow full-width" style="margin-top: 14px; padding: 12px;" onclick="window.saveNewSparePart()">
+        <button class="btn btn-yellow full-width" style="margin-top: 14px; padding: 12px;"
+          onclick="window.saveNewSparePart()">
           <i data-lucide="plus-circle"></i> Add to Wholesale Catalog
         </button>
       </div>
@@ -549,7 +594,8 @@
           <label>Winch / Load Capacity (Tons):</label>
           <input type="text" id="tow-cap-input" placeholder="4.5 Tons" class="brutal-input" />
         </div>
-        <button class="btn btn-yellow full-width" style="margin-top: 14px; padding: 12px;" onclick="window.saveNewTowTruck()">
+        <button class="btn btn-yellow full-width" style="margin-top: 14px; padding: 12px;"
+          onclick="window.saveNewTowTruck()">
           <i data-lucide="plus"></i> Register Fleet Vehicle
         </button>
       </div>
@@ -572,18 +618,23 @@
           <span class="star-rating active" data-val="5" onclick="window.setStarRating(5)">★</span>
         </div>
         <p id="star-rating-label" style="font-weight: 800; font-size: 13px; color: #166534;">Excellent (5/5 Stars)</p>
-        
-        <textarea id="feedback-text-input" placeholder="Share your feedback about mechanic arrival, repair speed, and professionalism..." class="brutal-input" style="width: 100%; height: 75px; margin-top: 10px;"></textarea>
 
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding: 8px 12px; background: #f8fafc; border: 1.5px solid #0D0D0D; border-radius: 8px;">
+        <textarea id="feedback-text-input"
+          placeholder="Share your feedback about mechanic arrival, repair speed, and professionalism..."
+          class="brutal-input" style="width: 100%; height: 75px; margin-top: 10px;"></textarea>
+
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding: 8px 12px; background: #f8fafc; border: 1.5px solid #0D0D0D; border-radius: 8px;">
           <div style="text-align: left;">
             <strong style="font-size: 12px;">❤️ Rebook Mechanic Toggle</strong>
             <small style="display: block; font-size: 10px; color: #64748b;">Save as favorite trusted partner</small>
           </div>
-          <input type="checkbox" id="rebook-toggle-check" checked style="width: 20px; height: 20px; accent-color: #00C851; cursor: pointer;" />
+          <input type="checkbox" id="rebook-toggle-check" checked
+            style="width: 20px; height: 20px; accent-color: #00C851; cursor: pointer;" />
         </div>
 
-        <button class="btn btn-green full-width" style="margin-top: 14px; padding: 12px;" onclick="window.submitServiceRating()">
+        <button class="btn btn-green full-width" style="margin-top: 14px; padding: 12px;"
+          onclick="window.submitServiceRating()">
           <i data-lucide="check-circle"></i> Submit Rating & Close
         </button>
       </div>

@@ -1266,29 +1266,320 @@ body {
   display: flex;
   gap: 8px;
   justify-content: space-between;
+  margin-top: 4px;
 }
 
 .otp-digit {
-  width: 48px;
+  width: 46px;
   height: 52px;
   text-align: center;
   font-size: 22px;
   font-weight: 900;
   border: var(--light-border);
   border-radius: 8px;
-  box-shadow: 2px 2px 0px var(--dark-black);
+  background: var(--pure-white);
+  color: var(--dark-black);
+  box-shadow: 2.5px 2.5px 0px var(--dark-black);
   outline: none;
+  transition: all 0.15s ease;
 }
 
-.btn-demo-autofill {
-  background: #E0E7FF;
-  color: #4338CA;
-  border: 1px solid #4338CA;
-  border-radius: 4px;
+.otp-digit:focus {
+  background: #FFFDE7;
+  border-color: #0D0D0D;
+  box-shadow: 3.5px 3.5px 0px #0D0D0D;
+  transform: translateY(-2px);
+}
+
+.otp-digit.filled {
+  background: #F0FDF4;
+  border-color: #16A34A;
+}
+
+.otp-digit.error {
+  background: #FEF2F2 !important;
+  border-color: #EF4444 !important;
+  color: #DC2626 !important;
+  animation: otpShake 0.4s ease;
+}
+
+@keyframes otpShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.otp-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: #DCFCE7;
+  color: #166534;
+  border: 1.5px solid #16A34A;
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 800;
-  padding: 3px 8px;
+  box-shadow: 1.5px 1.5px 0px #16A34A;
+  transition: all 0.2s ease;
+}
+
+.otp-timer-badge.warning {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: #D97706;
+  box-shadow: 1.5px 1.5px 0px #D97706;
+}
+
+.otp-timer-badge.expired {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-color: #DC2626;
+  box-shadow: 1.5px 1.5px 0px #DC2626;
+  animation: pulseBadge 1.2s infinite;
+}
+
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.btn-resend-otp {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1.5px solid #64748B;
+  background: #E2E8F0;
+  color: #64748B;
+  cursor: not-allowed;
+  transition: all 0.15s ease;
+}
+
+.btn-resend-otp.active-ready {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+  border: 1.5px solid var(--dark-black);
+  box-shadow: 2px 2px 0px var(--dark-black);
   cursor: pointer;
+  font-weight: 900;
+}
+
+.btn-resend-otp.active-ready:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--dark-black);
+  background: #FFE033;
+}
+
+.auth-error-banner {
+  background: #FEF2F2;
+  border: 2px solid #EF4444;
+  color: #991B1B;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  box-shadow: 2px 2px 0px #EF4444;
+  animation: toastSlideDown 0.25s ease;
+}
+
+/* Floating Simulated SMS Alert Notification System */
+.sms-toast-container {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999999;
+  width: 92%;
+  max-width: 480px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sms-toast {
+  pointer-events: auto;
+  background: #0D0D0D;
+  color: #FFFFFF;
+  border: 3px solid #FFD600;
+  border-radius: 12px;
+  box-shadow: 5px 5px 0px rgba(0,0,0,0.8), 0 8px 24px rgba(0,0,0,0.3);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+  animation: toastSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
+}
+
+.sms-toast.closing {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+}
+
+@keyframes toastSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-25px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sms-toast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 6px;
+}
+
+.sms-toast-sender-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sms-sender-dot {
+  width: 8px;
+  height: 8px;
+  background: #00C851;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #00C851;
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+.sms-sender-name {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #FFD600;
+}
+
+.sms-toast-meta {
+  font-size: 10px;
+  color: #94A3B8;
+  font-weight: 700;
+}
+
+.sms-toast-close {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #FFFFFF;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  transition: background 0.15s;
+}
+
+.sms-toast-close:hover {
+  background: #FF3B30;
+}
+
+.sms-toast-body {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #F1F5F9;
+  font-weight: 600;
+}
+
+.sms-toast-otp-highlight {
+  display: inline-block;
+  background: #FFD600;
+  color: #0D0D0D;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1.5px solid #0D0D0D;
+  margin: 4px 0;
+  box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.3);
+}
+
+.sms-toast-warning {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #FCD34D;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.sms-toast-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: flex-end;
+}
+
+.sms-toast-action-btn {
+  background: #1E293B;
+  color: #FFFFFF;
+  border: 1px solid #475569;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.sms-toast-action-btn:hover {
+  background: #334155;
+  border-color: #FFD600;
+}
+
+.sms-toast-action-btn.fill-btn {
+  background: #FFD600;
+  color: #0D0D0D;
+  border-color: #0D0D0D;
+  font-weight: 900;
+}
+
+.sms-toast-action-btn.fill-btn:hover {
+  background: #FFE033;
+}
+
+.sms-toast-progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sms-toast-progress-bar {
+  height: 100%;
+  background: #FFD600;
+  width: 100%;
+  transition: width 1s linear;
 }
 
 .auth-perks-box {

@@ -66,6 +66,17 @@ const APP_STATE = {
   isSirenPlaying: false,
   sirenAudioContext: null,
 
+  // Reactive Dynamic OTP Authentication State
+  authOtp: {
+    code: '',
+    phone: '',
+    createdAt: 0,
+    expiresAt: 0,
+    timerInterval: null,
+    remainingSeconds: 0,
+    isExpired: false
+  },
+
   // Customer Data
   customer: {
     id: 'CUST-TN-98765',
@@ -349,7 +360,18 @@ const STRINGS = {
     dispatchTowBtn: 'டோயிங் வாகனத்தை அனுப்பு ➔',
     selectTowType: 'டோயிங் லாரி வகையை தேர்வு செய்க:',
     myVehiclesTitle: 'எனது வாகனங்கள் (Registered Vehicles)',
-    activePill: 'செயலில்'
+    activePill: 'செயலில்',
+
+    // OTP & Authentication
+    authPhoneLabel: 'மொபைல் எண் (Mobile Phone):',
+    authOtpLabel: 'அனுப்பப்பட்ட 6-இலக்க OTP எண்:',
+    authOtpExpiryHint: 'OTP 2 நிமிடங்களுக்கு மட்டுமே செல்லுபடியாகும் (120 விநாடிகள்)',
+    authResendIn: 'மறுஅனுப்பு',
+    authResendBtn: '🔄 புதிய OTP அனுப்புக (Resend OTP)',
+    authVerifyBtn: 'சரிபார்த்து உள்நுழைக (VERIFY & ENTER)',
+    authOtpInvalid: '❌ தவறான OTP எண்! உங்கள் SMS அறிவிப்பில் உள்ள சரியான 6 இலக்க எண்ணை உள்ளிடவும்.',
+    authOtpExpired: '❌ OTP காலாவதியானது (120 விநாடிகள் முடிந்தது)! தயவுசெய்து புதிய OTP பெற "மறுஅனுப்பு" என்பதை அழுத்தவும்.',
+    authOtpIncomplete: 'முழுமையான 6 இலக்க OTP எண்ணை உள்ளிடவும்!'
   },
   en: {
     appTitle: 'ULLUR MECHANIC',
@@ -460,7 +482,18 @@ const STRINGS = {
     dispatchTowBtn: 'DISPATCH TOW VEHICLE ➔',
     selectTowType: 'Select Tow Truck Type:',
     myVehiclesTitle: 'My Registered Vehicles',
-    activePill: 'Active'
+    activePill: 'Active',
+
+    // OTP & Authentication
+    authPhoneLabel: 'Mobile Phone Number:',
+    authOtpLabel: 'Enter 6-Digit SMS OTP:',
+    authOtpExpiryHint: 'OTP is strictly valid for 2 minutes (120s)',
+    authResendIn: 'Resend in',
+    authResendBtn: '🔄 Resend New OTP',
+    authVerifyBtn: 'VERIFY & ENTER',
+    authOtpInvalid: '❌ Invalid OTP entered! Please check your SMS alert and try again.',
+    authOtpExpired: '❌ OTP Expired! The 2-minute validity has elapsed. Please click "Resend OTP".',
+    authOtpIncomplete: 'Please enter the complete 6-digit OTP code!'
   }
 };
 
@@ -488,8 +521,326 @@ function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 // --------------------------------------------------------------------------
-// 5. GLOBAL AUTHENTICATION & ROLE SWITCHING
+// 5. GLOBAL DYNAMIC OTP AUTHENTICATION & ROLE SWITCHING
 // --------------------------------------------------------------------------
+
+// Generates a cryptographically random/uniform 6-digit integer code (100000 - 999999)
+function generateSecureOtp() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+function formatTimerMinutesSeconds(totalSeconds) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function clearOtpInputs() {
+  document.querySelectorAll('.otp-digit').forEach((input) => {
+    input.value = '';
+    input.classList.remove('filled', 'error');
+  });
+}
+
+function highlightOtpInputsError() {
+  document.querySelectorAll('.otp-digit').forEach((input) => {
+    input.classList.add('error');
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.otp-digit').forEach((input) => {
+      input.classList.remove('error');
+    });
+  }, 1200);
+}
+
+function showAuthError(msg) {
+  const banner = document.getElementById('auth-error-banner');
+  const txt = document.getElementById('auth-error-msg');
+  if (banner && txt) {
+    txt.innerText = msg;
+    banner.style.display = 'flex';
+  }
+}
+
+function hideAuthError() {
+  const banner = document.getElementById('auth-error-banner');
+  if (banner) {
+    banner.style.display = 'none';
+  }
+}
+
+function updateOtpTimerUI(remainingSeconds) {
+  const timerText = document.getElementById('auth-otp-timer-text');
+  const badge = document.getElementById('auth-otp-status-badge');
+  const resendBtn = document.getElementById('btn-resend-otp');
+  const resendLabel = document.getElementById('resend-otp-label');
+  const hintText = document.getElementById('otp-hint-text');
+
+  const formattedTime = formatTimerMinutesSeconds(remainingSeconds);
+
+  if (timerText) timerText.innerText = formattedTime;
+
+  if (remainingSeconds > 0) {
+    if (badge) {
+      badge.className = 'otp-timer-badge';
+      if (remainingSeconds <= 30) badge.classList.add('warning');
+    }
+    if (resendBtn) {
+      resendBtn.disabled = true;
+      resendBtn.classList.remove('active-ready');
+    }
+    if (resendLabel) {
+      resendLabel.innerText = `${t('authResendIn')} ${formattedTime}`;
+    }
+    if (hintText) {
+      hintText.innerText = t('authOtpExpiryHint');
+    }
+  } else {
+    if (badge) {
+      badge.className = 'otp-timer-badge expired';
+    }
+    if (timerText) {
+      timerText.innerText = '00:00 (EXPIRED)';
+    }
+    if (resendBtn) {
+      resendBtn.disabled = false;
+      resendBtn.classList.add('active-ready');
+    }
+    if (resendLabel) {
+      resendLabel.innerText = t('authResendBtn');
+    }
+    if (hintText) {
+      hintText.innerText = APP_STATE.lang === 'ta'
+        ? '⚠️ OTP காலாவதியானது. புதிய குறியீட்டைப் பெற "மறுஅனுப்பு" என்பதை அழுத்தவும்.'
+        : '⚠️ OTP Expired. Click "Resend OTP" to generate a new valid code.';
+    }
+  }
+}
+
+function handleOtpExpiration() {
+  APP_STATE.authOtp.isExpired = true;
+  updateOtpTimerUI(0);
+  showAuthError(t('authOtpExpired'));
+  highlightOtpInputsError();
+}
+
+// Floating simulated SMS push notification alert banner
+function showSmsToastNotification(phone, code, validitySeconds = 120, isResend = false) {
+  const container = document.getElementById('sms-toast-container');
+  if (!container) return;
+
+  // Clear any existing active toast
+  container.innerHTML = '';
+
+  const formattedPhone = phone.startsWith('+91') ? phone : `+91 ${phone}`;
+  const isTa = APP_STATE.lang === 'ta';
+
+  const toastEl = document.createElement('div');
+  toastEl.className = 'sms-toast';
+  toastEl.id = `sms-toast-${Date.now()}`;
+
+  const msgPrefix = isResend
+    ? (isTa ? '🔄 [மறுஅனுப்பப்பட்ட புதிய OTP]' : '🔄 [NEW RESENT OTP]')
+    : (isTa ? '🚨 [உள்ளூர் மெக்கானிக் அவசர உள்நுழைவு]' : '🚨 [ULLUR HIGHWAY BREAKDOWN LOGIN]');
+
+  const bodyText = isTa
+    ? `${msgPrefix} ${formattedPhone} எண்ணுக்கான உங்கள் 6-இலக்க பாதுகாப்பு சரிபார்ப்பு எண்:`
+    : `${msgPrefix} Your 6-digit access verification OTP for ${formattedPhone} is:`;
+
+  const warningText = isTa
+    ? '⏳ 2 நிமிடங்களுக்கு மட்டுமே செல்லுபடியாகும் (120 விநாடிகள்). யாரிடமும் பகிர வேண்டாம்.'
+    : '⏳ Valid for 2 minutes (120s). Never share your OTP with anyone.';
+
+  toastEl.innerHTML = `
+    <div class="sms-toast-header">
+      <div class="sms-toast-sender-info">
+        <div class="sms-sender-dot"></div>
+        <span class="sms-sender-name">MESSAGES • TN-ULLUR-SMS</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="sms-toast-meta">${isTa ? 'இப்போது • சிம் 1' : 'Just Now • SIM 1'}</span>
+        <button type="button" class="sms-toast-close" onclick="window.dismissSmsToast(this)" title="Close SMS">✕</button>
+      </div>
+    </div>
+    <div class="sms-toast-body">
+      <div>${bodyText}</div>
+      <div style="text-align: center; margin: 6px 0;">
+        <span class="sms-toast-otp-highlight" id="toast-otp-value">${code}</span>
+      </div>
+      <div class="sms-toast-warning">
+        <i data-lucide="shield-alert" style="width: 13px; height: 13px; flex-shrink: 0;"></i>
+        <span>${warningText}</span>
+      </div>
+    </div>
+    <div class="sms-toast-actions">
+      <button type="button" class="sms-toast-action-btn" onclick="window.copyOtpFromToast('${code}', this)">
+        <i data-lucide="copy" style="width: 12px; height: 12px;"></i>
+        <span class="copy-btn-text">${isTa ? 'நகலெடு (Copy)' : 'Copy OTP'}</span>
+      </button>
+      <button type="button" class="sms-toast-action-btn fill-btn" onclick="window.fillOtpFromToast('${code}')">
+        <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
+        <span>${isTa ? 'உடனடி உள்ளீடு' : 'Tap to Fill'}</span>
+      </button>
+    </div>
+    <div class="sms-toast-progress-container">
+      <div class="sms-toast-progress-bar" id="toast-progress-bar"></div>
+    </div>
+  `;
+
+  container.appendChild(toastEl);
+  if (window.lucide) lucide.createIcons();
+
+  // Animate progress bar over 120s
+  const progressBar = toastEl.querySelector('#toast-progress-bar');
+  if (progressBar) {
+    setTimeout(() => {
+      progressBar.style.transition = `width ${validitySeconds}s linear`;
+      progressBar.style.width = '0%';
+    }, 50);
+  }
+}
+
+window.dismissSmsToast = function (btn) {
+  const toast = btn.closest('.sms-toast');
+  if (toast) {
+    toast.classList.add('closing');
+    setTimeout(() => toast.remove(), 300);
+  }
+};
+
+window.copyOtpFromToast = function (code, btn) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).catch(() => {});
+  }
+  const txt = btn.querySelector('.copy-btn-text');
+  if (txt) {
+    const original = txt.innerText;
+    txt.innerText = '✅ Copied!';
+    setTimeout(() => { txt.innerText = original; }, 1800);
+  }
+};
+
+window.fillOtpFromToast = function (code) {
+  const digits = code.split('');
+  const inputs = document.querySelectorAll('.otp-digit');
+  inputs.forEach((input, idx) => {
+    input.value = digits[idx] || '';
+    if (input.value) input.classList.add('filled');
+  });
+  hideAuthError();
+  if (inputs[inputs.length - 1]) inputs[inputs.length - 1].focus();
+};
+
+window.requestNewAuthOtp = function (phone, isResend = false) {
+  if (APP_STATE.authOtp.timerInterval) {
+    clearInterval(APP_STATE.authOtp.timerInterval);
+    APP_STATE.authOtp.timerInterval = null;
+  }
+
+  const generatedCode = generateSecureOtp();
+  const validitySeconds = 120; // 2 minutes (120 seconds)
+  const now = Date.now();
+  const expiresAt = now + validitySeconds * 1000;
+
+  const targetPhone = phone || document.getElementById('auth-phone-input')?.value || '9876543210';
+
+  APP_STATE.authOtp.code = generatedCode;
+  APP_STATE.authOtp.phone = targetPhone;
+  APP_STATE.authOtp.createdAt = now;
+  APP_STATE.authOtp.expiresAt = expiresAt;
+  APP_STATE.authOtp.remainingSeconds = validitySeconds;
+  APP_STATE.authOtp.isExpired = false;
+
+  // Clear inputs - strictly empty for user entry
+  clearOtpInputs();
+  hideAuthError();
+  updateOtpTimerUI(validitySeconds);
+
+  // Live countdown ticker
+  APP_STATE.authOtp.timerInterval = setInterval(() => {
+    const remaining = Math.max(0, Math.round((APP_STATE.authOtp.expiresAt - Date.now()) / 1000));
+    APP_STATE.authOtp.remainingSeconds = remaining;
+    updateOtpTimerUI(remaining);
+
+    if (remaining <= 0) {
+      clearInterval(APP_STATE.authOtp.timerInterval);
+      APP_STATE.authOtp.timerInterval = null;
+      handleOtpExpiration();
+    }
+  }, 1000);
+
+  // Trigger floating simulated SMS Toast Notification
+  showSmsToastNotification(targetPhone, generatedCode, validitySeconds, isResend);
+
+  // Focus first input box
+  setTimeout(() => {
+    const firstInput = document.querySelector('.otp-digit');
+    if (firstInput) firstInput.focus();
+  }, 200);
+};
+
+window.resendAuthOtp = function () {
+  if (APP_STATE.authOtp.remainingSeconds > 0 && !APP_STATE.authOtp.isExpired) {
+    return; // Button is disabled while timer is counting down
+  }
+  const phone = document.getElementById('auth-phone-input')?.value || '9876543210';
+  window.requestNewAuthOtp(phone, true);
+};
+
+function setupOtpInputListeners() {
+  const inputs = document.querySelectorAll('.otp-digit');
+  inputs.forEach((input, index) => {
+    if (input.dataset.bound === 'true') return;
+    input.dataset.bound = 'true';
+
+    input.addEventListener('input', (e) => {
+      const val = e.target.value.replace(/\D/g, '');
+      e.target.value = val ? val.slice(-1) : '';
+
+      if (e.target.value) {
+        e.target.classList.add('filled');
+        if (index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      } else {
+        e.target.classList.remove('filled');
+      }
+      hideAuthError();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace') {
+        if (!input.value && index > 0) {
+          inputs[index - 1].focus();
+          inputs[index - 1].value = '';
+          inputs[index - 1].classList.remove('filled');
+        }
+      } else if (e.key === 'ArrowLeft' && index > 0) {
+        inputs[index - 1].focus();
+      } else if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      } else if (e.key === 'Enter') {
+        window.submitRoleAuth();
+      }
+    });
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+      const digits = pastedData.replace(/\D/g, '').slice(0, inputs.length).split('');
+      digits.forEach((digit, i) => {
+        if (inputs[i]) {
+          inputs[i].value = digit;
+          inputs[i].classList.add('filled');
+        }
+      });
+      const nextIndex = Math.min(digits.length, inputs.length - 1);
+      if (inputs[nextIndex]) inputs[nextIndex].focus();
+      hideAuthError();
+    });
+  });
+}
+
 window.initiateRoleAuth = function (role) {
   APP_STATE.pendingAuthRole = role;
   const modal = document.getElementById('auth-modal');
@@ -517,27 +868,52 @@ window.initiateRoleAuth = function (role) {
 
   if (modal) modal.classList.add('active');
   setupRecaptcha();
+  setupOtpInputListeners();
+
+  // Request fresh dynamic 6-digit OTP and start 120s timer
+  const phone = document.getElementById('auth-phone-input')?.value || '9876543210';
+  window.requestNewAuthOtp(phone, false);
+
   if (window.lucide) lucide.createIcons();
 };
 
 window.closeAuthModal = function () {
   const modal = document.getElementById('auth-modal');
   if (modal) modal.classList.remove('active');
-};
-
-window.autofillDemoOtp = function () {
-  const digits = ['1', '2', '3', '4', '5', '6'];
-  document.querySelectorAll('.otp-digit').forEach((input, idx) => {
-    input.value = digits[idx] || '';
-  });
+  if (APP_STATE.authOtp.timerInterval) {
+    clearInterval(APP_STATE.authOtp.timerInterval);
+    APP_STATE.authOtp.timerInterval = null;
+  }
+  hideAuthError();
 };
 
 window.submitRoleAuth = function () {
-  const otpCode = Array.from(document.querySelectorAll('.otp-digit')).map((d) => d.value).join('');
+  const otpCode = Array.from(document.querySelectorAll('.otp-digit')).map((d) => d.value.trim()).join('');
 
   if (otpCode.length < 6) {
-    alert(APP_STATE.lang === 'ta' ? 'முழுமையான 6 இலக்க OTP எண்ணை உள்ளிடவும்!' : 'Please enter full 6-digit SMS OTP!');
+    showAuthError(t('authOtpIncomplete'));
+    highlightOtpInputsError();
     return;
+  }
+
+  // 1. Strict Expiration Check
+  if (APP_STATE.authOtp.isExpired || Date.now() > APP_STATE.authOtp.expiresAt) {
+    showAuthError(t('authOtpExpired'));
+    highlightOtpInputsError();
+    return;
+  }
+
+  // 2. Strict OTP Match Check
+  if (otpCode !== APP_STATE.authOtp.code) {
+    showAuthError(t('authOtpInvalid'));
+    highlightOtpInputsError();
+    return;
+  }
+
+  // Verification Successful: Clear timer interval & state
+  if (APP_STATE.authOtp.timerInterval) {
+    clearInterval(APP_STATE.authOtp.timerInterval);
+    APP_STATE.authOtp.timerInterval = null;
   }
 
   window.closeAuthModal();
@@ -794,6 +1170,18 @@ window.setAppLanguage = function (lang) {
     renderTowingPartnerScreen();
   } else if (APP_STATE.role === 'admin') {
     renderAdminPanel();
+  }
+
+  // Dynamic Auth Modal Translations
+  const authPhoneLbl = document.getElementById('auth-phone-label');
+  if (authPhoneLbl) authPhoneLbl.innerText = t('authPhoneLabel');
+  const authOtpLbl = document.getElementById('auth-otp-label');
+  if (authOtpLbl) authOtpLbl.innerText = t('authOtpLabel');
+  const authSubmitTxt = document.getElementById('auth-submit-btn-txt');
+  if (authSubmitTxt) authSubmitTxt.innerText = t('authVerifyBtn');
+
+  if (APP_STATE.authOtp && APP_STATE.authOtp.remainingSeconds !== undefined) {
+    updateOtpTimerUI(APP_STATE.authOtp.remainingSeconds);
   }
 
   renderDesktopHeaderNav(APP_STATE.role);
