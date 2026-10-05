@@ -41,8 +41,8 @@ if (typeof firebase !== "undefined" && !firebase.apps.length) {
 }
 
 // Global Auth and Firestore instances
-const auth = typeof firebase !== "undefined" && firebase.auth ? firebase.auth() : null;
-const db = typeof firebase !== "undefined" && firebase.firestore ? firebase.firestore() : null;
+const auth = firebase.auth();
+const db = firebase.firestore();
 const firestoreDb = db; // Backward compatibility
 
 // Global window reference for phone auth confirmation result
