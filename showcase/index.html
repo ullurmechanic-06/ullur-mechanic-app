@@ -35,9 +35,10 @@
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
-<body>
-  <!-- Dynamic Simulated SMS Alert / Notification Toast Banner -->
-  <div id="sms-toast-container" class="sms-toast-container" aria-live="polite"></div>
+  <!-- Local Server / Protocol Warning Banner -->
+  <div id="file-protocol-warning" class="protocol-warning-banner" style="display: none; background: #FEF2F2; color: #DC2626; border-bottom: 2px solid #EF4444; padding: 12px 16px; font-weight: 800; font-size: 14px; text-align: center; position: sticky; top: 0; z-index: 999999;">
+    ⚠️ Firebase Auth requires http/https. Please run via Live Server or deploy to Vercel.
+  </div>
 
   <!-- Master Navigation Header -->
   <header class="master-header">
@@ -291,9 +292,14 @@
         <div class="auth-step-container">
           <div class="input-group">
             <label id="auth-phone-label">மொபைல் எண் (Mobile Phone):</label>
-            <div class="phone-input-wrapper">
-              <span class="phone-prefix">🇮🇳 +91</span>
-              <input type="tel" id="auth-phone-input" placeholder="98765 43210" value="9876543210" maxlength="10" />
+            <div class="phone-input-row" style="display: flex; gap: 8px; align-items: stretch; margin-top: 4px;">
+              <div class="phone-input-wrapper" style="flex: 1;">
+                <span class="phone-prefix">🇮🇳 +91</span>
+                <input type="tel" id="auth-phone-input" placeholder="98765 43210" value="9876543210" maxlength="10" />
+              </div>
+              <button type="button" id="btn-send-otp" class="btn btn-yellow" onclick="window.sendAuthOtp()" style="white-space: nowrap; padding: 10px 14px; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="send" style="width: 14px; height: 14px;"></i> <span id="send-otp-btn-txt">Send OTP</span>
+              </button>
             </div>
 
             <div id="recaptcha-container" style="margin-top: 8px;"></div>

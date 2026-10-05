@@ -1,9 +1,26 @@
 /* eslint-disable no-undef */
-/* global firebase, L, Razorpay, lucide */
+/* global firebase, L, Razorpay, lucide, grecaptcha */
 // ==========================================================================
 // ULLUR MECHANIC — COMPLETE FULL-WIDTH MULTI-STAKEHOLDER SUPER APP
 // High-Fidelity Bilingual Architecture, 5 Full-Width Portals, Leaflet & Razorpay
 // ==========================================================================
+
+// --------------------------------------------------------------------------
+// 0. RESILIENCY & LOCAL SERVER GUARD
+// --------------------------------------------------------------------------
+if (window.location.protocol === 'file:') {
+  const fileWarningEl = document.getElementById('file-protocol-warning');
+  if (fileWarningEl) {
+    fileWarningEl.style.display = 'block';
+  } else {
+    const banner = document.createElement('div');
+    banner.id = 'file-protocol-warning';
+    banner.style.cssText = 'background: #FEF2F2; color: #DC2626; border-bottom: 2px solid #EF4444; padding: 12px 16px; font-weight: 800; font-size: 14px; text-align: center; position: sticky; top: 0; z-index: 999999;';
+    banner.innerHTML = '⚠️ Firebase Auth requires http/https. Please run via Live Server or deploy to Vercel.';
+    document.body.prepend(banner);
+  }
+  console.warn("Firebase Auth requires http/https. Please run via Live Server or deploy to Vercel.");
+}
 
 // --------------------------------------------------------------------------
 // 1. FIREBASE & AUTHENTICATION CONFIGURATION
@@ -19,24 +36,18 @@ const firebaseConfig = {
   measurementId: "G-GJKPY9VW57"
 };
 
-let auth = firebase.auth();
-let firestoreDb = firebase.firestore();
-
-try {
-  if (typeof firebase !== "undefined") {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    auth = firebase.auth();
-    if (firebase.firestore) {
-      firestoreDb = firebase.firestore();
-    }
-  }
-} catch (e) {
-  console.warn("Firebase Init notice:", e);
+// Clean Firebase initialization
+if (typeof firebase !== "undefined" && !firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
 }
 
-// Global window reference for confirmation result
+// Instantiate Auth and Firestore globally
+const auth = firebase.auth();
+const db = firebase.firestore();
+const firestoreDb = db; // Backward compatibility
+
+// Global window reference for phone auth confirmation result
+window.confirmationResult = null;
 window.confirmationResultGlobal = null;
 
 function setupRecaptcha() {
@@ -364,13 +375,14 @@ const STRINGS = {
     activePill: 'செயலில்',
 
     // OTP & Authentication
+    sendOtpBtn: 'OTP அனுப்பு (Send OTP)',
     authPhoneLabel: 'மொபைல் எண் (Mobile Phone):',
     authOtpLabel: 'அனுப்பப்பட்ட 6-இலக்க OTP எண்:',
     authOtpExpiryHint: 'OTP 2 நிமிடங்களுக்கு மட்டுமே செல்லுபடியாகும் (120 விநாடிகள்)',
     authResendIn: 'மறுஅனுப்பு',
     authResendBtn: '🔄 புதிய OTP அனுப்புக (Resend OTP)',
     authVerifyBtn: 'சரிபார்த்து உள்நுழைக (VERIFY & ENTER)',
-    authOtpInvalid: '❌ தவறான OTP எண்! உங்கள் SMS அறிவிப்பில் உள்ள சரியான 6 இலக்க எண்ணை உள்ளிடவும்.',
+    authOtpInvalid: '❌ தவறான OTP எண்! தயவுசெய்து சரியான 6 இலக்க எண்ணை உள்ளிடவும்.',
     authOtpExpired: '❌ OTP காலாவதியானது (120 விநாடிகள் முடிந்தது)! தயவுசெய்து புதிய OTP பெற "மறுஅனுப்பு" என்பதை அழுத்தவும்.',
     authOtpIncomplete: 'முழுமையான 6 இலக்க OTP எண்ணை உள்ளிடவும்!'
   },
@@ -486,13 +498,14 @@ const STRINGS = {
     activePill: 'Active',
 
     // OTP & Authentication
+    sendOtpBtn: 'Send OTP',
     authPhoneLabel: 'Mobile Phone Number:',
     authOtpLabel: 'Enter 6-Digit SMS OTP:',
     authOtpExpiryHint: 'OTP is strictly valid for 2 minutes (120s)',
     authResendIn: 'Resend in',
     authResendBtn: '🔄 Resend New OTP',
     authVerifyBtn: 'VERIFY & ENTER',
-    authOtpInvalid: '❌ Invalid OTP entered! Please check your SMS alert and try again.',
+    authOtpInvalid: '❌ Invalid OTP entered! Please check and try again.',
     authOtpExpired: '❌ OTP Expired! The 2-minute validity has elapsed. Please click "Resend OTP".',
     authOtpIncomplete: 'Please enter the complete 6-digit OTP code!'
   }
@@ -522,13 +535,8 @@ function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 // --------------------------------------------------------------------------
-// 5. GLOBAL DYNAMIC OTP AUTHENTICATION & ROLE SWITCHING
+// 5. REAL FIREBASE PHONE AUTHENTICATION & ROLE SWITCHING
 // --------------------------------------------------------------------------
-
-// Generates a cryptographically random/uniform 6-digit integer code (100000 - 999999)
-function generateSecureOtp() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
 
 function formatTimerMinutesSeconds(totalSeconds) {
   const m = Math.floor(totalSeconds / 60);
@@ -613,151 +621,36 @@ function updateOtpTimerUI(remainingSeconds) {
     if (hintText) {
       hintText.innerText = APP_STATE.lang === 'ta'
         ? '⚠️ OTP காலாவதியானது. புதிய குறியீட்டைப் பெற "மறுஅனுப்பு" என்பதை அழுத்தவும்.'
-        : '⚠️ OTP Expired. Click "Resend OTP" to generate a new valid code.';
+        : '⚠️ OTP Expired. Click "Resend OTP" to request a new code.';
     }
   }
 }
 
 function handleOtpExpiration() {
   APP_STATE.authOtp.isExpired = true;
+  window.confirmationResult = null;
+  window.confirmationResultGlobal = null;
   updateOtpTimerUI(0);
   showAuthError(t('authOtpExpired'));
   highlightOtpInputsError();
 }
 
-// Floating simulated SMS push notification alert banner
-function showSmsToastNotification(phone, code, validitySeconds = 120, isResend = false) {
-  const container = document.getElementById('sms-toast-container');
-  if (!container) return;
-
-  // Clear any existing active toast
-  container.innerHTML = '';
-
-  const formattedPhone = phone.startsWith('+91') ? phone : `+91 ${phone}`;
-  const isTa = APP_STATE.lang === 'ta';
-
-  const toastEl = document.createElement('div');
-  toastEl.className = 'sms-toast';
-  toastEl.id = `sms-toast-${Date.now()}`;
-
-  const msgPrefix = isResend
-    ? (isTa ? '🔄 [மறுஅனுப்பப்பட்ட புதிய OTP]' : '🔄 [NEW RESENT OTP]')
-    : (isTa ? '🚨 [உள்ளூர் மெக்கானிக் அவசர உள்நுழைவு]' : '🚨 [ULLUR HIGHWAY BREAKDOWN LOGIN]');
-
-  const bodyText = isTa
-    ? `${msgPrefix} ${formattedPhone} எண்ணுக்கான உங்கள் 6-இலக்க பாதுகாப்பு சரிபார்ப்பு எண்:`
-    : `${msgPrefix} Your 6-digit access verification OTP for ${formattedPhone} is:`;
-
-  const warningText = isTa
-    ? '⏳ 2 நிமிடங்களுக்கு மட்டுமே செல்லுபடியாகும் (120 விநாடிகள்). யாரிடமும் பகிர வேண்டாம்.'
-    : '⏳ Valid for 2 minutes (120s). Never share your OTP with anyone.';
-
-  toastEl.innerHTML = `
-    <div class="sms-toast-header">
-      <div class="sms-toast-sender-info">
-        <div class="sms-sender-dot"></div>
-        <span class="sms-sender-name">MESSAGES • TN-ULLUR-SMS</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span class="sms-toast-meta">${isTa ? 'இப்போது • சிம் 1' : 'Just Now • SIM 1'}</span>
-        <button type="button" class="sms-toast-close" onclick="window.dismissSmsToast(this)" title="Close SMS">✕</button>
-      </div>
-    </div>
-    <div class="sms-toast-body">
-      <div>${bodyText}</div>
-      <div style="text-align: center; margin: 6px 0;">
-        <span class="sms-toast-otp-highlight" id="toast-otp-value">${code}</span>
-      </div>
-      <div class="sms-toast-warning">
-        <i data-lucide="shield-alert" style="width: 13px; height: 13px; flex-shrink: 0;"></i>
-        <span>${warningText}</span>
-      </div>
-    </div>
-    <div class="sms-toast-actions">
-      <button type="button" class="sms-toast-action-btn" onclick="window.copyOtpFromToast('${code}', this)">
-        <i data-lucide="copy" style="width: 12px; height: 12px;"></i>
-        <span class="copy-btn-text">${isTa ? 'நகலெடு (Copy)' : 'Copy OTP'}</span>
-      </button>
-      <button type="button" class="sms-toast-action-btn fill-btn" onclick="window.fillOtpFromToast('${code}')">
-        <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
-        <span>${isTa ? 'உடனடி உள்ளீடு' : 'Tap to Fill'}</span>
-      </button>
-    </div>
-    <div class="sms-toast-progress-container">
-      <div class="sms-toast-progress-bar" id="toast-progress-bar"></div>
-    </div>
-  `;
-
-  container.appendChild(toastEl);
-  if (window.lucide) lucide.createIcons();
-
-  // Animate progress bar over 120s
-  const progressBar = toastEl.querySelector('#toast-progress-bar');
-  if (progressBar) {
-    setTimeout(() => {
-      progressBar.style.transition = `width ${validitySeconds}s linear`;
-      progressBar.style.width = '0%';
-    }, 50);
-  }
-}
-
-window.dismissSmsToast = function (btn) {
-  const toast = btn.closest('.sms-toast');
-  if (toast) {
-    toast.classList.add('closing');
-    setTimeout(() => toast.remove(), 300);
-  }
-};
-
-window.copyOtpFromToast = function (code, btn) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(code).catch(() => { });
-  }
-  const txt = btn.querySelector('.copy-btn-text');
-  if (txt) {
-    const original = txt.innerText;
-    txt.innerText = '✅ Copied!';
-    setTimeout(() => { txt.innerText = original; }, 1800);
-  }
-};
-
-window.fillOtpFromToast = function (code) {
-  const digits = code.split('');
-  const inputs = document.querySelectorAll('.otp-digit');
-  inputs.forEach((input, idx) => {
-    input.value = digits[idx] || '';
-    if (input.value) input.classList.add('filled');
-  });
-  hideAuthError();
-  if (inputs[inputs.length - 1]) inputs[inputs.length - 1].focus();
-};
-
-window.requestNewAuthOtp = function (phone, isResend = false) {
+function startOtpCountdownTimer(validitySeconds = 120) {
   if (APP_STATE.authOtp.timerInterval) {
     clearInterval(APP_STATE.authOtp.timerInterval);
     APP_STATE.authOtp.timerInterval = null;
   }
 
-  const generatedCode = generateSecureOtp();
-  const validitySeconds = 120; // 2 minutes (120 seconds)
   const now = Date.now();
   const expiresAt = now + validitySeconds * 1000;
 
-  const targetPhone = phone || document.getElementById('auth-phone-input')?.value || '9876543210';
-
-  APP_STATE.authOtp.code = generatedCode;
-  APP_STATE.authOtp.phone = targetPhone;
   APP_STATE.authOtp.createdAt = now;
   APP_STATE.authOtp.expiresAt = expiresAt;
   APP_STATE.authOtp.remainingSeconds = validitySeconds;
   APP_STATE.authOtp.isExpired = false;
 
-  // Clear inputs - strictly empty for user entry
-  clearOtpInputs();
-  hideAuthError();
   updateOtpTimerUI(validitySeconds);
 
-  // Live countdown ticker
   APP_STATE.authOtp.timerInterval = setInterval(() => {
     const remaining = Math.max(0, Math.round((APP_STATE.authOtp.expiresAt - Date.now()) / 1000));
     APP_STATE.authOtp.remainingSeconds = remaining;
@@ -769,23 +662,215 @@ window.requestNewAuthOtp = function (phone, isResend = false) {
       handleOtpExpiration();
     }
   }, 1000);
+}
 
-  // Trigger floating simulated SMS Toast Notification
-  showSmsToastNotification(targetPhone, generatedCode, validitySeconds, isResend);
+function getFormattedFirebaseErrorMessage(error) {
+  let errorMsg = error.message || 'Authentication error occurred.';
+  if (error.code === 'auth/invalid-phone-number') {
+    errorMsg = 'Invalid phone number. Please enter a valid 10-digit Indian mobile number.';
+  } else if (error.code === 'auth/quota-exceeded') {
+    errorMsg = 'SMS quota exceeded for today on Firebase project. Please try again later.';
+  } else if (error.code === 'auth/captcha-check-failed') {
+    errorMsg = 'reCAPTCHA verification failed. Please try again.';
+  } else if (error.code === 'auth/too-many-requests') {
+    errorMsg = 'Too many requests. Please wait a short while before requesting OTP again.';
+  } else if (error.code === 'auth/operation-not-allowed') {
+    errorMsg = 'Phone authentication is not enabled in Firebase Console.';
+  } else if (error.code === 'auth/invalid-verification-code') {
+    errorMsg = 'Wrong OTP. Please enter the correct code.';
+  } else if (error.code === 'auth/code-expired') {
+    errorMsg = 'OTP expired. Please request a new one.';
+  }
+  return errorMsg;
+}
 
-  // Focus first input box
-  setTimeout(() => {
-    const firstInput = document.querySelector('.otp-digit');
-    if (firstInput) firstInput.focus();
-  }, 200);
+window.sendAuthOtp = function () {
+  const phoneInput = document.getElementById('auth-phone-input');
+  const rawValue = phoneInput ? phoneInput.value.trim() : '';
+  const digitsOnly = rawValue.replace(/\D/g, '');
+
+  if (digitsOnly.length !== 10) {
+    alert("Please enter a valid 10-digit mobile number.");
+    showAuthError("Please enter a valid 10-digit mobile number.");
+    return;
+  }
+
+  const phoneNumber = `+91${digitsOnly}`;
+  setupRecaptcha();
+
+  const sendBtn = document.getElementById('btn-send-otp');
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = `<i data-lucide="loader" style="width: 14px; height: 14px;"></i> <span>${APP_STATE.lang === 'ta' ? 'அனுப்பப்படுகிறது...' : 'Sending...'}</span>`;
+    if (window.lucide) lucide.createIcons();
+  }
+
+  hideAuthError();
+
+  auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+    .then((confirmationResult) => {
+      window.confirmationResult = confirmationResult;
+      window.confirmationResultGlobal = confirmationResult;
+      APP_STATE.authOtp.phone = phoneNumber;
+
+      startOtpCountdownTimer(120);
+      clearOtpInputs();
+
+      alert(`✅ Real SMS OTP sent to ${phoneNumber}. Please check your phone for the 6-digit code.`);
+
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = `<i data-lucide="check" style="width: 14px; height: 14px;"></i> <span id="send-otp-btn-txt">${APP_STATE.lang === 'ta' ? 'OTP அனுப்பப்பட்டது' : 'OTP Sent'}</span>`;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      setTimeout(() => {
+        const firstInput = document.querySelector('.otp-digit');
+        if (firstInput) firstInput.focus();
+      }, 200);
+    })
+    .catch((error) => {
+      console.error("Firebase Phone Auth Error:", error);
+      if (window.recaptchaVerifier && typeof window.recaptchaVerifier.clear === 'function') {
+        try { window.recaptchaVerifier.clear(); } catch (e) {}
+      }
+      window.recaptchaVerifier = null;
+
+      const errorMsg = getFormattedFirebaseErrorMessage(error);
+      alert(`❌ Firebase Auth Error: ${errorMsg}`);
+      showAuthError(errorMsg);
+
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> <span id="send-otp-btn-txt">${APP_STATE.lang === 'ta' ? 'OTP அனுப்பு' : 'Send OTP'}</span>`;
+        if (window.lucide) lucide.createIcons();
+      }
+    });
 };
 
 window.resendAuthOtp = function () {
   if (APP_STATE.authOtp.remainingSeconds > 0 && !APP_STATE.authOtp.isExpired) {
-    return; // Button is disabled while timer is counting down
+    return; // Disabled until timer reaches 00:00
   }
-  const phone = document.getElementById('auth-phone-input')?.value || '9876543210';
-  window.requestNewAuthOtp(phone, true);
+
+  const phoneInput = document.getElementById('auth-phone-input');
+  const rawValue = phoneInput ? phoneInput.value.trim() : '';
+  const digitsOnly = rawValue.replace(/\D/g, '');
+
+  if (digitsOnly.length !== 10) {
+    alert("Please enter a valid 10-digit mobile number.");
+    showAuthError("Please enter a valid 10-digit mobile number.");
+    return;
+  }
+
+  const phoneNumber = `+91${digitsOnly}`;
+
+  // Reset recaptchaVerifier if possible
+  if (window.recaptchaVerifier) {
+    try {
+      if (typeof window.recaptchaVerifier.render === 'function') {
+        window.recaptchaVerifier.render().then((widgetId) => {
+          if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+            grecaptcha.reset(widgetId);
+          }
+        }).catch(() => {});
+      }
+    } catch (e) {
+      console.warn("Recaptcha reset error:", e);
+    }
+  } else {
+    setupRecaptcha();
+  }
+
+  const resendBtn = document.getElementById('btn-resend-otp');
+  if (resendBtn) {
+    resendBtn.disabled = true;
+    resendBtn.classList.remove('active-ready');
+  }
+
+  hideAuthError();
+
+  auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+    .then((confirmationResult) => {
+      window.confirmationResult = confirmationResult;
+      window.confirmationResultGlobal = confirmationResult;
+      APP_STATE.authOtp.phone = phoneNumber;
+
+      startOtpCountdownTimer(120);
+      clearOtpInputs();
+
+      alert(`✅ New SMS OTP sent successfully to ${phoneNumber}!`);
+
+      setTimeout(() => {
+        const firstInput = document.querySelector('.otp-digit');
+        if (firstInput) firstInput.focus();
+      }, 200);
+    })
+    .catch((error) => {
+      console.error("Firebase Resend OTP Error:", error);
+      const errorMsg = getFormattedFirebaseErrorMessage(error);
+      alert(`❌ ${errorMsg}`);
+      showAuthError(errorMsg);
+
+      if (resendBtn) {
+        resendBtn.disabled = false;
+        resendBtn.classList.add('active-ready');
+      }
+    });
+};
+
+window.submitRoleAuth = function () {
+  const enteredOtp = Array.from(document.querySelectorAll('.otp-digit')).map((d) => d.value.trim()).join('');
+
+  if (enteredOtp.length < 6) {
+    const msg = t('authOtpIncomplete') || "Please enter the complete 6-digit OTP code!";
+    alert(msg);
+    showAuthError(msg);
+    highlightOtpInputsError();
+    return;
+  }
+
+  if (!window.confirmationResult || APP_STATE.authOtp.isExpired) {
+    alert("OTP expired. Please request a new one.");
+    showAuthError("OTP expired. Please request a new one.");
+    highlightOtpInputsError();
+    return;
+  }
+
+  const submitBtn = document.getElementById('btn-submit-auth');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+  }
+
+  window.confirmationResult.confirm(enteredOtp)
+    .then((result) => {
+      console.log("Firebase Phone Auth Login Success:", result.user);
+
+      if (APP_STATE.authOtp.timerInterval) {
+        clearInterval(APP_STATE.authOtp.timerInterval);
+        APP_STATE.authOtp.timerInterval = null;
+      }
+
+      alert("Login Successful!");
+      window.closeAuthModal();
+      APP_STATE.role = APP_STATE.pendingAuthRole;
+      localStorage.setItem('ullur_role', APP_STATE.role);
+      window.switchAppMode(APP_STATE.role);
+    })
+    .catch((error) => {
+      console.error("Firebase Confirm OTP Error:", error);
+      alert("Wrong OTP. Please enter the correct code.");
+      showAuthError("Wrong OTP. Please enter the correct code.");
+      clearOtpInputs();
+      highlightOtpInputsError();
+      const firstInput = document.querySelector('.otp-digit');
+      if (firstInput) firstInput.focus();
+    })
+    .finally(() => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+      }
+    });
 };
 
 function setupOtpInputListeners() {
@@ -870,10 +955,8 @@ window.initiateRoleAuth = function (role) {
   if (modal) modal.classList.add('active');
   setupRecaptcha();
   setupOtpInputListeners();
-
-  // Request fresh dynamic 6-digit OTP and start 120s timer
-  const phone = document.getElementById('auth-phone-input')?.value || '9876543210';
-  window.requestNewAuthOtp(phone, false);
+  clearOtpInputs();
+  hideAuthError();
 
   if (window.lucide) lucide.createIcons();
 };
@@ -888,40 +971,7 @@ window.closeAuthModal = function () {
   hideAuthError();
 };
 
-window.submitRoleAuth = function () {
-  const otpCode = Array.from(document.querySelectorAll('.otp-digit')).map((d) => d.value.trim()).join('');
 
-  if (otpCode.length < 6) {
-    showAuthError(t('authOtpIncomplete'));
-    highlightOtpInputsError();
-    return;
-  }
-
-  // 1. Strict Expiration Check
-  if (APP_STATE.authOtp.isExpired || Date.now() > APP_STATE.authOtp.expiresAt) {
-    showAuthError(t('authOtpExpired'));
-    highlightOtpInputsError();
-    return;
-  }
-
-  // 2. Strict OTP Match Check
-  if (otpCode !== APP_STATE.authOtp.code) {
-    showAuthError(t('authOtpInvalid'));
-    highlightOtpInputsError();
-    return;
-  }
-
-  // Verification Successful: Clear timer interval & state
-  if (APP_STATE.authOtp.timerInterval) {
-    clearInterval(APP_STATE.authOtp.timerInterval);
-    APP_STATE.authOtp.timerInterval = null;
-  }
-
-  window.closeAuthModal();
-  APP_STATE.role = APP_STATE.pendingAuthRole;
-  localStorage.setItem('ullur_role', APP_STATE.role);
-  window.switchAppMode(APP_STATE.role);
-};
 
 window.logoutUser = function () {
   APP_STATE.role = 'gateway';
@@ -1176,6 +1226,8 @@ window.setAppLanguage = function (lang) {
   // Dynamic Auth Modal Translations
   const authPhoneLbl = document.getElementById('auth-phone-label');
   if (authPhoneLbl) authPhoneLbl.innerText = t('authPhoneLabel');
+  const sendOtpBtnTxt = document.getElementById('send-otp-btn-txt');
+  if (sendOtpBtnTxt) sendOtpBtnTxt.innerText = t('sendOtpBtn');
   const authOtpLbl = document.getElementById('auth-otp-label');
   if (authOtpLbl) authOtpLbl.innerText = t('authOtpLabel');
   const authSubmitTxt = document.getElementById('auth-submit-btn-txt');
