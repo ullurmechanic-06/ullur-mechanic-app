@@ -27,9 +27,9 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Firebase Web SDK Compatibility CDN -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <!-- Razorpay Checkout SDK CDN -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -301,7 +301,8 @@
             <!-- Dynamic OTP Input Block -->
             <div class="input-group" style="margin-top: 14px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <label id="auth-otp-label" style="font-weight: 800; font-size: 13px;">அனுப்பப்பட்ட 6-இலக்க OTP எண்:</label>
+                <label id="auth-otp-label" style="font-weight: 800; font-size: 13px;">அனுப்பப்பட்ட 6-இலக்க OTP
+                  எண்:</label>
                 <div id="auth-otp-status-badge" class="otp-timer-badge" title="OTP Validity Timer">
                   <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
                   <span id="auth-otp-timer-text">02:00</span>
@@ -310,21 +311,30 @@
 
               <!-- 6-digit input boxes strictly blank by default -->
               <div class="otp-inputs-row" id="otp-inputs-container">
-                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="0" placeholder="•" />
-                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="1" placeholder="•" />
-                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="2" placeholder="•" />
-                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="3" placeholder="•" />
-                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="4" placeholder="•" />
-                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="5" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                  data-index="0" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                  data-index="1" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                  data-index="2" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                  data-index="3" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                  data-index="4" placeholder="•" />
+                <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                  data-index="5" placeholder="•" />
               </div>
 
               <!-- Resend OTP & Expiry info row -->
-              <div class="otp-resend-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                <div class="otp-expiry-hint" id="otp-expiry-hint" style="font-size: 11px; font-weight: 700; color: #64748B; display: flex; align-items: center; gap: 4px;">
+              <div class="otp-resend-row"
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <div class="otp-expiry-hint" id="otp-expiry-hint"
+                  style="font-size: 11px; font-weight: 700; color: #64748B; display: flex; align-items: center; gap: 4px;">
                   <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #F59E0B;"></i>
                   <span id="otp-hint-text">OTP 2 நிமிடங்களுக்கு மட்டுமே செல்லுபடியாகும் (120 விநாடிகள்)</span>
                 </div>
-                <button type="button" id="btn-resend-otp" class="btn-resend-otp" onclick="window.resendAuthOtp()" disabled>
+                <button type="button" id="btn-resend-otp" class="btn-resend-otp" onclick="window.resendAuthOtp()"
+                  disabled>
                   <i data-lucide="rotate-cw" style="width: 12px; height: 12px;"></i>
                   <span id="resend-otp-label">Resend in 02:00</span>
                 </button>
