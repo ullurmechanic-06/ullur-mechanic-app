@@ -22,9 +22,13 @@ if (window.location.protocol === 'file:') {
   console.warn("Firebase Auth requires http/https. Please run via Live Server or deploy to Vercel.");
 }
 
-// --------------------------------------------------------------------------
-// 1. FIREBASE & AUTHENTICATION CONFIGURATION
-// --------------------------------------------------------------------------
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyADeAvhgZy29k_Cn_yFxlKVzOgPBNq2bis",
@@ -32,20 +36,13 @@ const firebaseConfig = {
   projectId: "ullur-mechanic",
   storageBucket: "ullur-mechanic.firebasestorage.app",
   messagingSenderId: "325254482783",
-  appId: "1:325254482783:web:1f08437dc410b3128004ea",
-  measurementId: "G-GJKPY9VW57"
+  appId: "1:325254482783:web:1a9b071bae25ac4c8004ea",
+  measurementId: "G-NW4REY73K0"
 };
 
-// Clean Firebase initialization
-if (typeof firebase !== "undefined" && !firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
-// Instantiate Auth and Firestore globally
-const auth = firebase.auth();
-const db = firebase.firestore();
-const firestoreDb = db; // Backward compatibility
-
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 // Global window reference for phone auth confirmation result
 window.confirmationResult = null;
 window.confirmationResultGlobal = null;
@@ -732,7 +729,7 @@ window.sendAuthOtp = function () {
     .catch((error) => {
       console.error("Firebase Phone Auth Error:", error);
       if (window.recaptchaVerifier && typeof window.recaptchaVerifier.clear === 'function') {
-        try { window.recaptchaVerifier.clear(); } catch (e) {}
+        try { window.recaptchaVerifier.clear(); } catch (e) { }
       }
       window.recaptchaVerifier = null;
 
@@ -773,7 +770,7 @@ window.resendAuthOtp = function () {
           if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
             grecaptcha.reset(widgetId);
           }
-        }).catch(() => {});
+        }).catch(() => { });
       }
     } catch (e) {
       console.warn("Recaptcha reset error:", e);
