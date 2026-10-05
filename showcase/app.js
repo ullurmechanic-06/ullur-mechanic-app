@@ -44,6 +44,25 @@ if (typeof firebase !== "undefined" && !firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 const firestoreDb = db; // Backward compatibility
+// ==========================================
+// AUTO-DISMISSING TOAST NOTIFICATION
+// ==========================================
+function showToast(message, type = "success", duration = 4000) {
+  const oldToast = document.querySelector(".custom-toast");
+  if (oldToast) oldToast.remove();
+
+  const toast = document.createElement("div");
+  toast.className = `custom-toast toast-${type}`;
+  toast.innerHTML = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 100);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, duration);
+}
 
 // Global window reference for phone auth confirmation result
 window.confirmationResult = null;
@@ -720,7 +739,7 @@ window.sendAuthOtp = function () {
       startOtpCountdownTimer(120);
       clearOtpInputs();
 
-      alert(`✅ Real SMS OTP sent to ${phoneNumber}. Please check your phone for the 6-digit code.`);
+      showToast(`✅ Real SMS OTP sent to ${phoneNumber}. Please check your phone for the 6-digit code.`);
 
       if (sendBtn) {
         sendBtn.disabled = false;
@@ -814,7 +833,7 @@ window.resendAuthOtp = function () {
       startOtpCountdownTimer(120);
       clearOtpInputs();
 
-      alert(`✅ New SMS OTP sent successfully to ${phoneNumber}!`);
+      showToast(`✅ New SMS OTP sent successfully to ${phoneNumber}!`);
 
       setTimeout(() => {
         const firstInput = document.querySelector('.otp-digit');
@@ -824,7 +843,7 @@ window.resendAuthOtp = function () {
     .catch((error) => {
       console.error("Firebase Resend OTP Error:", error);
       const errorMsg = getFormattedFirebaseErrorMessage(error);
-      alert(`❌ ${errorMsg}`);
+      showToast(`❌ ${errorMsg}`);
       showAuthError(errorMsg);
 
       if (resendBtn) {
@@ -846,7 +865,7 @@ window.submitRoleAuth = function () {
   }
 
   if (!window.confirmationResult || APP_STATE.authOtp.isExpired) {
-    alert("OTP expired. Please request a new one.");
+    showToast("OTP expired. Please request a new one.");
     showAuthError("OTP expired. Please request a new one.");
     highlightOtpInputsError();
     return;
@@ -866,7 +885,7 @@ window.submitRoleAuth = function () {
         APP_STATE.authOtp.timerInterval = null;
       }
 
-      alert("Login Successful!");
+      showToast("Login Successful!");
       window.closeAuthModal();
       APP_STATE.role = APP_STATE.pendingAuthRole;
       localStorage.setItem('ullur_role', APP_STATE.role);
@@ -874,7 +893,7 @@ window.submitRoleAuth = function () {
     })
     .catch((error) => {
       console.error("Firebase Confirm OTP Error:", error);
-      alert("Wrong OTP. Please enter the correct code.");
+      showToast("Wrong OTP. Please enter the correct code.");
       showAuthError("Wrong OTP. Please enter the correct code.");
       clearOtpInputs();
       highlightOtpInputsError();
