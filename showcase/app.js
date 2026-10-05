@@ -22,14 +22,9 @@ if (window.location.protocol === 'file:') {
   console.warn("Firebase Auth requires http/https. Please run via Live Server or deploy to Vercel.");
 }
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// --------------------------------------------------------------------------
+// 1. FIREBASE & AUTHENTICATION CONFIGURATION
+// --------------------------------------------------------------------------
 const firebaseConfig = {
   apiKey: "AIzaSyADeAvhgZy29k_Cn_yFxlKVzOgPBNq2bis",
   authDomain: "ullur-mechanic.firebaseapp.com",
@@ -40,9 +35,16 @@ const firebaseConfig = {
   measurementId: "G-NW4REY73K0"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Clean Firebase initialization using browser SDK
+if (typeof firebase !== "undefined" && !firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+// Global Auth and Firestore instances
+const auth = typeof firebase !== "undefined" && firebase.auth ? firebase.auth() : null;
+const db = typeof firebase !== "undefined" && firebase.firestore ? firebase.firestore() : null;
+const firestoreDb = db; // Backward compatibility
+
 // Global window reference for phone auth confirmation result
 window.confirmationResult = null;
 window.confirmationResultGlobal = null;
@@ -702,9 +704,14 @@ window.sendAuthOtp = function () {
     if (window.lucide) lucide.createIcons();
   }
 
-  hideAuthError();
+  const activeAuth = auth || (typeof firebase !== "undefined" && firebase.auth ? firebase.auth() : null);
+  if (!activeAuth) {
+    alert("Firebase Auth is not loaded. Please ensure you are serving via http/https (e.g. Live Server) with active internet.");
+    showAuthError("Firebase Auth is not available.");
+    return;
+  }
 
-  auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+  activeAuth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
     .then((confirmationResult) => {
       window.confirmationResult = confirmationResult;
       window.confirmationResultGlobal = confirmationResult;
@@ -787,7 +794,18 @@ window.resendAuthOtp = function () {
 
   hideAuthError();
 
-  auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+  const activeAuth = auth || (typeof firebase !== "undefined" && firebase.auth ? firebase.auth() : null);
+  if (!activeAuth) {
+    alert("Firebase Auth is not loaded. Please ensure you are serving via http/https (e.g. Live Server).");
+    showAuthError("Firebase Auth is not available.");
+    if (resendBtn) {
+      resendBtn.disabled = false;
+      resendBtn.classList.add('active-ready');
+    }
+    return;
+  }
+
+  activeAuth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
     .then((confirmationResult) => {
       window.confirmationResult = confirmationResult;
       window.confirmationResultGlobal = confirmationResult;
