@@ -19,8 +19,8 @@ const firebaseConfig = {
   measurementId: "G-GJKPY9VW57"
 };
 
-let auth = null;
-let firestoreDb = null;
+let auth = firebase.auth();
+let firestoreDb = firebase.firestore();
 
 try {
   if (typeof firebase !== "undefined") {
