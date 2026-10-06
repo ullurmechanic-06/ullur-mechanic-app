@@ -8,6 +8,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <!-- Leaflet CSS & JS CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Firebase Web SDK Compatibility CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <!-- Lucide icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -121,31 +128,18 @@
           <!-- Live Map Radar -->
           <div class="brutal-panel map-panel">
             <div class="panel-header">
-              <h3><i data-lucide="radar"></i> Live Highway Radar & Safety Grid (Theni / Madurai)</h3>
-              <span class="badge green">28 Online</span>
+              <h3><i data-lucide="radar"></i> Real-Time Telemetry Radar (Live Firestore Grid)</h3>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span class="badge green" id="telemetry-status-badge"><span class="pulse-dot"></span> Firestore Synced</span>
+              </div>
             </div>
-            <div class="map-view-mock">
-              <div class="radar-ping"></div>
-              <div class="map-pin user-pin" style="top: 35%; left: 45%;" title="Breakdown: Hyundai i20 (Murugan)">
-                <i data-lucide="car"></i>
-                <span class="pin-tag red">Murugan (TN-60)</span>
-              </div>
-              <div class="map-pin mech-pin" style="top: 42%; left: 52%;" title="Mechanic: Selvam">
-                <i data-lucide="wrench"></i>
-                <span class="pin-tag yellow">Selvam (En Route)</span>
-              </div>
-              <div class="map-pin police-pin" style="top: 20%; left: 38%; background: #000; color: #FF3B30;" title="Theni Town Police Station">
-                <i data-lucide="shield"></i>
-                <span class="pin-tag black" style="background: #000; color: #FFF;">தேனி காவல் நிலையம்</span>
-              </div>
-              <div class="map-pin shop-pin" style="top: 25%; left: 70%;" title="Shop: Theni Wholesale Spares">
-                <i data-lucide="store"></i>
-                <span class="pin-tag green">Theni Spares Hub</span>
-              </div>
-              <div class="map-pin tow-pin" style="top: 75%; left: 65%;" title="Tow Truck: TN Highway Tow">
-                <i data-lucide="truck"></i>
-                <span class="pin-tag blue">TN Flatbed Tow</span>
-              </div>
+            <div id="admin-leaflet-telemetry-map" style="width: 100%; height: 420px; border: 2px solid #0D0D0D; border-radius: 6px; position: relative; z-index: 1;"></div>
+            <div class="telemetry-legend" style="display: flex; gap: 12px; margin-top: 10px; font-size: 11.5px; font-weight: 700; flex-wrap: wrap;">
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#F59E0B; border:1px solid #000;"></span> 🟡 Customer Requests</span>
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#10B981; border:1px solid #000;"></span> 🔧 Mechanic (Available)</span>
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#F97316; border:1px solid #000;"></span> 🔧 Mechanic (Busy / On-Job)</span>
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#3B82F6; border:1px solid #000;"></span> 🛻 Tow Trucks</span>
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#8B5CF6; border:1px solid #000;"></span> 🏪 Spares Stores</span>
             </div>
           </div>
 

@@ -33,6 +33,57 @@
 
   <!-- Razorpay Checkout SDK CDN -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    /* Toast Notification Floating Pill */
+    .custom-toast {
+      position: fixed;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #1e293b;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      z-index: 99999999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Toast Active State */
+    .custom-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Success style (Green accent) */
+    .custom-toast.toast-success {
+      background: #0f766e;
+      border: 1px solid #14b8a6;
+    }
+
+    /* Error style (Red accent) */
+    .custom-toast.toast-error {
+      background: #991b1b;
+      border: 1px solid #ef4444;
+    }
+
+    /* Info style (Blue accent) */
+    .custom-toast.toast-info {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+    }
+
+    @keyframes pulseDot {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
 </head>
 
 <body>
@@ -663,6 +714,7 @@
 
   <!-- Application Logic Entrypoint -->
   <script src="app.js"></script>
+
 </body>
 
 </html>

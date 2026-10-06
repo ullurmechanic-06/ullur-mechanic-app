@@ -53,15 +53,163 @@ function showToast(message, type = "success", duration = 4000) {
 
   const toast = document.createElement("div");
   toast.className = `custom-toast toast-${type}`;
+  toast.style.cssText = `
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: ${type === 'error' ? '#991b1b' : (type === 'info' ? '#1e293b' : '#0f766e')};
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 99999999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 1px solid ${type === 'error' ? '#ef4444' : (type === 'info' ? '#38bdf8' : '#14b8a6')};
+    font-family: 'Space Grotesk', sans-serif;
+  `;
   toast.innerHTML = message;
   document.body.appendChild(toast);
 
-  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+  }, 50);
 
   setTimeout(() => {
-    toast.classList.remove("show");
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(-20px)';
     setTimeout(() => toast.remove(), 400);
   }, duration);
+}
+
+// ==========================================
+// DYNAMIC REAL-TIME GEOLOCATION SYNC
+// ==========================================
+let activeGeolocationWatcherId = null;
+
+function syncUserLiveLocation(role = 'customer', customEntityId = null) {
+  if (!navigator.geolocation) {
+    showToast("Geolocation is not supported by your browser.", "error");
+    return;
+  }
+
+  if (activeGeolocationWatcherId !== null) {
+    navigator.geolocation.clearWatch(activeGeolocationWatcherId);
+    activeGeolocationWatcherId = null;
+  }
+
+  const handlePositionSuccess = (position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    const timestamp = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
+      ? firebase.firestore.FieldValue.serverTimestamp()
+      : new Date().toISOString();
+
+    if (role === 'customer') {
+      APP_STATE.customer.location.lat = lat;
+      APP_STATE.customer.location.lng = lng;
+      APP_STATE.customer.location.name = `GPS Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+      APP_STATE.activeJob.location.lat = lat;
+      APP_STATE.activeJob.location.lng = lng;
+
+      if (db) {
+        const userId = customEntityId || APP_STATE.customer.id;
+        db.collection('users').doc(userId).set({
+          role: 'customer',
+          name: APP_STATE.customer.name,
+          phone: APP_STATE.customer.phone,
+          vehicle: APP_STATE.customer.vehicle,
+          lat: lat,
+          lng: lng,
+          status: 'Active',
+          updatedAt: timestamp
+        }, { merge: true }).catch((err) => console.warn("Firestore user sync error:", err));
+      }
+
+      if (leafletCustomerMap) {
+        leafletCustomerMap.setView([lat, lng], leafletCustomerMap.getZoom() || 14);
+        const label = document.getElementById('current-pinned-coords');
+        if (label) {
+          label.innerText = `📌 Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)} • Live GPS Locked`;
+        }
+      }
+    } else if (role === 'mechanic') {
+      const mechId = customEntityId || 'MEC-01';
+      const mech = APP_STATE.mechanics.find((m) => m.id === mechId) || APP_STATE.mechanics[0];
+      if (mech) {
+        mech.lat = lat;
+        mech.lng = lng;
+      }
+      if (db) {
+        db.collection('mechanics').doc(mechId).set({
+          name: mech ? mech.name : 'Selvam Auto Works',
+          phone: mech ? mech.phone : '+91 98421 00001',
+          status: (mech && mech.isOnline) ? 'available' : 'busy',
+          rating: mech ? mech.rating : 4.9,
+          serviceArea: mech ? mech.serviceArea : 'Live GPS Sector',
+          lat: lat,
+          lng: lng,
+          updatedAt: timestamp
+        }, { merge: true }).catch((err) => console.warn("Firestore mechanic sync error:", err));
+      }
+    } else if (role === 'towing') {
+      const towId = customEntityId || 'TOW-01';
+      const truck = APP_STATE.towingFleet.find((t) => t.id === towId) || APP_STATE.towingFleet[0];
+      if (truck) {
+        truck.lat = lat;
+        truck.lng = lng;
+      }
+      if (db) {
+        db.collection('tow_services').doc(towId).set({
+          driverName: truck ? truck.driver : 'Mani',
+          phone: truck ? truck.phone : '+91 98421 11001',
+          type: truck ? truck.type : 'Flatbed Hydraulic',
+          status: truck ? (truck.status === 'Available' ? 'available' : 'busy') : 'available',
+          lat: lat,
+          lng: lng,
+          updatedAt: timestamp
+        }, { merge: true }).catch((err) => console.warn("Firestore tow sync error:", err));
+      }
+    } else if (role === 'shop') {
+      const shopId = customEntityId || 'SHOP-01';
+      if (db) {
+        db.collection('spare_parts').doc(shopId).set({
+          storeName: 'Sri Murugan Auto Spares Hub',
+          phone: '+91 98421 22001',
+          status: 'Open (Wholesale)',
+          lat: lat,
+          lng: lng,
+          updatedAt: timestamp
+        }, { merge: true }).catch((err) => console.warn("Firestore shop sync error:", err));
+      }
+    }
+
+    showToast(`📍 GPS synchronized for ${role.toUpperCase()} (${lat.toFixed(4)}, ${lng.toFixed(4)})`, "success");
+  };
+
+  const handlePositionError = (err) => {
+    console.warn("GPS acquisition error:", err);
+    showToast("Please allow GPS location access to detect nearby assistance.", "error");
+  };
+
+  navigator.geolocation.getCurrentPosition(handlePositionSuccess, handlePositionError, {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 0
+  });
+
+  if (navigator.geolocation.watchPosition) {
+    activeGeolocationWatcherId = navigator.geolocation.watchPosition(
+      handlePositionSuccess,
+      (err) => console.warn("GPS watch update:", err),
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
+    );
+  }
 }
 
 // Global window reference for phone auth confirmation result
@@ -858,14 +1006,14 @@ window.submitRoleAuth = function () {
 
   if (enteredOtp.length < 6) {
     const msg = t('authOtpIncomplete') || "Please enter the complete 6-digit OTP code!";
-    alert(msg);
+    showToast(msg, "error");
     showAuthError(msg);
     highlightOtpInputsError();
     return;
   }
 
   if (!window.confirmationResult || APP_STATE.authOtp.isExpired) {
-    showToast("OTP expired. Please request a new one.");
+    showToast("OTP expired. Please request a new one.", "error");
     showAuthError("OTP expired. Please request a new one.");
     highlightOtpInputsError();
     return;
@@ -885,15 +1033,16 @@ window.submitRoleAuth = function () {
         APP_STATE.authOtp.timerInterval = null;
       }
 
-      showToast("Login Successful!");
+      showToast("✅ Login Successful! Synchronizing live GPS...", "success");
       window.closeAuthModal();
       APP_STATE.role = APP_STATE.pendingAuthRole;
       localStorage.setItem('ullur_role', APP_STATE.role);
+      syncUserLiveLocation(APP_STATE.role);
       window.switchAppMode(APP_STATE.role);
     })
     .catch((error) => {
       console.error("Firebase Confirm OTP Error:", error);
-      showToast("Wrong OTP. Please enter the correct code.");
+      showToast("Wrong OTP. Please enter the correct code.", "error");
       showAuthError("Wrong OTP. Please enter the correct code.");
       clearOtpInputs();
       highlightOtpInputsError();
@@ -1005,8 +1154,6 @@ window.closeAuthModal = function () {
   hideAuthError();
 };
 
-
-
 window.logoutUser = function () {
   APP_STATE.role = 'gateway';
   localStorage.removeItem('ullur_role');
@@ -1045,9 +1192,10 @@ window.verifyAdminLogin = function () {
     window.closeAdminLoginModal();
     APP_STATE.role = 'admin';
     localStorage.setItem('ullur_role', 'admin');
+    showToast("⚡ Tamil Nadu Police & Admin Desk Verified", "success");
     window.switchAppMode('admin');
   } else {
-    alert('❌ Invalid Staff Credentials. Access Denied!');
+    showToast('❌ Invalid Staff Credentials. Access Denied!', 'error');
   }
 };
 
@@ -1059,6 +1207,10 @@ window.switchAppMode = function (mode) {
 
   const sessionChip = document.getElementById('user-session-chip');
   const sessionRoleLabel = document.getElementById('session-role-label');
+
+  if (mode && mode !== 'gateway') {
+    syncUserLiveLocation(mode);
+  }
 
   if (mode === 'gateway' || !mode) {
     const gw = document.getElementById('role-gateway-view');
@@ -1106,7 +1258,7 @@ window.switchAppMode = function (mode) {
     if (am) am.classList.add('active');
     if (sessionChip) {
       sessionChip.style.display = 'flex';
-      if (sessionRoleLabel) sessionRoleLabel.innerText = '🚨 Police & Super Admin';
+      if (sessionRoleLabel) sessionRoleLabel.innerText = '🚨 Admin / Police Desk';
     }
     renderAdminPanel();
     renderDesktopHeaderNav('admin');
@@ -1553,17 +1705,46 @@ function initLeafletCustomerMap() {
     maxZoom: 19
   }).addTo(leafletCustomerMap);
 
-  // Add mechanics markers
-  APP_STATE.mechanics.forEach((m) => {
-    if (m.isOnline) {
-      const mechIcon = L.divIcon({
-        className: 'custom-mech-icon',
-        html: `<div style="background:#FFD600; border:2px solid #0D0D0D; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:15px; box-shadow:2px 2px 0 #0D0D0D;">🔧</div>`,
-        iconSize: [32, 32]
+  const mechsLayer = L.layerGroup().addTo(leafletCustomerMap);
+
+  const renderMechanicPins = (mechList) => {
+    mechsLayer.clearLayers();
+    mechList.forEach((m) => {
+      if (m.isOnline || m.status === 'available' || m.status === 'Verified') {
+        const mechIcon = L.divIcon({
+          className: 'custom-mech-icon',
+          html: `<div style="background:#FFD600; border:2px solid #0D0D0D; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:15px; box-shadow:2px 2px 0 #0D0D0D; cursor:pointer;">🔧</div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        });
+        const dist = calculateHaversineDistance(APP_STATE.customer.location.lat, APP_STATE.customer.location.lng, m.lat, m.lng);
+        L.marker([m.lat, m.lng], { icon: mechIcon })
+          .addTo(mechsLayer)
+          .bindPopup(`<b>${m.name || 'Mechanic Partner'}</b><br>⭐ ${m.rating || 4.9} • ${dist} km away`);
+      }
+    });
+  };
+
+  // Live Firestore Stream for mechanics
+  if (db) {
+    db.collection('mechanics').onSnapshot((snap) => {
+      const liveMechs = [];
+      snap.forEach((doc) => {
+        const d = doc.data();
+        if (d.lat && d.lng) liveMechs.push({ id: doc.id, ...d });
       });
-      L.marker([m.lat, m.lng], { icon: mechIcon }).addTo(leafletCustomerMap).bindPopup(`<b>${m.name}</b><br>⭐ ${m.rating}`);
-    }
-  });
+      if (liveMechs.length > 0) {
+        renderMechanicPins(liveMechs);
+      } else {
+        renderMechanicPins(APP_STATE.mechanics);
+      }
+    }, (err) => {
+      console.warn("Mechanics stream fallback:", err);
+      renderMechanicPins(APP_STATE.mechanics);
+    });
+  } else {
+    renderMechanicPins(APP_STATE.mechanics);
+  }
 
   leafletCustomerMap.on('moveend', () => {
     const center = leafletCustomerMap.getCenter();
@@ -1571,7 +1752,7 @@ function initLeafletCustomerMap() {
     APP_STATE.customer.location.lng = center.lng;
     const label = document.getElementById('current-pinned-coords');
     if (label) {
-      label.innerText = `📌 Lat: ${center.lat.toFixed(4)}, Lng: ${center.lng.toFixed(4)} • Theni Bypass Highway`;
+      label.innerText = `📌 Lat: ${center.lat.toFixed(4)}, Lng: ${center.lng.toFixed(4)} • Pinned Location`;
     }
   });
 
@@ -1584,19 +1765,24 @@ window.autoDetectGps = function () {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        APP_STATE.customer.location.lat = pos.coords.latitude;
-        APP_STATE.customer.location.lng = pos.coords.longitude;
+        const { latitude, longitude } = pos.coords;
+        APP_STATE.customer.location.lat = latitude;
+        APP_STATE.customer.location.lng = longitude;
+        APP_STATE.customer.location.name = `GPS (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
         if (leafletCustomerMap) {
-          leafletCustomerMap.setView([pos.coords.latitude, pos.coords.longitude], 15);
+          leafletCustomerMap.setView([latitude, longitude], 15);
         }
-        alert("📍 GPS Coordinates Locked Successfully!");
+        syncUserLiveLocation('customer');
+        showToast(`📍 Live GPS Coordinates Locked: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, "success");
       },
       (err) => {
-        console.warn("GPS fallback applied:", err.message);
-        alert("GPS Signal Weak on Highway. Pinned to nearest milestone (Theni Bypass NH-85)!");
+        console.warn("GPS error:", err.message);
+        showToast("Please allow GPS location access to detect nearby assistance.", "error");
       },
-      { timeout: 5000 }
+      { enableHighAccuracy: true, timeout: 8000 }
     );
+  } else {
+    showToast("Geolocation is not supported by your browser.", "error");
   }
 };
 
@@ -1661,7 +1847,7 @@ window.toggleVoiceRecording = function () {
 function simulateVoiceNoteAttachment() {
   APP_STATE.customer.issue.audioBlobUrl = 'https://actions.google.com/sounds/v1/emergency/siren_emergency_truck.ogg';
   APP_STATE.activeJob.audioBlobUrl = APP_STATE.customer.issue.audioBlobUrl;
-  alert("🎤 Voice Note Recorded & Attached!");
+  showToast("🎤 Voice Note Recorded & Attached!", "success");
   window.customerNavigate('home');
 }
 
@@ -1671,6 +1857,7 @@ window.handlePhotoUpload = function (input) {
     reader.onload = function (e) {
       APP_STATE.customer.issue.photoData = e.target.result;
       APP_STATE.activeJob.photoData = e.target.result;
+      showToast("📷 Breakdown Photo Attached!", "info");
       window.customerNavigate('home');
     };
     reader.readAsDataURL(input.files[0]);
@@ -1694,7 +1881,7 @@ window.initiateSmartHaversineMatch = function () {
   setTimeout(() => {
     let matches = APP_STATE.mechanics.filter((m) => {
       const d = calculateHaversineDistance(APP_STATE.customer.location.lat, APP_STATE.customer.location.lng, m.lat, m.lng);
-      return m.isOnline && m.status === 'Verified' && d <= 3.0;
+      return (m.isOnline || m.status === 'available' || m.status === 'Verified') && d <= 3.0;
     });
 
     if (!matches.length) {
@@ -1702,7 +1889,7 @@ window.initiateSmartHaversineMatch = function () {
       setTimeout(() => {
         matches = APP_STATE.mechanics.filter((m) => {
           const d = calculateHaversineDistance(APP_STATE.customer.location.lat, APP_STATE.customer.location.lng, m.lat, m.lng);
-          return m.isOnline && m.status === 'Verified' && d <= 6.0;
+          return (m.isOnline || m.status === 'available' || m.status === 'Verified') && d <= 6.0;
         });
         assignTopMatch(matches);
       }, 1400);
@@ -1718,28 +1905,59 @@ function assignTopMatch(matches) {
 
   APP_STATE.activeJob.mechanicId = topMatch.id;
   APP_STATE.activeJob.distanceKm = dist;
-  APP_STATE.activeJob.etaMins = Math.max(4, Math.round(dist * 6));
+  APP_STATE.activeJob.etaMins = Math.max(2, Math.round(dist * 3.5));
   APP_STATE.activeJob.status = 'Accepted';
   APP_STATE.activeJob.acceptedAt = Date.now();
   graceSecondsLeft = 120;
 
-  if (firestoreDb) {
+  if (db) {
     try {
-      firestoreDb.collection("breakdown_jobs").doc(APP_STATE.activeJob.id).set(APP_STATE.activeJob, { merge: true });
+      db.collection("breakdown_jobs").doc(APP_STATE.activeJob.id).set(APP_STATE.activeJob, { merge: true });
     } catch (e) {
       console.warn("Firestore sync:", e);
     }
   }
 
+  showToast(`⚡ Match Dispatched: ${topMatch.name} (ETA ~${APP_STATE.activeJob.etaMins} mins)`, "success");
   window.customerNavigate('tracking');
 }
+
+// OSRM Road Routing Helper
+function fetchOsrmRoute(startLat, startLng, endLat, endLng) {
+  const url = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
+  return fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
+        const coordinates = route.geometry.coordinates.map((pt) => [pt[1], pt[0]]);
+        const distanceKm = Math.round((route.distance / 1000) * 10) / 10;
+        const etaMins = Math.max(2, Math.round(route.duration / 60));
+        return { coordinates, distanceKm, etaMins };
+      }
+      throw new Error("No OSRM route found");
+    })
+    .catch((err) => {
+      console.warn("OSRM routing fallback to straight line:", err);
+      const distanceKm = calculateHaversineDistance(startLat, startLng, endLat, endLng);
+      const etaMins = Math.max(2, Math.round(distanceKm * 3.5));
+      return {
+        coordinates: [[startLat, startLng], [endLat, endLng]],
+        distanceKm,
+        etaMins
+      };
+    });
+}
+
+let trackingFirestoreUnsubscribe = null;
+let currentTrackingPolyline = null;
 
 // Customer Screen 3: Full-Width 2-Column Responsive Live Tracking Screen
 function renderCustomerTrackingSplitScreen(container) {
   const job = APP_STATE.activeJob;
   const mech = APP_STATE.mechanics.find((m) => m.id === job.mechanicId) || APP_STATE.mechanics[0];
   const stages = ['Requested', 'Accepted', 'Arrived', 'In Progress', 'Completed'];
-  const currentStageIndex = stages.indexOf(job.status);
+  const currentStageIndex = stages.indexOf(job.status) !== -1 ? stages.indexOf(job.status) : 1;
 
   container.innerHTML = `
     <!-- Live Status Stepper Bar -->
@@ -1772,10 +1990,10 @@ function renderCustomerTrackingSplitScreen(container) {
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div>
                 <strong style="font-size: 15px;">${APP_STATE.lang === 'ta' ? mech.nameTa : mech.name}</strong>
-                <div style="font-size: 12px; font-weight: 700; color: #475569;">⭐ ${mech.rating} (148 jobs) • Verified Partner</div>
+                <div style="font-size: 12px; font-weight: 700; color: #475569;">⭐ ${mech.rating || 4.9} (${mech.jobsDone || 148} jobs) • Verified Partner</div>
                 <small style="display: block; font-size: 11px; color: #166534; font-weight: 800; margin-top: 2px;">🛵 Hero Splendor (TN-60-M-4421)</small>
               </div>
-              <span class="pill green">ETA ~${job.etaMins} Mins</span>
+              <span class="pill green" id="tracking-eta-pill">ETA ~${job.etaMins} Mins</span>
             </div>
           </div>
           <a href="tel:${mech.phone}" class="btn btn-yellow" style="padding: 10px 14px; font-size: 13px; text-decoration: none;">
@@ -1818,7 +2036,7 @@ function renderCustomerTrackingSplitScreen(container) {
       <div class="b-card" style="padding: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
           <span class="pill green"><span class="pulse-dot"></span> REAL-TIME GPS TRACKING</span>
-          <strong style="font-size: 13px; color: #166534;">Distance: ${job.distanceKm} km</strong>
+          <strong style="font-size: 13px; color: #166534;" id="tracking-distance-label">Distance: ${job.distanceKm} km</strong>
         </div>
         <div class="map-wrapper" style="height: 420px;">
           <div id="tracking-leaflet-map"></div>
@@ -1858,6 +2076,11 @@ function initLeafletTrackingMap(job, mech) {
     leafletTrackingMap = null;
   }
 
+  if (trackingFirestoreUnsubscribe) {
+    try { trackingFirestoreUnsubscribe(); } catch (e) {}
+    trackingFirestoreUnsubscribe = null;
+  }
+
   const custLat = APP_STATE.customer.location.lat;
   const custLng = APP_STATE.customer.location.lng;
 
@@ -1870,40 +2093,79 @@ function initLeafletTrackingMap(job, mech) {
 
   const userIcon = L.divIcon({
     className: 'custom-user-icon',
-    html: `<div style="background:#FF3B30; color:white; border:2px solid #0D0D0D; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:2px 2px 0 #0D0D0D;">🚗</div>`,
-    iconSize: [34, 34]
+    html: `<div style="background:#FF3B30; color:white; border:2.5px solid #0D0D0D; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 0 0 4px rgba(255,59,48,0.35); animation:pulseDot 1.2s infinite;">🚗</div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
   });
   L.marker([custLat, custLng], { icon: userIcon }).addTo(leafletTrackingMap).bindPopup("<b>Your Breakdown Location</b>");
 
-  let currentMechLat = mech.lat;
-  let currentMechLng = mech.lng;
+  let currentMechLat = mech.lat || (custLat + 0.015);
+  let currentMechLng = mech.lng || (custLng + 0.012);
 
   const mechIcon = L.divIcon({
     className: 'custom-mech-tracking-icon',
-    html: `<div style="background:#FFD600; color:#0D0D0D; border:2px solid #0D0D0D; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:2px 2px 0 #0D0D0D; animation:pulseDot 1s infinite;">🛵</div>`,
-    iconSize: [34, 34]
+    html: `<div style="background:#FFD600; color:#0D0D0D; border:2.5px solid #0D0D0D; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:2px 2px 0 #0D0D0D; animation:pulseDot 1s infinite;">🔧</div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
   });
 
   trackingMechanicMarker = L.marker([currentMechLat, currentMechLng], { icon: mechIcon }).addTo(leafletTrackingMap);
+  trackingMechanicMarker.bindPopup(`<b>${mech.name}</b><br>Status: En-Route<br>Live GPS Synced`);
 
-  const routeLine = L.polyline([[currentMechLat, currentMechLng], [custLat, custLng]], {
+  currentTrackingPolyline = L.polyline([[currentMechLat, currentMechLng], [custLat, custLng]], {
     color: '#2563EB',
     weight: 5,
-    dashArray: '6, 8'
+    opacity: 0.85,
+    dashArray: '8, 8'
   }).addTo(leafletTrackingMap);
 
-  leafletTrackingMap.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+  const updateLiveRoute = (pLat, pLng) => {
+    fetchOsrmRoute(pLat, pLng, custLat, custLng).then((res) => {
+      if (currentTrackingPolyline && leafletTrackingMap) {
+        currentTrackingPolyline.setLatLngs(res.coordinates);
+        leafletTrackingMap.fitBounds(currentTrackingPolyline.getBounds(), { padding: [40, 40] });
+      }
+      if (trackingMechanicMarker) {
+        trackingMechanicMarker.setLatLng([pLat, pLng]);
+      }
+      job.distanceKm = res.distanceKm;
+      job.etaMins = res.etaMins;
+
+      const distLabel = document.getElementById('tracking-distance-label');
+      if (distLabel) distLabel.innerText = `Distance: ${res.distanceKm} km (ETA ~${res.etaMins} mins)`;
+      const etaPill = document.getElementById('tracking-eta-pill');
+      if (etaPill) etaPill.innerText = `ETA ~${res.etaMins} Mins`;
+    });
+  };
+
+  updateLiveRoute(currentMechLat, currentMechLng);
+
+  if (db && job.mechanicId) {
+    trackingFirestoreUnsubscribe = db.collection('mechanics').doc(job.mechanicId).onSnapshot((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.lat && data.lng) {
+          currentMechLat = data.lat;
+          currentMechLng = data.lng;
+          updateLiveRoute(currentMechLat, currentMechLng);
+        }
+      }
+    }, (err) => console.warn("Firestore mechanic tracking listener notice:", err));
+  }
 
   if (trackingAnimTimer) clearInterval(trackingAnimTimer);
   trackingAnimTimer = setInterval(() => {
-    currentMechLat += (custLat - currentMechLat) * 0.12;
-    currentMechLng += (custLng - currentMechLng) * 0.12;
-
-    if (trackingMechanicMarker) {
-      trackingMechanicMarker.setLatLng([currentMechLat, currentMechLng]);
-      routeLine.setLatLngs([[currentMechLat, currentMechLng], [custLat, custLng]]);
+    if (Math.abs(currentMechLat - custLat) > 0.0002 || Math.abs(currentMechLng - custLng) > 0.0002) {
+      currentMechLat += (custLat - currentMechLat) * 0.08;
+      currentMechLng += (custLng - currentMechLng) * 0.08;
+      if (trackingMechanicMarker) trackingMechanicMarker.setLatLng([currentMechLat, currentMechLng]);
+      const dist = calculateHaversineDistance(currentMechLat, currentMechLng, custLat, custLng);
+      job.distanceKm = dist;
+      job.etaMins = Math.max(1, Math.round(dist * 3.5));
+      const distLabel = document.getElementById('tracking-distance-label');
+      if (distLabel) distLabel.innerText = `Distance: ${dist} km (ETA ~${job.etaMins} mins)`;
     }
-  }, 2000);
+  }, 3000);
 
   setTimeout(() => {
     if (leafletTrackingMap) leafletTrackingMap.invalidateSize();
@@ -1912,11 +2174,11 @@ function initLeafletTrackingMap(job, mech) {
 
 window.cancelActiveJob = function () {
   if (graceSecondsLeft > 0) {
-    alert("✅ Service Request Cancelled Free of Charge (Within 2-Min Grace Period)!");
+    showToast("✅ Service Request Cancelled Free of Charge (Within 2-Min Grace Period)!", "info");
     APP_STATE.activeJob.status = 'Cancelled';
     window.customerNavigate('home');
   } else {
-    alert("⚠️ Cancellation Fee of ₹50 applied as mechanic has already dispatched beyond grace period.");
+    showToast("⚠️ Cancellation Fee of ₹50 applied as partner dispatched beyond grace period.", "error");
     window.openRazorpayModal(50);
   }
 };

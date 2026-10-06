@@ -201,9 +201,20 @@ body {
 }
 
 @keyframes pulseDot {
-  0% { transform: scale(0.9); opacity: 0.8; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.8; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
 }
 
 .btn-logout-sm {
@@ -273,8 +284,15 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .full-viewport-dashboard {
@@ -385,8 +403,13 @@ body {
 }
 
 @keyframes floatLogo {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-8px);
+  }
 }
 
 .gateway-hero h2 {
@@ -452,10 +475,25 @@ body {
   height: 28px;
 }
 
-.role-icon-box.yellow { background: var(--primary-yellow); color: var(--dark-black); }
-.role-icon-box.green { background: #CCFF90; color: #1B5E20; }
-.role-icon-box.blue { background: #B3E5FC; color: #0277BD; }
-.role-icon-box.lime { background: #FFF59D; color: #E65100; }
+.role-icon-box.yellow {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+}
+
+.role-icon-box.green {
+  background: #CCFF90;
+  color: #1B5E20;
+}
+
+.role-icon-box.blue {
+  background: #B3E5FC;
+  color: #0277BD;
+}
+
+.role-icon-box.lime {
+  background: #FFF59D;
+  color: #E65100;
+}
 
 .role-select-card h3 {
   font-size: 18px;
@@ -591,14 +629,40 @@ body {
   box-shadow: 1px 1px 0px var(--dark-black);
 }
 
-.btn-yellow { background: var(--primary-yellow); color: var(--dark-black); }
-.btn-green { background: #00C851; color: white; }
-.btn-red { background: var(--emergency-red); color: white; }
-.btn-black { background: var(--dark-black); color: white; }
-.btn-secondary { background: #E2E8F0; color: #1E293B; }
-.btn-primary { background: var(--primary-yellow); color: var(--dark-black); font-weight: 900; }
+.btn-yellow {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+}
 
-.btn.full-width { width: 100%; }
+.btn-green {
+  background: #00C851;
+  color: white;
+}
+
+.btn-red {
+  background: var(--emergency-red);
+  color: white;
+}
+
+.btn-black {
+  background: var(--dark-black);
+  color: white;
+}
+
+.btn-secondary {
+  background: #E2E8F0;
+  color: #1E293B;
+}
+
+.btn-primary {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+  font-weight: 900;
+}
+
+.btn.full-width {
+  width: 100%;
+}
 
 /* Brutalist Cards */
 .b-card {
@@ -612,10 +676,25 @@ body {
   gap: 8px;
 }
 
-.b-card.yellow { background: #FFFDE7; border-color: #0D0D0D; }
-.b-card.green { background: #F0FDF4; border-color: #0D0D0D; }
-.b-card.red { background: #FEF2F2; border-color: var(--emergency-red); }
-.b-card.black { background: var(--dark-black); color: white; }
+.b-card.yellow {
+  background: #FFFDE7;
+  border-color: #0D0D0D;
+}
+
+.b-card.green {
+  background: #F0FDF4;
+  border-color: #0D0D0D;
+}
+
+.b-card.red {
+  background: #FEF2F2;
+  border-color: var(--emergency-red);
+}
+
+.b-card.black {
+  background: var(--dark-black);
+  color: white;
+}
 
 /* Quick grid */
 .quick-grid {
@@ -666,11 +745,30 @@ body {
   border: 1.5px solid var(--dark-black);
 }
 
-.pill.yellow { background: var(--primary-yellow); color: var(--dark-black); }
-.pill.green { background: #DCFCE7; color: #15803D; }
-.pill.red { background: #FEE2E2; color: #B91C1C; }
-.pill.blue { background: #E0F2FE; color: #0369A1; }
-.pill.black { background: var(--dark-black); color: white; }
+.pill.yellow {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+}
+
+.pill.green {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.pill.red {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.pill.blue {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.pill.black {
+  background: var(--dark-black);
+  color: white;
+}
 
 .badge {
   display: inline-block;
@@ -682,11 +780,30 @@ body {
   letter-spacing: 0.5px;
 }
 
-.badge.yellow { background: var(--primary-yellow); color: var(--dark-black); }
-.badge.green { background: #00C851; color: white; }
-.badge.red { background: var(--emergency-red); color: white; }
-.badge.black { background: var(--dark-black); color: white; }
-.badge.blue { background: var(--accent-blue); color: white; }
+.badge.yellow {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+}
+
+.badge.green {
+  background: #00C851;
+  color: white;
+}
+
+.badge.red {
+  background: var(--emergency-red);
+  color: white;
+}
+
+.badge.black {
+  background: var(--dark-black);
+  color: white;
+}
+
+.badge.blue {
+  background: var(--accent-blue);
+  color: white;
+}
 
 /* Brutal Input Fields */
 .brutal-input {
@@ -723,7 +840,9 @@ body {
   background: #E2E8F0;
 }
 
-#leaflet-map, #tracking-leaflet-map, #admin-leaflet-map {
+#leaflet-map,
+#tracking-leaflet-map,
+#admin-leaflet-map {
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -744,7 +863,7 @@ body {
 .pin-drop-crosshair img {
   width: 36px;
   height: 36px;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
 }
 
 .crosshair-milestone-pill {
@@ -756,7 +875,7 @@ body {
   border-radius: 6px;
   margin-top: 3px;
   white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* ==========================================================================
@@ -848,8 +967,14 @@ body {
 }
 
 @keyframes recordPulse {
-  0% { transform: scale(0.95); }
-  100% { transform: scale(1.1); box-shadow: 0 0 14px rgba(239, 68, 68, 0.8); }
+  0% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.8);
+  }
 }
 
 .photo-preview-container {
@@ -996,9 +1121,20 @@ body {
   font-weight: 900;
 }
 
-.role-avatar-circle.shop { background: #B3E5FC; color: #0277BD; }
-.role-avatar-circle.towing { background: #FFF59D; color: #E65100; }
-.role-avatar-circle.admin { background: #FEE2E2; color: #DC2626; }
+.role-avatar-circle.shop {
+  background: #B3E5FC;
+  color: #0277BD;
+}
+
+.role-avatar-circle.towing {
+  background: #FFF59D;
+  color: #E65100;
+}
+
+.role-avatar-circle.admin {
+  background: #FEE2E2;
+  color: #DC2626;
+}
 
 /* KPI Stats Grid */
 .admin-top-stats {
@@ -1027,10 +1163,25 @@ body {
   flex-shrink: 0;
 }
 
-.stat-box.red i { background: #FEE2E2; color: #DC2626; }
-.stat-box.yellow i { background: var(--primary-yellow); color: var(--dark-black); }
-.stat-box.green i { background: #DCFCE7; color: #16A34A; }
-.stat-box.blue i { background: #E0F2FE; color: #0284C7; }
+.stat-box.red i {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.stat-box.yellow i {
+  background: var(--primary-yellow);
+  color: var(--dark-black);
+}
+
+.stat-box.green i {
+  background: #DCFCE7;
+  color: #16A34A;
+}
+
+.stat-box.blue i {
+  background: #E0F2FE;
+  color: #0284C7;
+}
 
 .stat-box span {
   display: block;
@@ -1053,7 +1204,8 @@ body {
 }
 
 /* Dashboard 2-column Grid */
-.role-dashboard-grid, .admin-radar-grid {
+.role-dashboard-grid,
+.admin-radar-grid {
   display: grid;
   grid-template-columns: 1.35fr 1.05fr;
   gap: 20px;
@@ -1130,8 +1282,16 @@ body {
   border: 1px solid var(--dark-black);
 }
 
-.stock-pill.in-stock { background: #DCFCE7; color: #166534; }
-.stock-pill.low-stock { background: #FEE2E2; color: #991B1B; animation: pulseDot 1s infinite; }
+.stock-pill.in-stock {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.stock-pill.low-stock {
+  background: #FEE2E2;
+  color: #991B1B;
+  animation: pulseDot 1s infinite;
+}
 
 /* Fleet Grid for Towing */
 .fleet-grid {
@@ -1188,7 +1348,7 @@ body {
   background: var(--pure-white);
   border: var(--thick-border);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5), var(--brutal-shadow-lg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--brutal-shadow-lg);
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
@@ -1196,7 +1356,11 @@ body {
   position: relative;
 }
 
-.auth-modal-header, .razorpay-header, .receipt-header, .dispatch-header, .modal-header-simple {
+.auth-modal-header,
+.razorpay-header,
+.receipt-header,
+.dispatch-header,
+.modal-header-simple {
   padding: 16px 20px;
   border-bottom: var(--thick-border);
   display: flex;
@@ -1304,9 +1468,21 @@ body {
 }
 
 @keyframes otpShake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-4px); }
-  40%, 80% { transform: translateX(4px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 .otp-timer-badge {
@@ -1340,8 +1516,15 @@ body {
 }
 
 @keyframes pulseBadge {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
 }
 
 .btn-resend-otp {
@@ -1411,7 +1594,7 @@ body {
   color: #FFFFFF;
   border: 3px solid #FFD600;
   border-radius: 12px;
-  box-shadow: 5px 5px 0px rgba(0,0,0,0.8), 0 8px 24px rgba(0,0,0,0.3);
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.3);
   padding: 14px 16px;
   position: relative;
   overflow: hidden;
@@ -1429,6 +1612,7 @@ body {
     opacity: 0;
     transform: translateY(-25px) scale(0.96);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1460,8 +1644,17 @@ body {
 }
 
 @keyframes pulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.7; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
 }
 
 .sms-sender-name {
